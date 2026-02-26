@@ -32,6 +32,11 @@ ReactVM, Event-Driven, Automation
 - Email：nanakodesyo@gmail.com
 ## 发起组织
 
+  [LXDAO](https://lxdao.io/) <img alt="organization-logo" height="60px" width="60px" src="https://cdn.lxdao.io/bafkreiay6vxsvv3ksxr75lzzt3iqy3zja3o2epuxh47ivs24p2xs3awexm.png" />
+
+  [ETHPanda](https://ethpanda.org/) <img alt="organization-logo" height="60px" width="60px" src="https://cdn.lxdao.io/10aed40b-4786-4c2b-aaaa-b7d8a119c00e.png" />
+
+  [Reactive Network](https://reactive.network/) <img alt="organization-logo" height="60px" width="60px" src="https://avatars.githubusercontent.com/u/164997232?s=200&v=4" />
 
 
 
