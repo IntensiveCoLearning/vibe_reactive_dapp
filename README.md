@@ -32,12 +32,11 @@ ReactVM, Event-Driven, Automation
 - Email：nanakodesyo@gmail.com
 ## 发起组织
 
+  [Reactive Network](https://reactive.network/) <img alt="organization-logo" height="60px" width="60px" src="https://drive.google.com/drive/folders/1-B6WbxFKi_tmgLfDiraqt4OQoh-_N10_" />
 
+  [LXDAO](https://lxdao.io/) <img alt="organization-logo" height="60px" width="60px" src="https://cdn.lxdao.io/bafkreic7yeypjshk3vc6rko3rnuijygyqqlawpmlgmi3ucisyj4pj6pm4q.png" />
 
-
-## 请假规则
-
-每周请假 2 次
+  [ETHPanda](https://ethpanda.org/) <img alt="organization-logo" height="60px" width="60px" src="https://cdn.lxdao.io/10aed40b-4786-4c2b-aaaa-b7d8a119c00e.png" />
 
 
 ## 社群
@@ -64,7 +63,6 @@ ReactVM, Event-Driven, Automation
 - 参加共学营的朋友请加入 Reactive 中文社区，添加运营微信 XiaoHai67890，并备注【睿应层中文社群】。
   扫码加入：
   ![b779646e41bea2ced419c9186ac2a118](https://github.com/user-attachments/assets/0d908cc0-6f0e-4b2c-8e24-fa1c19d513ea)
-
 
 
 ## 残酷共学打卡记录表
@@ -263,3 +261,9 @@ ReactVM, Event-Driven, Automation
 - 报名：https://www.notion.so/lxdao/232dceffe40b8030993ad26f2eb6bed2
 
 - 打卡：https://www.notion.so/lxdao/232dceffe40b80508330c5ee936d4dab
+
+
+## 请假规则
+
+每周请假 2 次
+
