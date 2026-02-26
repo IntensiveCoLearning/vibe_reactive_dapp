@@ -32,8 +32,7 @@ ReactVM, Event-Driven, Automation
 - Email：nanakodesyo@gmail.com
 ## 发起组织
 
-  [Reactive Network](https://reactive.network/) <img alt="organization-logo" height="60px" width="60px" src="https://cdn.jsdelivr.net/gh/nanakodesuu/cdn-assets/Symbol.png" />
-
+  [Reactive Network](https://reactive.network/) <img alt="organization-logo" height="60px" width="60px" src="https://avatars.githubusercontent.com/u/164997232?s=200&v=4" />
 
 
 ## 社群
