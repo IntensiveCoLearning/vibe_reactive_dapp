@@ -62,6 +62,9 @@ ReactVM, Event-Driven, Automation
 - 参与者需每日发布学习笔记打卡，所有学习记录将开源至 GitHub。
 - 残酷共学期间，欢迎在社区内随时提问与交流。
 - 参加共学营的朋友请加入 Reactive 中文社区，添加运营微信 XiaoHai67890，并备注【睿应层中文社群】。
+  扫码加入：
+  ![b779646e41bea2ced419c9186ac2a118](https://github.com/user-attachments/assets/0d908cc0-6f0e-4b2c-8e24-fa1c19d513ea)
+
 
 
 ## 残酷共学打卡记录表
