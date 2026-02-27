@@ -46,7 +46,128 @@ ReactVM, Event-Driven, Automation
 微信联系人：XiaoHai67890
 ## 学习资料/课程安排
 
-确认中。。。
+### 第一阶段：理解 Reactive 思维
+
+**学习目标：**
+
+- 理解 Reactive 与传统 EVM 的根本区别
+- 核心架构：ReactVM + Reactive Network 环境
+- 理解“事件驱动智能合约”，什么是 reactive smart contracts（睿应式智能合约）
+- 知道 Reactive 适合解决什么问题
+
+**学习材料：**
+
+- Reactive Network 官网 Overview
+    
+    [https://reactive.network/](https://reactive.network/?utm_source=chatgpt.com)
+    
+- Reactive Contracts 文档
+    
+    https://dev.reactive.network/education/module-1/reactive-smart-contracts
+    
+- 主网，测试网以及水龙头信息
+    
+    https://dev.reactive.network/reactive-mainnet
+    
+- 官方 Ecosystem 案例
+    
+    https://reactive.network/ecosystem#cases
+    
+- Dev 文档 Introduction
+    
+    [https://dev.reactive.network/education/introduction](https://dev.reactive.network/education/introduction?utm_source=chatgpt.com)
+    
+
+**挑战任务：**
+
+请根据指引完成挑战：[https://ethpanda.notion.site/312bbd63be878004a897e05a4841f7d4](https://www.notion.so/312bbd63be878004a897e05a4841f7d4?pvs=21)
+
+
+### 第二阶段：理解 Reactive 技术结构与开发模型
+
+**学习目标：**
+
+- 理解 Reactive Contract 的组成结构
+- 理解 Subscribe / Trigger / Callback 模型
+- 理解 ReactVM 执行逻辑
+- 理解跨链和自动化机制
+
+**学习材料：**
+
+- Dev 文档核心模块：[https://dev.reactive.network/](https://dev.reactive.network/?utm_source=chatgpt.com)
+    - [Reactive Library (核心开发库) — 提供回调/订阅接口等组件](https://dev.reactive.network/reactive-library?utm_source=chatgpt.com)
+- **GitHub —— 欢迎给我们点个 ⭐！如果有任何可以进一步改进的地方，也请告诉我们。**
+    
+    https://github.com/Reactive-Network/reactive-smart-contract-demos
+    
+    - 如有需要，可以使用 Stop Order 作为脚手架参考：
+        
+        https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/demos/uniswap-v2-stop-order
+        
+- 订阅机制
+https://dev.reactive.network/subscriptions
+- 事件与回调
+https://dev.reactive.network/events-&-callbacks
+- ReactVM 双状态模型
+https://dev.reactive.network/reactvm
+- 经济模型
+https://dev.reactive.network/economy
+- GitHub 示例代码
+    
+    [https://github.com/Reactive-Network](https://github.com/Reactive-Network?utm_source=chatgpt.com)
+    
+- Uniswap V2 止损示例代码
+https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/demos/uniswap-v2-stop-order
+
+**挑战任务：**
+
+请根据指引完成挑战：[https://ethpanda.notion.site/311bbd63be87809f9410c6fe8f8daff5?pvs=73](https://www.notion.so/311bbd63be87809f9410c6fe8f8daff5?pvs=21)
+
+
+### 第三阶段：动手实践 + Casual Hackathon 准备
+
+**学习目标：**
+
+前端：
+
+- 能连接钱包并切换到：Origin 链与 Lasna 链
+- 做一个最小交互：能够触发 Origin 事件
+- 能够展示 Reactive 三段链路的时间线（Origin- Reactive- Destination）
+
+后端：
+
+- 能同时监听至少两条链，把事件统一成结构
+- 实现推送通道（SSE 或 WebSocket 二选一）
+- 能调用 RNK 专用 RPC 方法来进行验证
+- 能把部署地址对应的 RVM 地址、reactive 交易状态作为排错信息返回给前端（或在日志里输出），并指导用户去 Reactscan 对照查看
+
+智能合约：
+
+- 理解双状态：Reactive 合约会在 Reactive Network 与私有 ReactVM 各有一份实例、状态隔离
+- 写一个只负责 `emit Event(...)` 的合约，确保事件签名（topic0）稳定、并且参数里至少包含一个 `indexed`（Origin）
+- 回调入口函数，并强制 **第一个参数为 `address`**（Destination）
+- 在 constructor 里调用系统合约 `subscribe(chainId, originContract, topic0..topic3)` 建立订阅，并理解过滤维度就是 chainId,合约地址,topics 的等值匹配（Reactive 的 Subscribe 部分）
+- 实现 `react(LogRecord)`：能从 log 中读出 topics/data，做条件判断（阈值,白名单,去重），并产出可观测事件（便于 UI/后端确认触发过）（Reactive 的 LogRecord 部分）
+- 能在 Lasna 部署 Reactive 合约，并确认系统合约地址固定为 `0x…fffFfF`
+
+**学习材料：**
+
+- Dev Guide（部署与测试部分）
+    
+    [https://dev.reactive.network/](https://dev.reactive.network/?utm_source=chatgpt.com)
+    
+- 往期 Workshop
+    
+    https://youtu.be/PnPIHVKPKgo?si=ENJcLHFikNB0wQK6
+    
+- Reactive Network Ecosystem 页面（找灵感）
+    
+    https://reactive.network/ecosystem#cases
+    
+
+### 社媒与社区
+
+[Twitter (EN)](https://x.com/0xReactive) | [Twitter (CN)](https://x.com/0xReactive_cn) | [Discord](https://discord.com/invite/SaZAfkgZhj) | [Telegram](https://t.me/reactivedevs)
 
 
 ## 共学激励
