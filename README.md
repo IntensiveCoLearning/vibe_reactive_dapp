@@ -200,7 +200,9 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [Bill306](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Bill306.md) | | | | | | | | | | | | | | |
 | [QingQiuGeek](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/QingQiuGeek.md) | | | | | | | | | | | | | | |
 | [ShawnX-F](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/ShawnX-F.md) | | | | | | | | | | | | | | |
+| [Cap-bit-mint](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Cap-bit-mint.md) | | | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
