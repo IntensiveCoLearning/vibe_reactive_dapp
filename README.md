@@ -366,7 +366,9 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [SeafaringSoul](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/SeafaringSoul.md) | | | | | | | | | | | | | | |
 | [oiGho5t](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/oiGho5t.md) | | | | | | | | | | | | | | |
 | [surdress](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/surdress.md) | | | | | | | | | | | | | | |
+| [JackCC703](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/JackCC703.md) | | | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
