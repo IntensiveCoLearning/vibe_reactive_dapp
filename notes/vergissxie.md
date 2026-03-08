@@ -6,15 +6,14 @@ timezone: UTC+8
 
 **GitHub ID:** vergissxie
 
-**Telegram:** 
+**Telegram:**
 
 ## Self-introduction
 
-Web3 实习计划 2025 冬季实习生
+Let’s vibe Reactive dApp
 
 ## Notes
 
 <!-- Content_START -->
-
 
 <!-- Content_END -->
