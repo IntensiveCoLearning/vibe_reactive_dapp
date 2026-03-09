@@ -377,7 +377,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [Im-Sue](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Im-Sue.md) |   | | | | | | | | | | | | | |
 | [beautifulrem](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/beautifulrem.md) |   | | | | | | | | | | | | | |
 | [Leahleaha](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Leahleaha.md) |   | | | | | | | | | | | | | |
-| [henanshifandaxue](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/henanshifandaxue.md) |   | | | | | | | | | | | | | |
+| [henanshifandaxue](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/henanshifandaxue.md) | ✅ | | | | | | | | | | | | | |
 | [gitgdut](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/gitgdut.md) |   | | | | | | | | | | | | | |
 | [YuChanGongzhu](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/YuChanGongzhu.md) |   | | | | | | | | | | | | | |
 | [a0905087259-sketch](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/a0905087259-sketch.md) |   | | | | | | | | | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) |   | | | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) |   | | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
