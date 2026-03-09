@@ -311,7 +311,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [hy3917-code](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/hy3917-code.md) |   | | | | | | | | | | | | | |
 | [zhangmuf](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/zhangmuf.md) |   | | | | | | | | | | | | | |
 | [wwwjy1220](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/wwwjy1220.md) |   | | | | | | | | | | | | | |
-| [nanakodesuu](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/nanakodesuu.md) |   | | | | | | | | | | | | | |
+| [nanakodesuu](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/nanakodesuu.md) | ✅ | | | | | | | | | | | | | |
 | [shaopingZH](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/shaopingZH.md) | ✅ | | | | | | | | | | | | | |
 | [0x-IHRR](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/0x-IHRR.md) |   | | | | | | | | | | | | | |
 | [Xiaonan2020](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Xiaonan2020.md) |   | | | | | | | | | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) |   | | | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) |   | | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
