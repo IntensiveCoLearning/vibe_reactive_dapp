@@ -405,7 +405,9 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [Abcrypto100](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Abcrypto100.md) |   | | | | | | | | | | | | | |
 | [Mugeng-su](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Mugeng-su.md) |   | | | | | | | | | | | | | |
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) |   | | | | | | | | | | | | | |
+| [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) |   | | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
