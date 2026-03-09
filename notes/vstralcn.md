@@ -10,7 +10,7 @@ timezone: UTC+8
 
 ## Self-introduction
 
-Let’s vibe Reactive dApp
+致力于学习研究 Web3安全
 
 ## Notes
 
