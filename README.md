@@ -342,7 +342,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [runrunrunz](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/runrunrunz.md) |   | | | | | | | | | | | | | |
 | [ShihaoZhou-NEU](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/ShihaoZhou-NEU.md) |   | | | | | | | | | | | | | |
 | [zblingling](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/zblingling.md) |   | | | | | | | | | | | | | |
-| [Zhao444Four](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Zhao444Four.md) |   | | | | | | | | | | | | | |
+| [Zhao444Four](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Zhao444Four.md) | ✅ | | | | | | | | | | | | | |
 | [G-H11](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/G-H11.md) |   | | | | | | | | | | | | | |
 | [hyr0ky](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/hyr0ky.md) |   | | | | | | | | | | | | | |
 | [LinLyra](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/LinLyra.md) |   | | | | | | | | | | | | | |
@@ -405,6 +405,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [Abcrypto100](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Abcrypto100.md) |   | | | | | | | | | | | | | |
 | [Mugeng-su](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Mugeng-su.md) |   | | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
