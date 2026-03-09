@@ -17,9 +17,32 @@ Let's vibe Reactive dApp！
 <!-- Content_START -->
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
-第一天任务：
+**第一步：Git Clone**
 
-  
+· git clone [https://github.com/Reactive-Network/reactive-smart-contract-demos.git](https://github.com/Reactive-Network/reactive-smart-contract-demos.git)
+
+· git clone --recurse-submodules [https://github.com/Reactive-Network/reactive-smart-contract-demos.git](https://github.com/Reactive-Network/reactive-smart-contract-demos.git)
+
+· cd reactive-smart-contract-demos
+
+**第二步：Foundry Environment**
+
+· curl -L [https://foundry.paradigm.xyz](https://foundry.paradigm.xyz) | bash
+
+source ~/.bashrc
+
+foundryup
+
+[https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main](https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main)
+
+**第三步：Build**
+
+· forge build
+
+[https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/demos/basic](https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/demos/basic)
+
+**第一天任务：**
+
 1\. Origin Contract
 
 · Deployer: 0x2C165514fBF30a120d50540Edabcf88495607142
