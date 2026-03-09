@@ -232,7 +232,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [sweetsky123](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/sweetsky123.md) |   | | | | | | | | | | | | | |
 | [just4zeroq](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/just4zeroq.md) |   | | | | | | | | | | | | | |
 | [Mosssi](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Mosssi.md) |   | | | | | | | | | | | | | |
-| [tofudfy](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/tofudfy.md) |   | | | | | | | | | | | | | |
+| [tofudfy](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/tofudfy.md) | ✅ | | | | | | | | | | | | | |
 | [Wea1her](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Wea1her.md) | ✅ | | | | | | | | | | | | | |
 | [xmhhmx](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/xmhhmx.md) |   | | | | | | | | | | | | | |
 | [jishukuangzi](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/jishukuangzi.md) | ✅ | | | | | | | | | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) |   | | | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) |   | | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
