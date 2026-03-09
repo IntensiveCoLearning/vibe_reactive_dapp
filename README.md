@@ -302,7 +302,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [Duamixu1](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Duamixu1.md) | ⭕️ |   | | | | | | | | | | | | |
 | [qianliFISH](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/qianliFISH.md) | ✅ |   | | | | | | | | | | | | |
 | [RJx233](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/RJx233.md) | ⭕️ |   | | | | | | | | | | | | |
-| [foreverdesmond](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/foreverdesmond.md) | ⭕️ |   | | | | | | | | | | | | |
+| [foreverdesmond](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/foreverdesmond.md) | ⭕️ | ✅ | | | | | | | | | | | | |
 | [SylvanLIUyu](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/SylvanLIUyu.md) | ⭕️ |   | | | | | | | | | | | | |
 | [ViVi-SH](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/ViVi-SH.md) | ✅ |   | | | | | | | | | | | | |
 | [Wwangjinghan](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Wwangjinghan.md) | ⭕️ |   | | | | | | | | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) | ⭕️ |   | | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) | ⭕️ |   | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
