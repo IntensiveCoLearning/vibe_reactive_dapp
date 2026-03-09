@@ -288,7 +288,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [ghostin1024](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/ghostin1024.md) |   | | | | | | | | | | | | | |
 | [yedeyu](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yedeyu.md) |   | | | | | | | | | | | | | |
 | [finish-blip](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/finish-blip.md) |   | | | | | | | | | | | | | |
-| [drinkingmorewater](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/drinkingmorewater.md) |   | | | | | | | | | | | | | |
+| [drinkingmorewater](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/drinkingmorewater.md) | ✅ | | | | | | | | | | | | | |
 | [barryxu-0410](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/barryxu-0410.md) |   | | | | | | | | | | | | | |
 | [Susie-beep](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Susie-beep.md) |   | | | | | | | | | | | | | |
 | [wodeche](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/wodeche.md) |   | | | | | | | | | | | | | |
@@ -405,6 +405,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [Abcrypto100](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Abcrypto100.md) |   | | | | | | | | | | | | | |
 | [Mugeng-su](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Mugeng-su.md) |   | | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
