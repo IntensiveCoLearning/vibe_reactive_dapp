@@ -15,8 +15,14 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+## **How RCs Differ from Traditional Smart Contracts**
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 ## 睿应层（Reactive Network）与传统 EVM 的区别
 
 ### 交互模式：被动（Passive）vs 主动（Reactive）
