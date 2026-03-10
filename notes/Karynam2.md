@@ -15,8 +15,23 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+# 3.9—3.10两场会议总结
+
+1.  🧘集中精力看着自己脚下的路走，不要分心左顾右盼（不是让你闭门造车/与世隔绝的意思，重点是强调集中精力在解决问题是，精力是一种有限且珍贵的资源，每天是定量供应的，不要浪费它）保持对外界的信息的觉知度，看事情尽量抓本质（是什么东西What，什么原因Why, 具体有什么用Value，怎么样我能用上How，碰上具体什么问题？然后厚着脸皮去问，不管问题是否能完满解决，至少训练了自己的脸皮（褒义））
+    
+2.  感想：先做作业，有问题提前总结出来，晚上七点Co-Learning统一提问解决
+    
+3.  自学大于上课学（当然规律地上课有利于倒逼自学，两者相辅相成）目前这种有社群地自学更好，有问题可以直接解决
+    
+
+![cdb80358d738bfff965550265daa451c.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Karynam2/images/2026-03-10-1773156376438-cdb80358d738bfff965550265daa451c.png)![10cfa83e24141b649342aad692aef2ea.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Karynam2/images/2026-03-10-1773156262566-10cfa83e24141b649342aad692aef2ea.png)
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 # 1️⃣“挑战1”  
 构建一个跨链事件与回调合约
 
