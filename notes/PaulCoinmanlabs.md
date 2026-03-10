@@ -15,8 +15,16 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+-   深入学习reactive的理论知识
+    
+-   构思自己的reactive的demo
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 **1.学习Reacitve相关的理论知识，比如主网配置、测试TOKEN的获取**
 
 -   直接跟合约交互（向合约发送Sepolia的ETH获取即可）：0x9b9BB25f1A81078C544C829c5EB7822d747Cf434
