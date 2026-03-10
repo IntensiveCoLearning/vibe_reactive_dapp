@@ -15,8 +15,43 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+# Summary of Reactive Contracts Lessons 1-2
+
+**Reactive Contracts (RCs)** represent a paradigm shift in blockchain automation. Unlike traditional smart contracts that passively wait for external transactions, RCs actively monitor blockchains for specified events and autonomously execute predefined actions in response.
+
+## Core Concepts
+
+The fundamental difference lies in **Inversion of Control (IoC)**. Traditional contracts require external actors—users or bots—to initiate execution. RCs flip this model: they independently decide when to execute based on detected events. This eliminates the need for centralized intermediaries holding private keys and signing transactions, enabling fully decentralized automation.
+
+RCs operate by continuously monitoring specified blockchain addresses for events of interest—transfers, swaps, oracle updates, or any smart contract activity. When a matching event occurs, the RC's `react()` method is automatically triggered. RCs are stateful, allowing them to accumulate historical data and respond when conditions are met.
+
+## Technical Implementation
+
+RCs implement the `IReactive` interface, which receives event data through `LogRecord` structures containing chain ID, contract address, indexed topics, and transaction details. The RC processes this data and can emit `Callback` events to initiate transactions on destination chains, enabling cross-chain functionality.
+
+## Practical Applications
+
+RCs enable diverse use cases:
+
+-   **Oracle Data Aggregation**: Combining data from multiple oracles across chains for precise, decentralized information
+    
+-   **UniSwap Stop Orders**: Monitoring pool prices to execute trades trustlessly
+    
+-   **DEX Arbitrage**: Detecting price discrepancies across pools and executing arbitrage automatically
+    
+-   **Liquidity Pool Rebalancing**: Automatically managing assets across multiple exchanges
+    
+
+## Key Advantage
+
+By shifting from centralized bots to decentralized automation, RCs provide faster, more reliable, and trustless execution while maintaining full transparency—both inputs and outputs remain on-chain, creating more dynamic and responsive blockchain applications.
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 # 1\. What Reactive Contracts Are
 
 **Reactive Contracts (RCs)** are a new type of smart contract designed to **automatically respond to blockchain events** without requiring a user transaction to trigger them.
