@@ -66,13 +66,14 @@ Polygon transaction
 
 # 3.10
 
-![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-10-1773156164752-image.png)
+![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-10-1773157873570-image.png)
 
 -   最困难的居然是空钱包搞到Base sepolia ETH，试了挺多只有这个桥接的能用[https://superbridge.app/base-sepolia](https://superbridge.app/base-sepolia)
 <!-- DAILY_CHECKIN_2026-03-10_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 # 传统 Solidity 智能合约的问题
 
