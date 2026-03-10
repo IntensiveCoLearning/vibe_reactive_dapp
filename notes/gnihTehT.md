@@ -15,8 +15,70 @@ shadowdoge，web3新人
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+# 为什么你 deploy 会 revert
+
+关键在这个逻辑：
+
+```
+if (!vm) {
+    service.subscribe(...)
+}
+```
+
+`vm` 是 Reactive 用来区分：
+
+```
+ReactVM
+vs
+普通 EVM
+```
+
+Reactive lib 会通过：
+
+```
+extcodesize(system contract)
+```
+
+检测运行环境。
+
+如果不是 ReactVM：
+
+```
+vm = false
+```
+
+于是 constructor 会调用：
+
+```
+service.subscribe()
+```
+
+但你当前 RPC：
+
+```
+https://lasna-rpc.rnk.dev
+```
+
+**并没有 system contract**
+
+所以：
+
+```
+subscribe() call → revert
+```
+
+这就是你遇到的：
+
+```
+execution reverted
+```
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 **Reactive Network Demo 的核心逻辑是一个跨链的“监听-触发”机制。**
 
 这个 Demo 流程展示了从用户在源链（Origin Chain）发起交易，到响应网络（Reactive Network）处理，最后在目标链（Destination Chain）执行回调的完整闭环。
