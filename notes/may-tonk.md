@@ -17,13 +17,9 @@ Let’s vibe Reactive dApp
 <!-- Content_START -->
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
-# _采用ai做了两关于reactive contract的理解和一些问题的分析_
+# _采用AI做了两关于reactive contract的理解和一些问题的分析_
 
-[Reactive Contract 理解框架](http://127.0.0.1:5500/html_study/reactive_contract_image.html/first_frame.html)
-
-[Reactive Contract 触发演示](http://127.0.0.1:5500/html_study/reactive_contract_image.html/third_reactive_fame.html)
-
-[Reactive\_Contract代码样式分析](http://127.0.0.1:5500/html_study/reactive_contract_image.html/second_reactiveframe.html)
+(完整网站明天补上）
 
 # Reactive Contract三个合约大白话解释
 
@@ -69,9 +65,7 @@ ReactiveContract 在 Lasna 上 24小时值班
 
 * * *
 
-## 回答你的问题
-
-**Reactive VM 地址是什么？**
+## **Reactive VM 地址是什么？**
 
 就是**门卫的工牌**。
 
@@ -308,6 +302,7 @@ L1Callback 开门之前要检查：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 # 一、Reactive Contract 是什么
 
