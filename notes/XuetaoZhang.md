@@ -15,8 +15,22 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+今日完成：
+
+1、睿应层（Reactive Network）官网 Overview学习完成；
+
+2、Reactive Contracts 文档学习到Lesson 3；
+
+今日感想：
+
+1、到现在还是只知道概念，无法实际操作，基础太弱有点无从下手的感觉；
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 今日完成：
 
 1、[http://reactive.network](http://reactive.network)官网overview和文档查看学习完成50%，测试网eth操作转换REACT代币，了解整个reactive.network的作用框架等等；
