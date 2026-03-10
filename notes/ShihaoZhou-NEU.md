@@ -15,8 +15,18 @@ Reactive 探索者
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+## 学习计划
+
+1.  学习：[https://dev.reactive.network/education/module-1/reactive-contracts](https://dev.reactive.network/education/module-1/reactive-contracts)
+    
+2.  看一下 Workshop 视频
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 # **Overview**
 
 > 事件发生在一条链上，而驱动这些事件的逻辑却存在于另一条链上。标准合约无法弥合这种鸿沟。
