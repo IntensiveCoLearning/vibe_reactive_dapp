@@ -381,7 +381,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [gitgdut](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/gitgdut.md) | ✅ | ✅ | | | | | | | | | | | | |
 | [YuChanGongzhu](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/YuChanGongzhu.md) | ⭕️ |   | | | | | | | | | | | | |
 | [a0905087259-sketch](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/a0905087259-sketch.md) | ⭕️ |   | | | | | | | | | | | | |
-| [Jack-OuCJ](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Jack-OuCJ.md) | ✅ |   | | | | | | | | | | | | |
+| [Jack-OuCJ](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Jack-OuCJ.md) | ✅ | ✅ | | | | | | | | | | | | |
 | [NinaChow09](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/NinaChow09.md) | ⭕️ |   | | | | | | | | | | | | |
 | [wanghanyu0120](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/wanghanyu0120.md) | ✅ | ✅ | | | | | | | | | | | | |
 | [Yuntwo](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Yuntwo.md) | ⭕️ |   | | | | | | | | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) | ⭕️ |   | | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) | ⭕️ |   | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
