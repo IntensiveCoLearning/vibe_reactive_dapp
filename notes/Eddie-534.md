@@ -15,8 +15,16 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+26.3.10 今天部署了三个合约，连接了 reactive lasna 网络，明天将会触发并验证跨链回调。  
+
+![屏幕截图 2026-03-10 233540.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Eddie-534/images/2026-03-10-1773157153639-_____2026-03-10_233540.png)
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 26.3.9 今天对 reactive network 进行学习和理解：
 
 1\. Reactive Network 与传统EVM的根本区别
