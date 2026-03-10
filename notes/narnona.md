@@ -15,8 +15,61 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+## Reactive Network 存储查询不一致 (RNK vs RVM)
+
+### **1\. 背景信息**
+
+-   **网络**: Reactive Lasna Testnet
+    
+-   **合约地址**: [0xc1aa02EE5fAD3973Ff7F9B861AAeFC65A7Df07b2](https://lasna.reactscan.net/address/0x6af9d10d222b356ca61837629c89e4124461ad70/contract/0xc1aa02ee5fad3973ff7f9b861aaefc65a7df07b2)
+    
+-   **目标变量**: `number` (位于 Storage **Slot 0**)
+    
+-   **操作**: 已执行 `setNumber(666)` 交易 ([0x541f40…](https://lasna.reactscan.net/tx/0x541f40f25bc3823821abc2d6672645cb329dc6c21c2cb1e5f9a47cd3f99211dd))
+    
+
+* * *
+
+### **2\. 现象描述**
+
+### **现象 A：通过标准 RPC 调用 (正常)**
+
+使用 `cast call` 查询合约状态，能够正确返回设置的值。 **命令**: `cast call 0xc1aa02EE5fAD3973Ff7F9B861AAeFC65A7Df07b2 "getNumber()(uint256)" --rpc-url <https://lasna-rpc.rnk.dev/`\> **结果**: `666` ✅
+
+### **现象 B：通过** `rnk_getStorageAt` **查询 (异常)**
+
+使用 Reactive 特有的 RVM 存储查询接口，返回值为全零。接口文档：[https://dev.reactive.network/rnk-rpc-methods#rnk\_getstorageat](https://dev.reactive.network/rnk-rpc-methods#rnk_getstorageat) **命令**:
+
+```bash
+curl --location '<https://lasna-rpc.rnk.dev/>' \\
+--header 'Content-Type: application/json' \\
+--data '{
+  "jsonrpc": "2.0",
+  "method": "rnk_getStorageAt",
+  "params": [
+    "0x6aF9D10d222b356CA61837629C89E4124461AD70",
+    "0xc1aa02EE5fAD3973Ff7F9B861AAeFC65A7Df07b2",
+    "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "latest"
+  ],
+  "id": 1
+}' | jq
+```
+
+**结果**: `"result": "0x0000000000000000000000000000000000000000000000000000000000000000"`
+
+* * *
+
+### **3\. 结论**
+
+在 **RNK (Reactive Network)** 层面，合约状态已更新为 `666`；但在 **RVM (ReactVM)** 存储层，同一合约地址在相同 Slot 下的值仍为 `0`。
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 学习了reactive智能合约的编写，并尝试编写一个跨链传输的demo。
 
 每个链可以部署一个MsgNode合约：
