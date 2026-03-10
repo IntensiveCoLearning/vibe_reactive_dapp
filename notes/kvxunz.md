@@ -1,5 +1,5 @@
 ---
-timezone: UTC+8
+timezone: UTC+0
 ---
 
 # kvuxnz
@@ -10,7 +10,7 @@ timezone: UTC+8
 
 ## Self-introduction
 
-Let’s vibe Reactive dApp
+Web3 实习计划 2025 冬季实习生
 
 ## Notes
 
