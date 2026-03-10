@@ -351,7 +351,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [haoshidoufasheng-dev](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/haoshidoufasheng-dev.md) | ✅ | ✅ | | | | | | | | | | | | |
 | [xiqing21](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/xiqing21.md) | ⭕️ |   | | | | | | | | | | | | |
 | [Kwong-WJTECH](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Kwong-WJTECH.md) | ✅ | ✅ | | | | | | | | | | | | |
-| [ershisihuasheng2003](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/ershisihuasheng2003.md) | ✅ |   | | | | | | | | | | | | |
+| [ershisihuasheng2003](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/ershisihuasheng2003.md) | ✅ | ✅ | | | | | | | | | | | | |
 | [irinaguo](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/irinaguo.md) | ✅ |   | | | | | | | | | | | | |
 | [FSDSCCEVVS](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/FSDSCCEVVS.md) | ✅ | ✅ | | | | | | | | | | | | |
 | [XiaoHai67890](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/XiaoHai67890.md) | ✅ | ✅ | | | | | | | | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) | ⭕️ |   | | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) | ⭕️ |   | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
