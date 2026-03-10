@@ -15,8 +15,109 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+# Basic Demo 实操
+
+## Basic Demo 三个合约详解与流程合约角色
+
+### 1、Origin Contract（BasicDemoL1Contract）
+
+-   receive()：收到 ETH → emit Received(origin, sender, value) → 退回 ETH
+    
+-   作用：事件触发器
+    
+
+### 2、Reactive Contract（BasicDemoReactiveContract）
+
+-   constructor：调用 subscribe() 订阅源链 Received 事件（topic\_0 固定）
+    
+-   react()：收到 log → if value ≥ 0.001 ETH → emit Callback（payload 编码 callback(address)）
+    
+-   作用：大脑 + 反应逻辑
+    
+
+### 3、Destination Callback（BasicDemoL1Callback）
+
+-   继承 AbstractCallback
+    
+-   callback(sender)：验证 authorizedSenderOnly + rvmIdOnly → emit CallbackReceived
+    
+-   作用：跨链接收端 + 授权验证
+    
+
+测试命令完整流程（cast send 0.001 ETH）
+
+1.  转 0.001 ETH → Origin receive() 触发
+    
+2.  emit Received + 立即退回 ETH
+    
+3.  Reactive 扫描 → 调用 react()
+    
+4.  条件成立 → emit Callback（替换 sender 为 ReactVM ID）
+    
+5.  系统跨链 → Proxy 调用 Destination callback()
+    
+6.  Destination emit CallbackReceived（证明成功）
+    
+
+浏览器可见标志：
+
+-   源链：Received 事件 + ETH 转入/退回
+    
+-   目标链：CallbackReceived 事件 + 来自 Proxy 的调用交易
+    
+
+## 一些概念
+
+### **1\. 事件Topic**
+
+-   **topic\_0**: 事件签名哈希（常数，如`Received`事件的hash）
+    
+-   **topic\_1-3**: indexed参数的值
+    
+    text
+    
+    ```
+    event Received(origin, sender, value)
+    topic_1 = origin地址
+    topic_2 = sender地址  
+    topic_3 = value金额
+    ```
+    
+
+### **2\. rvmIdOnly修饰器**
+
+solidity
+
+```
+// 特性：
+- 自动验证调用者是Reactive VM
+- 自动替换sender参数为真实Reactive合约地址
+- 安全机制，防止伪造
+
+// 效果：
+你传入：address(0) 或 0x1234...
+实际收到：你的Reactive合约真实地址
+```
+
+### **3\. 订阅函数**
+
+```
+function subscribe(
+    uint256 chain_id,           // 要监听的链ID
+    address contract_address,   // 要监听的合约地址
+    uint256 topic_0,            // 事件签名哈希（必填）
+    uint256 topic_1,            // 第一个indexed参数的过滤值
+    uint256 topic_2,            // 第二个indexed参数的过滤值
+    uint256 topic_3             // 第三个indexed参数的过滤值
+) external;
+```
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 ## **什么是睿应层（Reactive Network）**
 
 **Reactive Network**是一个兼容 EVM 的链**，**引入了一种全新的合约类型，叫**Reactive Contracts，RC** 与传统智能合约的主要区别在于反应性。**传统智能合约**是**被动的，**等待别人调用函数去执行，而**RC**是主动的**，**可以主动监听事件，自动触发。
