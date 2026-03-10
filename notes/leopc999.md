@@ -15,8 +15,59 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+# **Basic Reactive Demo：理解“监听-反应”闭环**
+
+这个 Demo 是 Reactive 的 "Hello World"。流程很简单：在 Sepolia 上转账 -> Reactive 监听到 -> 自动通知 Sepolia 上的回调合约。
+
+**部署流程速览**
+
+1.  **Origin (Sepolia)**: 部署 BasicDemoL1Contract。这是被监听的对象。
+    
+2.  **Destination (Sepolia)**: 部署 BasicDemoL1Callback。这是接收通知的对象。
+    
+3.  **Reactive (Reactive Lasna)**: 部署监听合约，连接 Origin 和 Destination。
+    
+4.  **触发测试**: 向 Origin 转账 > 0.001 ETH。
+    
+
+**具体执行命令**
+
+**Step 1**：部署源链合约 (Origin) 负责接收转账并发出事件。
+
+```bash
+forge create --broadcast --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY src/demos/basic/BasicDemoL1Contract.sol:BasicDemoL1Contract
+```
+
+**Deployed to:** **0x1fe40FbA975c1B0f8069737dB32B4b74C6dD01F8**
+
+**Step 2**：部署目标链合约 (Destination) 负责接收回调。这里预充值 0.001 ETH 是为了模拟支付 Relayer 的 Gas 费。
+
+```bash
+forge create --rpc-url $SEPOLIA_RPC --private-key $PRIVATE_KEY src/demos/basic/BasicDemoL1Callback.sol:BasicDemoL1Callback --value 0.001ether --constructor-args $DESTINATION_CALLBACK_PROXY_ADDR
+```
+
+**Deployed to:** **0xf2Dd031f9a732a3f6e3097bB626eAA9627cDE4cc**
+
+**Step 3**：部署反应式合约 (Reactive) 连接 Origin 和 Destination。注意中间的长 Hash 是 Received 事件的 Topic 0。
+
+```bash
+forge create --rpc-url $REACTIVE_RPC --private-key $PRIVATE_KEY src/demos/basic/BasicDemoReactiveContract.sol:BasicDemoReactiveContract --value 0.001ether --constructor-args $SYSTEM_CONTRACT_ADDR $ORIGIN_CHAIN_ID $DESTINATION_CHAIN_ID $ORIGIN_ADDR 0x8cabf31d2b1b11ba52dbb302817a3c9c83e4b2a5194d35121ab1354d69f6a4cb $CALLBACK_ADDR
+```
+
+**Step 4**：触发与验证 向 Origin 合约转账 **0.0015 ETH**（大于代码要求的 0.001 ETH）。
+
+```bash
+cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY --value 0.0015ether
+```
+
+**Trigger Tx Hash:** _0xe002ce016018c9387aa5444634eaded33801d30f0175b994cd97d0ec40b14567_ **结果**: 几分钟后，在 Sepolia Etherscan 查看 Callback 合约，成功收到 CallbackReceived 事件。
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 # **我所理解的睿应层（Reactive Network）**
 
 对于刚入门的初级技术开发来说，可以将睿应层理解为区块链世界的**“自动化触发器”或“智能中枢”**。
