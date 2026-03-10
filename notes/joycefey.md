@@ -15,8 +15,14 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+Reative是实现自动化响应的，但不能因此去追求极致的低延迟，所以针对高频交易的defi项目还是有风险。
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 传统的 EVM只有当用户连上钱包，花 Gas 费才会被动地计算。而 Reactive Network 会主动监听源链上的信息，信息触发后就能自动执行。所以Reactive适合解决跨链自动化执行的相关问题。
 <!-- DAILY_CHECKIN_2026-03-09_END -->
 <!-- Content_END -->
