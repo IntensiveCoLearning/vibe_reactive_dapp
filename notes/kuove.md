@@ -15,8 +15,39 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+Reactive Network 的核心本质是：**它不是在处理“状态”，而是在处理“状态的增量（Events）”。**
+
+* * *
+
+### 1\. 核心架构：Reactive Node 的运作逻辑
+
+传统的区块链节点只验证交易，而 Reactive 节点（Reactive Nodes）在运行 **ReactVM**，它的工作流程分为三个阶段：
+
+-   **捕获阶段 (Capture):** 节点通过低延迟的索引器（Indexer）实时监听源链（如 Ethereum, BSC）的事件日志。
+    
+-   **计算阶段 (Compute):** 触发 Reactive Smart Contract (RSC)。这里不只是简单的 `if-else`，RSC 拥有自己的状态存储，可以根据历史事件进行复杂逻辑计算。
+    
+-   **输出阶段 (Output):** 根据计算结果，RSC 生成一个 **Outbound Transaction**。这个交易通过跨链中继发送回目标链。
+    
+
+* * *
+
+### 2\. 深度特性：Reactive Smart Contracts (RSC)
+
+RSC 与普通的 Solidity 合约在编写逻辑上有显著区别。在 Reactive Network 上，合约通常需要实现 `IReactive` 接口：
+
+-   **订阅机制 (**`subscribe`**):** 合约在构造时会指定它要“听”谁。比如：监听 Uniswap V3 在以太坊上的所有 `Swap` 事件。
+    
+-   **原子性与异步性:** RSC 的执行在 Reactive 网络上是原子的，但它对外部链的影响是异步的（通过回调）。
+    
+-   **无 Gas 消耗的监听:** 用户不需要为“监听”支付 Gas，只有当 RSC 逻辑触发并向主链发送回调交易时，才需要支付目标链的 Gas。
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 # Reative NetWork
 
 ### 1\. 核心定义：什么是 Reactive Network？
