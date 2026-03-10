@@ -15,8 +15,254 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+Solidity 语法基础
+
+一、开头必须写：版本声明
+
+所有合约第一行固定写法，指定编译器版本：
+
+// 表示使用 0.8.20 及以上版本
+
+pragma solidity ^0.8.20;
+
+\-–
+
+二、合约结构（固定骨架）
+
+一个合约 = 一个 `contract`，所有代码都写在里面：
+
+pragma solidity ^0.8.20;
+
+// 合约定义
+
+contract MyContract {
+
+// 这里写变量、函数
+
+}
+
+三、变量与数据类型（必背）
+
+1\. 值类型（最常用）
+
+// 1. 无符号整数（正数，用得最多）
+
+uint256 public a = 100;
+
+// 2. 布尔值
+
+bool public isTrue = true;
+
+// 3. 地址类型（钱包/合约地址）
+
+address public myWallet = 0x1234567890123456789012345678901234567890;
+
+// 4. 字符串
+
+string public name = “Reactive”;
+
+// 5. 定长字节（存哈希、数据）
+
+bytes32 public b32 = “hello”;
+
+2\. 引用类型
+
+// 数组
+
+uint256\[\] public nums = \[1,2,3\];
+
+// 映射（键值对，最重要！）
+
+mapping(address => uint256) public balance;
+
+四、变量作用域（必须懂）
+
+1\. 状态变量（存在区块链上）
+
+写在合约内、函数外，\*\*永久存储\*\*，需要消耗 Gas：
+
+contract Test {
+
+uint256 public count = 0; // 状态变量
+
+}
+
+2\. 局部变量（函数内临时用）
+
+只在函数运行时存在，\*\*不存链上，不花 Gas\*\*：
+
+function test() public pure {
+
+uint256 x = 10; // 局部变量
+
+}
+
+五、函数语法（核心中的核心）
+
+1\. 函数基本格式
+
+function 函数名(参数) 权限修饰符 返回值 {
+
+// 代码
+
+}
+
+2\. 最常用 4 种修饰符
+
+\- **public**：任何人都能调用
+
+\- **view**：只读数据，\*\*不花 Gas\*\*
+
+\- **pure**：纯计算，不读不改数据
+
+\- **private**：只有合约内部能调用
+
+3\. 常见函数示例
+
+// 只读函数（view）
+
+function getNum() public view returns(uint256) {
+
+return count;
+
+}
+
+// 修改数据函数
+
+function setNum(uint256 \_num) public {
+
+count = \_num;
+
+}
+
+// 纯计算函数（pure）
+
+function add(uint256 x, uint256 y) public pure returns(uint256) {
+
+return x + y;
+
+}
+
+六、流程控制：if / for
+
+1\. 判断语句 if
+
+function check(uint256 x) public pure returns(bool) {
+
+if(x > 10) {
+
+return true;
+
+} else {
+
+return false;
+
+}
+
+}
+
+2\. 循环语句 for
+
+function sum() public pure returns(uint256) {
+
+uint256 s = 0;
+
+for(uint256 i=0; i<10; i++) {
+
+s += i;
+
+}
+
+return s;
+
+}
+
+七、映射 Mapping（区块链必备）
+
+用来存“地址 → 数值”，比如余额、权限：
+
+// 定义：key 是 address，value 是 uint256
+
+mapping(address => uint256) public userBalance;
+
+// 赋值
+
+userBalance\[msg.sender\] = 1000;
+
+// 取值
+
+uint256 bal = userBalance\[msg.sender\];
+
+八、内置关键字（常用）
+
+\- **msg.sender**：调用合约的\*\*当前钱包地址\*\*
+
+\- **msg.value**：发送的 ETH 数量
+
+\- **this**：当前合约
+
+\- **require**：条件判断，不满足就报错回滚
+
+// 必须满足条件才能继续执行
+
+function withdraw(uint256 amount) public {
+
+require(amount <= 100, “金额不能超过100”);
+
+}
+
+九、完整极简示例（背）
+
+pragma solidity ^0.8.20;
+
+contract SimpleDemo {
+
+uint256 public number;
+
+function setNumber(uint256 \_num) public {
+
+number = \_num;
+
+}
+
+function getNumber() public view returns(uint256) {
+
+return number;
+
+}
+
+function add(uint256 x) public view returns(uint256) {
+
+return number + x;
+
+}
+
+}
+
+🎯 语法速记口诀
+
+版本声明第一行
+
+合约结构大括号
+
+状态变量存链上
+
+view只读不花gas
+
+public调用最常用
+
+mapping键值存数据
+
+if判断for循环
+
+require做校验
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 反应式智能合约：解锁Web3自动化新范式——Ivan Ivanskitiy深度访谈解读
 
 在区块链技术不断演进的今天，智能合约作为Web3世界的核心构建模块，正面临着从“被动响应”到“主动执行”的范式转型。近日，Reactive Network的开发者兼负责人Ivan Ivanskitiy分享了对反应式智能合约的深度思考，从技术定位、风险控制到生态布局，全面揭示了这一创新方向的潜力与挑战。
