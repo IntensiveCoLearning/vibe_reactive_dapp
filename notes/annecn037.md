@@ -15,8 +15,186 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+**ReactVM** 是 Reactive Network 的专用执行引擎，为 Reactive Contracts 提供隔离、确定性的运行环境，使其能够安全地监听和响应跨链事件；Reactive Network 作为**底层基础设施**，通过这一架构实现了智能合约从**"被动调用"**到"**主动反应"**的范式转变。  
+  
+**核心概念：双状态环境（Dual-State Environment）**
+
+### **1\. 基本架构**
+
+**表格**
+
+| 环境 | 特性 | 功能 |
+| --- | --- | --- |
+| Reactive Network | 标准 EVM 区块链 + 系统合约 | 订阅/取消订阅源链事件、用户交互 |
+| ReactVM | 隔离的受限虚拟机 | 事件处理、业务逻辑执行、发起回调 |
+
+**关键设计决策**：每个部署地址拥有独立的 ReactVM，实现并行化处理以支持大规模事件处理。
+
+* * *
+
+### **2\. 执行上下文检测机制**
+
+`detectVm()` **函数原理**
+
+**solidity**
+
+复制
+
+```solidity
+function detectVm() internal {
+    uint256 size;
+    assembly { size := extcodesize(0x0000000000000000000000000000000000fffFfF) }
+    vm = size == 0;  // true = ReactVM, false = Reactive Network
+}
+```
+
+**表格**
+
+| 检测结果 | 含义 | vm 值 |
+| --- | --- | --- |
+| size > 0 | 系统合约存在 → Reactive Network | false |
+| size == 0 | 无系统合约 → ReactVM | true |
+
+**环境限制修饰符**
+
+**solidity**
+
+复制
+
+```solidity
+modifier rnOnly() { require(!vm, 'Reactive Network only'); _; }
+modifier vmOnly()  { require(vm,  'VM only'); _; }
+```
+
+* * *
+
+### **3\. 双状态变量管理**
+
+**变量分离模式**
+
+**表格**
+
+| 状态 | 变量来源 | 典型用途 |
+| --- | --- | --- |
+| Reactive Network 变量 | 继承自 AbstractReactive | service（订阅服务）、vm（环境标志） |
+| ReactVM 变量 | 合约自身声明 | 业务逻辑状态（如 triggered, threshold） |
+
+**实例：Uniswap 止损订单合约**
+
+**Reactive Network 专用逻辑**（构造函数中）：
+
+**solidity**
+
+复制
+
+```solidity
+if (!vm) {
+    service.subscribe(SEPOLIA_CHAIN_ID, pair, UNISWAP_V2_SYNC_TOPIC_0, ...);
+    service.subscribe(SEPOLIA_CHAIN_ID, stop_order, STOP_ORDER_STOP_TOPIC_0, ...);
+}
+```
+
+**ReactVM 专用变量**：
+
+**solidity**
+
+复制
+
+```solidity
+bool private triggered;      // 防止重复回调
+bool private done;           // 最终停止信号
+address private pair;        // 交易对地址
+uint256 private threshold;   // 触发阈值
+```
+
+**ReactVM 专用函数**：
+
+**solidity**
+
+复制
+
+```solidity
+function react(LogRecord calldata log) external vmOnly {
+    // 处理 Sync 事件，检查阈值，emit Callback
+}
+```
+
+* * *
+
+### **4\. 交易执行流程对比**
+
+**Reactive Network 交易**
+
+**表格**
+
+| 触发方式 | 说明 | 示例 |
+| --- | --- | --- |
+| 用户直接调用 | 管理功能、状态更新 | pause() / resume() |
+| 源链事件触发 | 监听并分发事件到订阅者 | 自动 dispatch 到 ReactVM |
+
+`pause()` **函数要点**：
+
+-   `rnOnly` + `onlyOwner` 双重限制
+    
+-   遍历取消所有可暂停订阅
+    
+-   设置 `paused = true` 状态标志
+    
+
+**ReactVM 交易**
+
+**plain**
+
+复制
+
+```plain
+源链事件 → Reactive Network 监听 → 分发到 ReactVM → 自动调用 react()
+```
+
+**核心特征**：
+
+-   ❌ 用户无法直接调用
+    
+-   ✅ 仅由系统通过事件触发
+    
+-   `react()` 函数输出：状态更新 + 跨链回调（`emit Callback(...)`）
+    
+
+* * *
+
+### **5\. 关键设计原则总结**
+
+**表格**
+
+| 原则 | 实现方式 |
+| --- | --- |
+| 环境隔离 | 同一合约代码，两个独立状态存储 |
+| 权限控制 | rnOnly/vmOnly 修饰符确保函数在正确环境执行 |
+| 并行处理 | 每地址独立 ReactVM，避免事件处理瓶颈 |
+| 事件驱动 | ReactVM 完全依赖事件输入，无外部直接调用 |
+
+* * *
+
+### **6\. 开发要点 checklist**
+
+-   \[ \] 继承 `AbstractReactive` 获取基础功能
+    
+-   \[ \] 构造函数中区分 `if (!vm)` 进行订阅注册
+    
+-   \[ \] 业务逻辑函数标记 `vmOnly`
+    
+-   \[ \] 管理函数标记 `rnOnly` + `onlyOwner`
+    
+-   \[ \] 明确分离两种状态的变量用途
+    
+-   \[ \] `react()` 函数处理事件并触发回调
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 ## **Reactive Network 生态系统笔记**
 
 ### **一、项目定位**
