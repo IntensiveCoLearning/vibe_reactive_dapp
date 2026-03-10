@@ -397,7 +397,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [L19711221-debug](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/L19711221-debug.md) | ⭕️ |   | | | | | | | | | | | | |
 | [big-dudu-mosty](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/big-dudu-mosty.md) | ⭕️ |   | | | | | | | | | | | | |
 | [qiaopengjun5162](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/qiaopengjun5162.md) | ⭕️ |   | | | | | | | | | | | | |
-| [fuujiro](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/fuujiro.md) | ✅ |   | | | | | | | | | | | | |
+| [fuujiro](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/fuujiro.md) | ✅ | ✅ | | | | | | | | | | | | |
 | [Archsoos](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Archsoos.md) | ⭕️ |   | | | | | | | | | | | | |
 | [xxy666-nb](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/xxy666-nb.md) | ⭕️ |   | | | | | | | | | | | | |
 | [hu-Angie](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/hu-Angie.md) | ⭕️ |   | | | | | | | | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) | ⭕️ |   | | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) | ⭕️ |   | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
