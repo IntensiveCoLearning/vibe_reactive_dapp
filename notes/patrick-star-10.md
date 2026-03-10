@@ -15,8 +15,14 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-10
+<!-- DAILY_CHECKIN_2026-03-10_START -->
+# **今天完成了第一个挑战任务**
+<!-- DAILY_CHECKIN_2026-03-10_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 # 今日学习内容
 
 1.  **学习了 Reactive Network 的跨链事件与回调机制。**
