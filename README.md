@@ -261,7 +261,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [zk1047740032](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/zk1047740032.md) | ✅ |   | | | | | | | | | | | | |
 | [zhibo7060-gif](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/zhibo7060-gif.md) | ⭕️ |   | | | | | | | | | | | | |
 | [XuetaoZhang](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/XuetaoZhang.md) | ✅ |   | | | | | | | | | | | | |
-| [bonujel](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/bonujel.md) | ✅ |   | | | | | | | | | | | | |
+| [bonujel](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/bonujel.md) | ✅ | ✅ | | | | | | | | | | | | |
 | [cxh993505935-sys](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/cxh993505935-sys.md) | ⭕️ |   | | | | | | | | | | | | |
 | [kachrel](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/kachrel.md) | ⭕️ |   | | | | | | | | | | | | |
 | [FairyTaleBliss](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/FairyTaleBliss.md) | ✅ |   | | | | | | | | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) | ⭕️ |   | | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) | ⭕️ |   | | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
