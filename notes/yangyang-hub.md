@@ -78,10 +78,214 @@ Let’s vibe Reactive dApp
 -   **跨链互通：** 原生支持跨多个 EVM 兼容链的事件编排。
     
 -   **高效可靠：** 减少人工干预带来的延迟和安全风险。
+    
+
+# Events 与 Callbacks
+
+## 1\. Events（事件）
+
+在 **Ethereum** 中，**Event** 用于让智能合约向链外传递信息。
+
+特点：
+
+-   写入 **transaction logs**
+    
+-   **不会改变区块链状态**
+    
+-   可以被 **dApp / 后端监听**
+    
+-   EVM 会对 event 进行 **索引**
+    
+
+常见用途：
+
+-   监听 Token Transfer
+    
+-   监听价格变化（Oracle）
+    
+-   监听合约状态更新
+    
+
+* * *
+
+## 2\. 定义与触发 Event
+
+### 定义 Event
+
+```
+event PriceUpdated(string symbol, uint256 newPrice);
+```
+
+### 触发 Event
+
+```
+emit PriceUpdated("ETH", newEthPrice);
+```
+
+触发后：
+
+```
+Smart Contract
+      ↓
+Transaction Log
+      ↓
+dApp / Backend 监听
+```
+
+* * *
+
+## 3\. Oracle 示例
+
+使用 **Chainlink** 获取价格：
+
+```
+Chainlink Oracle
+      ↓
+Smart Contract 更新价格
+      ↓
+emit PriceUpdated
+      ↓
+dApp / Reactive Contract 监听
+```
+
+* * *
+
+# 4\. Reactive Contracts 处理事件
+
+Reactive Contracts 必须实现 `IReactive` 接口。
+
+核心方法：
+
+```
+function react(LogRecord calldata log) external;
+```
+
+作用：
+
+```
+Event
+   ↓
+Reactive Network 监听
+   ↓
+调用 react(log)
+   ↓
+执行合约逻辑
+```
+
+* * *
+
+## LogRecord 结构
+
+事件信息会被打包为：
+
+```
+struct LogRecord {
+    uint256 chain_id;
+    address _contract;
+    uint256 topic_0;
+    uint256 topic_1;
+    uint256 topic_2;
+    uint256 topic_3;
+    bytes data;
+    uint256 block_number;
+    uint256 block_hash;
+    uint256 tx_hash;
+}
+```
+
+包含：
+
+-   来源链
+    
+-   事件合约
+    
+-   topics
+    
+-   数据
+    
+-   block / tx 信息
+    
+
+* * *
+
+# 5\. Callback（跨链回调）
+
+Reactive Contract 可以通过 **Callback** 在其他链执行交易。
+
+### Callback Event
+
+```
+event Callback(
+    uint256 indexed chain_id,
+    address indexed _contract,
+    uint64 indexed gas_limit,
+    bytes payload
+);
+```
+
+参数：
+
+| 参数 | 说明 |
+| --- | --- |
+| chain_id | 目标链 |
+| _contract | 目标合约 |
+| gas_limit | gas 限制 |
+| payload | ABI 编码的函数调用 |
+
+* * *
+
+## 触发 Callback
+
+```
+emit Callback(chain_id, contractAddr, gasLimit, payload);
+```
+
+流程：
+
+```
+Reactive Contract
+      ↓ emit Callback
+Reactive Network
+      ↓
+目标链发送交易
+      ↓
+调用目标合约
+```
+
+* * *
+
+# 6\. 安全机制
+
+Reactive Network 会自动：
+
+-   将 **payload 第一个参数**
+    
+-   替换为 **ReactVM 地址**
+    
+
+所以 callback 函数：
+
+```
+第一个参数 = ReactVM address
+```
+
+* * *
+
+# 7\. 整体流程
+
+```
+1 用户交易
+2 合约 emit Event
+3 Reactive Network 监听
+4 调用 react()
+5 emit Callback
+6 跨链执行交易
+```
 <!-- DAILY_CHECKIN_2026-03-10_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 ## 睿应层（Reactive Network）与传统 EVM 的区别
