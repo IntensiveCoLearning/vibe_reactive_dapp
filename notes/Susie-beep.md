@@ -15,8 +15,14 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+reactive network如何监听特定事件：每一个链上动作，在代码里都有一个对应的“标签名称”。
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 Reactive Network是反应式智能合约（Reactive Smart Contracts, RSCs）
 
 核心是监听链上事件+自动触发逻辑
