@@ -19,6 +19,10 @@ Let’s vibe Reactive dApp
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 # 使用AI演示和分析了reactive contract的工作原理，图片和简单动画演示
 
+[Reactive\_Contract步骤分析](https://may-tonk.github.io/html_may_tonk_web/reactive_contract_image.html/second_reactiveframe.html)
+
+[Reactive\_Contract简单动画演示](https://may-tonk.github.io/html_may_tonk_web/reactive_contract_image.html/third_reactive_fame.html)
+
 [Reactive Contract 完全指南](https://may-tonk.github.io/html_may_tonk_web/reactive_contract_image.html/second_reactiveframe.html)
 
 * * *
@@ -251,6 +255,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 # _采用AI做了两关于reactive contract的理解和一些问题的分析_
 
@@ -537,6 +542,7 @@ L1Callback 开门之前要检查：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
