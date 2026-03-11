@@ -15,8 +15,26 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+今日完成：
+
+1、睿应层（Reactive Network）官网 Overview[https://reactive.network/；](https://reactive.network/)
+
+2、开发文档全部学习完成；
+
+3、完成挑战1，在sepolia上看到睿应层完整调用事件过程；
+
+今日感想：
+
+1、今天跟着把挑战1的内容一步一步部署，看到结果感觉还是挺复杂的；
+
+2、还没来得及细看内部的事件发射和调用；
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 今日完成：
 
 1、睿应层（Reactive Network）官网 Overview学习完成；
@@ -30,6 +48,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 今日完成：
 
