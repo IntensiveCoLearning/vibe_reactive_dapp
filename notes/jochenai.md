@@ -15,8 +15,30 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+# Reactive Contracts: Dual-State Architecture and Subscriptions
+
+**Dual-State Environment:** Each RC exists in two instances—one on the Reactive Network (a blockchain with system contracts) and one in a ReactVM (an isolated virtual machine). The Reactive Network handles user-initiated transactions and event subscriptions, while the ReactVM executes business logic when triggered by events. Detection of the execution context uses a `detectVm()` function checking for system contract code at a specific address. Modifiers (`rnOnly` and `vmOnly`) enforce which functions execute in each environment.
+
+**Subscriptions (Lesson 4):** Subscriptions allow RCs to automatically respond to events from other contracts. The `ISubscriptionService` interface enables contracts to subscribe/unsubscribe from events using parameters like chain ID, contract address, and event topics. Subscriptions use wildcards (address(0), REACTIVE\_IGNORE) for flexible filtering, but at least one criterion must be specific. The `IReactive` interface provides the `react()` function, which processes incoming `LogRecord` data and emits callbacks to destination chains.
+
+## Key notes
+
+1.  **Architectural Parallelism:** The dual-state design enables high-performance, parallel processing by separating administrative functions (Reactive Network) from event-driven logic (ReactVM).
+    
+2.  **Context Awareness:** Developers must explicitly manage which code executes where using environment detection and modifiers, preventing conflicts between states.
+    
+3.  **Event-Driven Automation:** Subscriptions enable truly reactive systems where contracts automatically respond to external events without user intervention.
+    
+4.  **Callback-Based Cross-Chain Communication:** RCs communicate across chains through callbacks emitted from the ReactVM, enabling complex multi-chain workflows.
+    
+5.  **Flexibility with Constraints:** While subscriptions offer powerful filtering options, certain patterns (ranges, disjunctions, all chains/contracts) are prohibited to maintain efficiency and prevent combinatorial explosion.
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 # Summary of Reactive Contracts Lessons 1-2
 
 **Reactive Contracts (RCs)** represent a paradigm shift in blockchain automation. Unlike traditional smart contracts that passively wait for external transactions, RCs actively monitor blockchains for specified events and autonomously execute predefined actions in response.
@@ -51,6 +73,7 @@ By shifting from centralized bots to decentralized automation, RCs provide faste
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 # 1\. What Reactive Contracts Are
 
