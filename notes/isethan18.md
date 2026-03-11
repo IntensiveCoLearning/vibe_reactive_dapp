@@ -15,8 +15,31 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+## Day 3：挑战任务实战（终极目标）
+
+**核心点：按照 Notion 指引完成跨链自动化**
+
+要完成的挑战通常包含三个角色：
+
+1.  **Origin Contract（源合约）：** 在 Sepolia 上发出一个 Log（比如 `emit Ping()`）。
+    
+2.  **Reactive Contract（睿应合约）：** 部署在 Lasna 上。它订阅了 `Ping` 事件，一旦抓到，就执行逻辑。
+    
+3.  **Destination Contract（目标合约）：** 在 Sepolia 或其他链上。当 Reactive 合约抓到 `Ping` 后，它会跨链调用这个合约的 `pong()` 函数。
+    
+
+### 挑战任务 Tips：
+
+-   **部署顺序：** 先部署目标合约 $\\rightarrow$ 再部署 Reactive 合约（并订阅目标） $\\rightarrow$ 最后触发源合约。
+    
+-   **调试：** 如果没反应，检查 `topic0` 是否匹配（事件签名的哈希值）。
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 ## 2026.03.10
 
 ## Day 2：核心组件 RSC 与开发准备
@@ -64,6 +87,7 @@ bytes calldata data
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 ## 2026.03.09
 
