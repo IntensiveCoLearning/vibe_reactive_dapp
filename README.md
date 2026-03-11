@@ -277,7 +277,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [0xBrick-Li](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/0xBrick-Li.md) | ✅ | ✅ | ✅ | | | | | | | | | | | |
 | [286748501-png](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/286748501-png.md) | ⭕️ | ⭕️ |   | | | | | | | | | | | |
 | [New-zy](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/New-zy.md) | ⭕️ | ⭕️ |   | | | | | | | | | | | |
-| [7metachain](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/7metachain.md) | ⭕️ | ✅ |   | | | | | | | | | | | |
+| [7metachain](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/7metachain.md) | ⭕️ | ✅ | ✅ | | | | | | | | | | | |
 | [leopc999](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/leopc999.md) | ✅ | ✅ | ✅ | | | | | | | | | | | |
 | [hwish39-byte](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/hwish39-byte.md) | ✅ | ✅ | ✅ | | | | | | | | | | | |
 | [KMSHSF](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/KMSHSF.md) | ✅ | ✅ | ✅ | | | | | | | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) | ⭕️ | ⭕️ |   | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) | ⭕️ | ⭕️ |   | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
