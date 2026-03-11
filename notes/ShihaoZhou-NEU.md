@@ -15,8 +15,93 @@ Reactive 探索者
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+# **Lesson 2: How Events and Callbacks Work**
+
+本课重点讲解事件和回调在智能合约中的作用。通过学习如何发出、处理和监听事件，开发者可以创建能够实时响应区块链变化的动态去中心化应用（dApp）。我们还将探讨响应式合约如何使用 `react()` 方法处理事件，并通过回调发起跨链交易，从而增强响应式网络的功能。
+
+## **EVM 事件如何运作**
+
+当智能合约发出事件时，事件数据会存储在交易日志中。这些日志附加到区块链的区块上，但不会直接影响区块链的状态。相反，它们提供了一种基于事件参数记录和检索信息的方法。
+
+开发者在智能合约中使用 `event` 关键字定义事件，后跟事件名称和要记录的信息的数据类型。要发出事件，智能合约使用 `emit` 关键字，后跟事件名称和要记录的数据。
+
+外部应用程序（例如去中心化应用或后端服务）可以监听这些事件。通过指定事件签名以及（可选的）过滤参数，这些应用程序可以在事件发生时订阅实时更新。这种机制对于创建响应迅速且交互性强的区块链应用程序至关重要。
+
+```
+ pragma solidity >=0.8.0;
+ ​
+ import './IPayer.sol';
+ ​
+ interface IReactive is IPayer {
+     struct LogRecord { // 定义了一种结构化数据类型 LogRecord ，用于包含有关事件日志的详细信息：
+         uint256 chain_id; // 事件发生的区块链的 ID
+         address _contract; // 发出事件的合约地址
+         uint256 topic_0; // 日志的索引主题
+         uint256 topic_1;
+         uint256 topic_2;
+         uint256 topic_3;
+         bytes data; // 事件日志中未建立索引的数据
+         uint256 block_number; // 事件发生的区块编号
+         uint256 op_code; // Potentially denotes an operation code.
+         uint256 block_hash; // 用于追踪事件来源和上下文的附加标识符。
+         uint256 tx_hash; // 用于追踪事件来源和上下文的附加标识符。
+         uint256 log_index; // 用于追踪事件来源和上下文的附加标识符。
+     }
+ ​
+     event Callback( // 回调事件 ：用于通知订阅者特定事件发生的事件：
+         uint256 indexed chain_id, // 事件的区块链 ID
+         address indexed _contract, // 发出合约的地址
+         uint64 indexed gas_limit, // 回调函数分配的最大 gas 量
+         bytes payload // 随回调一起返回的编码数据
+     );
+     
+     function react(LogRecord calldata log) external; // 处理传入事件通知的关键函数
+ }
+```
+
+响应式网络持续监控事件日志，并将其与响应式合约中定义的订阅条件进行匹配。当检测到符合条件的事件时，网络会触发 `react()` 方法，并传递相关详细信息。
+
+响应式合约可以访问所有标准的 EVM 功能。但是，它们运行在私有的 ReactVM 环境中，这限制了它们只能与同一部署者部署的合约进行交互。这种隔离机制确保响应式合约在处理来自响应式网络的事件时，能够维持一个受控且安全的环境。
+
+## **Callbacks to Destination Chains**
+
+响应式合约可以通过以特定格式发出日志记录，在目标链上发起交易。这些记录会被响应式网络接收，然后响应式网络会在相关的链上执行所需的交易。
+
+### **Emitting Callback Events 发出回调事件**
+
+event Callback( // 回调事件 ：用于通知订阅者特定事件发生的事件： <- 这个事件被 emit
+
+### **Processing the Callback 处理回调**
+
+当 `Callback` 事件发出时，响应式网络会检测到该事件并处理 `payload` ，该有效载荷以特定格式编码交易详情。然后，响应式网络使用提供的 `chain_id` 和 `gas_limit` 将交易提交到目标链上指定的合约。
+
+### **Important Note on Authorization**
+
+For security and authorization purposes, the Reactive Network automatically replaces the first 160 bits of the call arguments within the `payload` with the RVM ID (equivalent to the ReactVM address) of the calling reactive contract. This RVM ID is identical to the contract deployer's address. As a result, the first argument in your callback will always be the ReactVM address (of type `address`), regardless of the variable name you use in your Solidity code.
+
+### **Encoding and Emitting the Callback Event**
+
+要在目标链上发起操作，您可以将交易详情编码到 `payload` 中并发出 `Callback` 事件。例如，在 Uniswap 止损单演示中，此过程用于通过目标链合约触发代币销售：
+
+```
+ bytes memory payload = abi.encodeWithSignature(
+    "stop(address,address,address,bool,uint256,uint256)",
+    address(0),  // The ReactVM address
+    pair,        // The Uniswap pair address involved in the transaction
+    client,      // The address of the client initiating the stop order
+    token0,      // The address of the first token in the pair
+    coefficient, // A coefficient determining the sale price
+    threshold    // The price threshold at which the sale should occur
+ );
+ emit Callback(chain_id, stop_order, CALLBACK_GAS_LIMIT, payload);
+```
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 # 学习计划
 
 1.  学习：[https://dev.reactive.network/education/module-1/reactive-contracts](https://dev.reactive.network/education/module-1/reactive-contracts)
@@ -82,6 +167,7 @@ RC 可以监控来自不同智能合约、兼容 EVM 的区块链的数据，它
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 # **Overview**
