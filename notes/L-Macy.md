@@ -15,8 +15,100 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+**ReactVM and Reactive Network As a Dual-State Environment**
+
+**1\. 学习目标（Lesson Objectives）**
+
+-   区分 Reactive 合约在两个执行环境中的实例与状态。
+    
+-   识别当前执行上下文（Reactive Network vs ReactVM）。
+    
+-   掌握双状态（dual-state）管理机制。
+    
+-   理解 Reactive 合约处理的交易类型及其在双环境中的流动。
+    
+
+**2\. 核心概念：Dual-State Environment（双状态环境）Reactive 合约并非单一实例，而是同时存在于两个独立环境中，每个环境维护独立的存储状态：**
+
+-   Reactive Network（主链环境）：
+    
+    -   这是合约的“真实部署”位置（用户交互、状态持久化、交易发起）。
+        
+    -   合约代码与状态存储在此链上，类似于传统 EVM 合约。
+        
+    -   这里处理：用户直接调用、订阅设置、回调交易的最终广播与执行。
+        
+-   ReactVM（隔离执行环境）：
+    
+    -   专为 Reactive 逻辑设计的沙箱/虚拟机。
+        
+    -   合约在此环境被“镜像”执行，用于处理事件触发后的反应逻辑。
+        
+    -   状态独立：ReactVM 中的存储（storage）与 Reactive Network 中的分离，避免事件处理干扰主链状态。
+        
+    -   这里处理：事件日志输入、回调函数执行、条件评估。
+        
+
+双状态的必要性：
+
+-   事件处理可能高频、计算密集，若在主链直接执行会阻塞或 gas 爆炸。
+    
+-   ReactVM 提供隔离、可扩展的执行空间，确保主链状态安全、一致。
+    
+-   事件 → ReactVM 计算 → 若需变更主链状态 → 发起回调交易回传 Reactive Network。
+    
+
+**3\. 执行上下文识别与状态管理**
+
+-   上下文区分：合约代码需判断当前运行在哪个环境。
+    
+    -   使用系统接口（如 isReactVM() 或类似标志）识别。
+        
+    -   示例逻辑：
+        
+        -   在 ReactVM 中：只读事件数据、更新本地状态、决定是否触发回调。
+            
+        -   在 Reactive Network 中：处理用户 tx、接收回调结果、更新持久状态。
+            
+-   状态管理原则：
+    
+    -   分离存储：两个环境各有独立 storage slot。
+        
+    -   同步机制：回调交易从 ReactVM 发出，携带必要数据回传 Reactive Network，实现状态最终一致性。
+        
+    -   数据流向：事件数据 → ReactVM（输入） → 计算/决策 → 回调 tx → Reactive Network（输出/更新）。
+        
+
+**4\. 交易类型与流动Reactive 合约涉及三种主要交易：**
+
+-   用户发起交易（User-initiated tx）：直接调用合约函数（e.g. 配置订阅、设置参数），在 Reactive Network 执行。
+    
+-   回调交易（Callback tx）：ReactVM 评估后自动生成，从 ReactVM 环境发起，目标通常是 Reactive Network 中的合约自身或其他链，实现自动化动作。
+    
+-   事件驱动交易：由 Reactive Network 中继的事件触发的间接 tx，最终落地在主链。
+    
+
+关键：回调 tx 由系统 gas 支付（或预付费机制），开发者无需手动资助，确保自治性。
+
+**5\. 关键 takeaway 与开发启发**
+
+-   双状态是 Reactive 架构的核心创新：隔离事件处理与主链状态，兼顾性能、安全与去中心化。
+    
+-   开发时必须显式处理上下文切换，避免状态混淆（e.g. 在 ReactVM 中写只读逻辑，在 Network 中写写操作）。
+    
+-   与传统合约对比：传统合约单环境、无需上下文判断；Reactive 合约需“双脑”设计，但换来自治与跨链能力。
+    
+-   后续关注：订阅设置（Lesson 4）如何在双环境中协调。
+    
+
+Reactive 合约的双状态本质：Reactive Network 作为持久主环境，ReactVM 作为反应隔离层，二者通过回调交易桥接，形成高效的自治闭环。这一设计有效解决了高频事件处理对主链的压力，同时保持全 on-chain 特性。理解 dual-state 是编写可靠 Reactive 合约的前提，后续订阅与回调实现将基于此展开。相比前两课的概念引入，本课提供了更底层的架构视角。
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 **Events and Callbacks 工作原理**
 
 **1\. 学习目标（Lesson Objectives**）
@@ -91,6 +183,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 **Reactive**
 
