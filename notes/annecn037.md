@@ -15,8 +15,14 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+回来太晚了，各位加油，I need to lie down
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 **ReactVM** 是 Reactive Network 的专用执行引擎，为 Reactive Contracts 提供隔离、确定性的运行环境，使其能够安全地监听和响应跨链事件；Reactive Network 作为**底层基础设施**，通过这一架构实现了智能合约从**"被动调用"**到"**主动反应"**的范式转变。  
   
 **核心概念：双状态环境（Dual-State Environment）**
@@ -194,6 +200,7 @@ function react(LogRecord calldata log) external vmOnly {
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 ## **Reactive Network 生态系统笔记**
 
