@@ -15,8 +15,60 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+### 1\. EVM 整体架构
+
+-   EVM 是**基于栈的 256 位虚拟机**，沙盒、确定性、图灵完备
+    
+-   执行单元：**PC 程序计数器 + Stack 栈 + Memory 内存 + Storage 存储 + Gas**
+    
+-   合约代码是只读 “虚拟 ROM”，执行时不修改代码本身
+    
+
+### 2\. 三大存储区域（必记）
+
+-   **Stack（栈）**：执行核心，1024 深度，256 位 / 项，所有运算基于栈
+    
+-   **Memory（内存）**：线性临时内存，字节寻址，交易结束即清空
+    
+-   **Storage（存储）**：账户级持久化 KV 存储，上链、耗 Gas 高
+    
+
+### 3\. 执行流程
+
+1.  交易 / 调用进入 EVM
+    
+2.  加载字节码 → PC 逐条取指令
+    
+3.  栈操作 → 内存读写 → 存储读写
+    
+4.  Gas 扣费 → 状态更新 → 输出结果 / 日志
+    
+
+### 4\. 关键特性
+
+-   **确定性**：同输入必同输出，保证全网共识
+    
+-   **Gas 机制**：计量计算成本，防止滥用
+    
+-   **无浮点、无原生随机**：保证执行一致性
+    
+-   指令集（Opcodes）约 140+，覆盖运算、内存、存储、链上信息
+    
+
+### 和 Reactive Contract 的关联：
+
+-   EVM 是**执行底座**，Reactive Contract 是**事件驱动的上层范式**
+    
+-   Reactive VM 兼容 EVM，栈 / 内存 / 存储模型完全一致
+    
+-   反应式合约的**回调执行、状态更新、跨链消息**，最终都跑在 EVM 规范上
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 # **学习笔记：Reactive Network 生态案例总结**
 
 **来源**：reactive.network/ecosystem#cases
@@ -155,6 +207,7 @@ Reactive Network 做的是：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 # **学习笔记：Reactive Network 与反应式智能合约核心解析**
 
