@@ -15,8 +15,112 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+# Reactive Staking Season 的结构
+
+Reactive 的 staking 不是永久池，而是 **Season 机制**：
+
+```
+Season 1
+Season 2
+Season 3
+Season 4
+Season 5
+```
+
+每个 Season：
+
+-   有新的 **reward pool**
+    
+-   有新的 **lock period**
+    
+-   用户可以 **restake**
+    
+
+例如之前 Season：
+
+-   30天池
+    
+-   60天池
+    
+-   90天池
+    
+
+奖励来自同一个 pool。
+
+特点：
+
+-   锁仓越久 → 奖励越高
+    
+-   参与人数越多 → APY下降
+    
+
+因为奖励是 **按比例分配**。
+
+* * *
+
+# Season 5 的核心目标
+
+Season 5 的设计主要有 **3个目标**。
+
+### 1 提升网络安全性
+
+Reactive 是 PoS 网络。
+
+更多 staking → 更安全。
+
+```
+更多 token 被锁
+      ↓
+攻击成本更高
+      ↓
+网络更安全
+```
+
+* * *
+
+### 2 提供长期流动性
+
+如果 token 都在交易所：
+
+```
+价格波动大
+卖压大
+```
+
+staking 可以：
+
+```
+减少 circulating supply
+稳定市场
+```
+
+* * *
+
+### 3 激励生态参与
+
+Season staking 是一种：
+
+**早期网络 bootstrap 机制**
+
+很多区块链都这么做。
+
+例如：
+
+-   Avalanche
+    
+-   Polkadot
+    
+
+都会在早期提供较高 APY。
+
+Reactive 初期 staking APY 曾达到 **约 15–35% 区间**
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 # 一、Reactive Network 与传统 EVM 的根本区别
 
 ## 1️⃣ 传统 EVM：**请求驱动（Request-driven）**
@@ -112,6 +216,7 @@ Reactive Contract监听事件
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 今天是第一天！打算先来了解一下概念！
 
