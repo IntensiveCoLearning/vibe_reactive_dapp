@@ -15,8 +15,190 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+# **ReactVM 与反应式网络作为双态环境**
+
+**每个反应式合同有两个实例——一个在反应式网络上，另一个在其独立的 ReactVM。**
+
+**Reactive Network**：一条 EVM 兼容的 L1 区块链，但它增加了系统合约，让合约可以订阅其他链（Ethereum、Sepolia、BNB、Polygon 等）的事件日志。
+
+**ReactVM**：不是普通的 EVM，而是每个部署者地址（deployer）独享的一个**受限的、隔离的虚拟机实例**。
+
+-   同一个 deployer 部署的所有合约，都跑在同一个 ReactVM 里，可以互相调用。
+    
+-   但它**完全隔离**于 Reactive Network 上的其他合约。
+    
+-   设计目标：**高性能、并行处理海量事件**，不阻塞主链。
+    
+
+用户管理的部分只在 Reactive Network处理,事件到来时的部分只在 ReactVM 执行，状态两套、代码一套、环境靠 vm 标志区分，写代码时需注意哪些变量应该只在哪个环境更新。
+
+```
+if (vm) { // 我在 ReactVM
+    // 只处理事件逻辑
+} else {  // 我在主链
+    // 订阅、暂停等管理逻辑
+}
+```
+
+# **如何订阅外部事件**
+
+**订阅只能在主链（Reactive Network）做，事件进来后只在 ReactVM 的 react() 里处理。**
+
+## 1\. 订阅的核心目的和流程
+
+RC 通过订阅，监控其他链（Ethereum、Sepolia、BNB 等）的合约事件。一旦匹配的事件发生，Reactive Network 会自动把事件打包成 LogRecord，推送到你的合约的 react(LogRecord) 函数里执行。
+
+```
+外部链合约发出事件 Log
+          ↓
+Reactive Network 监听到（跨链桥/中继）
+          ↓
+检查是否有 RC 订阅了这个 chain_id + _contract + topics
+          ↓
+如果匹配 → 构造 LogRecord struct
+          ↓
+调用你的 RC 的 react(LogRecord) （在 ReactVM 里执行）
+          ↓
+你的 react() 里可以：
+  - 更新状态（ReactVM 里的状态）
+  - emit Callback(...) → 触发目标链上的回调执行
+```
+
+## 2\. 关键接口：ISubscriptionService（订阅服务）
+
+**这是系统合约提供的接口**
+
+```
+interface ISubscriptionService is IPayable {
+    function subscribe(
+        uint256 chain_id,          // 源链的 EIP-155 chain ID（如 Sepolia=11155111）
+        address _contract,         // 发出事件的合约地址
+        uint256 topic_0,           // 事件签名 hash（必须）
+        uint256 topic_1,           // indexed 参数1（可忽略）
+        uint256 topic_2,
+        uint256 topic_3
+    ) external;
+
+    function unsubscribe(...) external;  // 参数同上
+}
+```
+
+-   **REACTIVE\_IGNORE** = uint256(0) 或 address(0)，表示“任意值都匹配”。
+    
+-   至少**一个参数必须具体**（不能全用忽略），否则禁止。
+    
+-   **禁止**订阅：全链所有事件、所有合约所有事件、范围比较（< >）、位运算等复杂过滤。只支持**严格相等**匹配。
+    
+
+例子：
+
+```
+// 监听某个 Uniswap Pair 的所有事件
+service.subscribe(SEPOLIA_CHAIN_ID, pairAddress, REACTIVE_IGNORE, REACTIVE_IGNORE, REACTIVE_IGNORE, REACTIVE_IGNORE);
+
+// 只监听 Sync 事件（topic_0 是事件签名 keccak）
+service.subscribe(SEPOLIA_CHAIN_ID, address(0), SYNC_TOPIC_0, REACTIVE_IGNORE, REACTIVE_IGNORE, REACTIVE_IGNORE);
+
+// 监听特定合约 + 特定 topic + 特定 owner（Approval 事件常用 topic_2 或 topic_1 存 owner）
+service.subscribe(SEPOLIA_CHAIN_ID, address(0), APPROVAL_TOPIC_0, REACTIVE_IGNORE, uint256(uint160(specificOwner)), REACTIVE_IGNORE);
+```
+
+**注意：重复 subscribe 允许，但浪费 gas（幂等性自己保证）。unsubscribe 很贵（要搜索删除），尽量少用。**
+
+## 3\. 收到事件后：LogRecord 和 react()
+
+```
+struct LogRecord {
+    uint256 chain_id;
+    address _contract;
+    uint256 topic_0;   // 到 topic_3
+    bytes data;        // 非 indexed 参数（abi.encode 的部分）
+    uint256 block_number;
+    uint256 op_code;   // 事件分类码（系统用）
+    uint256 block_hash;
+    uint256 tx_hash;
+    uint256 log_index;
+}
+```
+
+**收到事件后触发react（）操作**
+
+```
+function react(LogRecord calldata log) external vmOnly { ... }
+```
+
+  
+**可以进行以下操作：**
+
+-   解码 [log.data](http://log.data)
+    
+-   检查 log.topic\_x 是否匹配你关心的
+    
+-   读 non-indexed 数据
+    
+-   更新 ReactVM 状态
+    
+-   如果需要跨链执行 → emit Callback(target\_chain\_id, target\_contract, gas\_limit, payload);
+    
+
+**payload 通常是 abi.encodeWithSignature("someFunction(...)", args)。**
+
+## 4.动态订阅？(未进行实操)
+
+Reactive Network 的**系统合约（ISubscriptionService）**只能在 **Reactive Network 主链** 上调用，而大多数业务逻辑（react() 处理事件）发生在 **ReactVM** 里。
+
+-   ReactVM 里**不能**直接 call service.subscribe() → 会 revert（系统合约地址在 VM 里没代码）
+    
+-   但又希望合约能“根据事件内容”决定要不要订阅某个新东西（比如用户刚 approve 了，就开始监听他的 Transfer）
+    
+
+解决办法：**用 Callback 作为桥梁** ReactVM → emit Callback → 主链收到 → 执行真正的 subscribe/unsubscribe
+
+## 5\. 环境区分
+
+-   **Reactive Network**（!vm）：能直接 call service.subscribe / unsubscribe
+    
+-   **ReactVM**（vm=true）：**不能** call subscribe（系统合约不存在，会 revert） → 所以所有订阅逻辑必须 rnOnly 或 if (!vm)
+    
+-   动态订阅靠 Callback “跨环境”通信：ReactVM emit Callback → 主链收到并执行 subscribe
+    
+
+# Reactive Contracts + Oracle
+
+## **传统合约+预言机的痛点**
+
+拿用 Chainlink 取 ETH/USD 价格为例子：
+
+```
+function getLatestPrice() public view returns (int) {
+        (
+            , int price, , , 
+        ) = priceFeed.latestRoundData();
+        return price;
+    }
+```
+
+-   getLatestPrice() 是 **view 函数**，必须有人（EOA 或 keeper）主动 call 才能“刷新”数据。
+    
+-   合约自己**不能主动拉取**（无权限发起 tx）。
+    
+-   要实时响应价格变化？必须靠外部 keeper（如 Chainlink Automation、Gelato）定时调用 → 延迟 + gas 成本 + 中心化风险。
+    
+-   没法“事件驱动”：价格变了没人 call，就错过机会。
+    
+
+## Reactive Contracts + Oracle的优势
+
+**Reactive 把 oracle 的“数据更新”事件化，让合约能真正“反应式”响应外部世界变化，而不用 keeper 轮询。**
+
+**oracle 更新价格 → emit 事件 → Reactive 自动推到react() → 即时响应！**
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 # Basic Demo 实操
 
 ## Basic Demo 三个合约详解与流程合约角色
@@ -117,6 +299,7 @@ function subscribe(
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 ## **什么是睿应层（Reactive Network）**
 
