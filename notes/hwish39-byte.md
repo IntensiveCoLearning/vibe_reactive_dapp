@@ -15,8 +15,30 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+# 今天继续阅读Reactive Contracts 文档，理解 ReactVM 的执行逻辑
+
+## ReactVM 是 Reactive Network 的心脏，它的执行逻辑与传统 EVM 有本质区别：
+
+-   **双状态模型 (Dual-state Model)：**
+    
+    -   **Reactive Network 状态：** 全局共享，负责管理订阅（Subscriptions）和跨链协同。
+        
+    -   **私有 ReactVM 状态：** 每个合约拥有独立的运行环境，状态隔离。这意味着 Reactive 合约在处理逻辑时非常安全，互不干扰。
+        
+-   **逻辑流：**
+    
+    1.  **输入：** 监听到的 Origin 链事件日志（Event Logs）。
+        
+    2.  **处理：** react() 函数在私有 ReactVM 中执行，进行条件判断（如：检查金额、白名单）。
+        
+    3.  **输出：** 如果条件满足，生成一个指向 Destination 链的异步交易调用（Callback）。
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 # 今天主要阅读官网 Overview 和文档，理解 Reactive Network 与传统 EVM 的根本区别（主动推送 vs 被动调用）。研究“事件驱动智能合约”的概念。
 
 ## 1\. 核心概念：
@@ -68,6 +90,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 # 今天来不及学习了，先打卡
 <!-- DAILY_CHECKIN_2026-03-09_END -->
