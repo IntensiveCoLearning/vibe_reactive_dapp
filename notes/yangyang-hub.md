@@ -17,11 +17,120 @@ Let’s vibe Reactive dApp
 <!-- Content_START -->
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
-1
+# Reactive Contracts (RCs) 架构与执行机制
+
+## 一、 双重执行环境：一个合约，两个状态
+
+在 Reactive 网络中，每个部署的合约实际上运行在两个平行的实例中。它们代码完全相同，但**状态（变量）独立存储**。
+
+1.  **Reactive Network (RN) 状态：**
+    
+    -   **角色：** 合约的“指挥部”。
+        
+    -   **职责：** 直接与系统合约交互，负责订阅/取消订阅原始链（ETH, Polygon 等）的事件。
+        
+2.  **ReactVM 状态：**
+    
+    -   **角色：** 隔离的“实验室”。
+        
+    -   **职责：** 专门执行业务逻辑（`react()` 函数），处理接收到的事件并生成回调请求。
+        
+    -   **限制：** 每个部署地址拥有独立的 ReactVM，不同地址的合约互不干扰。
+        
+
+* * *
+
+## 二、 核心机制：如何识别与限制环境？
+
+为了让同一套代码在两个环境中各司其职，系统通过 `detectVm()` 函数进行环境检测。
+
+### 1\. 环境检测原理（Assembly Check）
+
+系统通过检查特定地址 `0x...fffFfF`（系统合约地址）是否存在代码来判断环境：
+
+-   **Code Size > 0** $\\rightarrow$ 在 **Reactive Network** 中（系统合约存在）。
+    
+-   **Code Size == 0** $\\rightarrow$ 在 **ReactVM** 中（受限环境，无系统合约）。
+    
+
+### 2\. 访问控制修饰器 (Modifiers)
+
+-   `rnOnly`: 仅允许在 Reactive Network 执行（如：修改订阅列表、管理员暂停）。
+    
+-   `vmOnly`: 仅允许在 ReactVM 执行（如：响应事件逻辑）。
+    
+
+* * *
+
+## 三、 变量与状态管理
+
+由于合约在两个环境中运行，变量通常分为两组：
+
+-   **RN 变量 (继承自** `AbstractReactive`**)：**
+    
+    -   `service`: 用于调用订阅服务的接口。
+        
+    -   `vm`: 布尔标志位，标记当前环境。
+        
+-   **ReactVM 变量 (业务逻辑相关)：**
+    
+    -   如 `triggered`, `done`, `threshold` 等。这些变量在 `react()` 逻辑中被修改，用于控制自动化行为。
+        
+
+* * *
+
+## 四、 交易执行流 (Transaction Flow)
+
+### 1\. 外部驱动交易 (Reactive Network 层)
+
+-   **用户发起：** 管理员手动调用 `pause()` 或 `resume()`。这些函数使用 `rnOnly` 修饰，通过调用 `service.unsubscribe/subscribe` 来开关“传感器”。
+    
+-   **事件分发：** RN 监控到原始链事件后，将其派发给对应的 ReactVM 实例。
+    
+
+### 2\. 自动触发交易 (ReactVM 层)
+
+-   **触发机制：** 无法由用户直接调用，仅在接收到订阅事件时由系统触发。
+    
+-   **执行逻辑：** 调用 `react()` $\\rightarrow$ 状态计算 $\\rightarrow$ 满足条件 $\\rightarrow$ 触发 **Callback**（回调交易）。
+    
+-   **最终行动：** Callback 请求被发回 Reactive Network，最终在目标链（如 Sepolia）上执行实际的链上动作（如执行 Swap）。
+    
+
+* * *
+
+## 五、 典型代码逻辑梳理 (以 Uniswap 止损订单为例)
+
+1.  **构造函数 (Constructor):**
+    
+    -   初始化所有变量。
+        
+    -   `if (!vm)`：如果是在 **RN** 环境，立即调用 `service.subscribe` 订阅 Uniswap 的 `Sync` 事件。
+        
+2.  **React 函数 (**`vmOnly`**):**
+    
+    -   接收事件日志 (`LogRecord`)。
+        
+    -   判断价格是否低于 `threshold`。
+        
+    -   如果满足，修改 `triggered = true` 并发出 `emit Callback(...)` 指令。
+        
+
+* * *
+
+### 总结对比表
+
+| 维度 | Reactive Network (RN) | ReactVM |
+| 部署地址 | 0x... (主网地址) | 隔离的虚拟机环境 |
+| 主要功能 | 管理订阅、行政管理 (Pause/Resume) | 运行业务逻辑、计算事件数据 |
+| Gas 消耗 | 用户或系统支付 | 逻辑执行（通常极低或受限） |
+| 系统调用 | 可调用 service.subscribe | 禁止直接调用订阅服务 |
+| 输出结果 | 状态更新或订阅变更 | 触发跨链 Callback |
 <!-- DAILY_CHECKIN_2026-03-11_END -->
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 # Reactive Contracts (RCs) 基础与核心概念
 
@@ -291,6 +400,7 @@ Reactive Network 会自动：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
