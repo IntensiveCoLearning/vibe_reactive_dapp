@@ -15,8 +15,16 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+差点忘记
+
+先打一个卡
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 Reactive 作业核心是一条最小自动化链路：
 
 **源链事件 → Reactive 监听 → ReactVM 执行 → 目标链回调。**
