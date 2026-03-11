@@ -15,8 +15,199 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+“崩溃😩，满课的1天根本多少事件看，，，明天只有一节早八😋好好勤能补拙一下”
+
+# solidity语法基础回顾（啃basic demo在回顾一下吧
+
+## **版本指令**
+
+所有的 Solidity 源码都必须冠以 "version pragma" — 标明 Solidity 编译器的版本. 以避免将来新的编译器可能破坏你的代码。
+
+例如: `pragma solidity ^0.4.19;` (当前 Solidity 的最新版本是 0.4.19).
+
+综上所述， 下面就是一个最基本的合约 — 每次建立一个新的项目时的第一段代码:
+
+```
+pragma solidity ^0.4.19;
+
+contract HelloWorld {
+
+}
+```
+
+## **状态变量和整数**
+
+**_状态变量_**是被永久地保存在合约中。也就是说它们被写入以太币区块链中. 想象成写入一个数据库。
+
+### 例子:
+
+```solidity
+contract Example{
+  // 这个无符号整数将会永久的被保存在区块链中
+  uint myUnsignedInteger = 100;
+}
+```
+
+在上面的例子中，定义 `myUnsignedInteger` 为 `uint` 类型，并赋值100。
+
+## **数学运算**
+
+在 Solidity 中，数学运算很直观明了，与其它程序设计语言相同:
+
+-   加法: `x + y`
+    
+-   减法: `x - y`,
+    
+-   乘法: `x * y`
+    
+-   除法: `x / y`
+    
+-   取模 / 求余: `x % y` _(例如,_ `13 % 5` _余_ `3`_, 因为13除以5，余3)_
+    
+
+Solidity 还支持 **_乘方操作_** (如：x 的 y次方） // 例如： 5 \*\* 2 = 25
+
+```
+uint x = 5 ** 2; // equal to 5^2 = 25
+```
+
+## **结构体**
+
+有时你需要更复杂的数据类型，Solidity 提供了 **结构体**:
+
+```csharp
+struct Person {
+  uint age;
+  string name;
+}
+```
+
+结构体允许你生成一个更复杂的数据类型，它有多个属性。
+
+> _注：我们刚刚引进了一个新类型,_ `string`_。 字符串用于保存任意长度的 UTF-8 编码数据。 如：_ `string greeting = "Hello world!"`_。_
+
+## **数组**
+
+如果你想建立一个集合，可以用 **_数组_这样的数据类型. Solidity 支持两种数组: _静态_ 数组和_动态_** 数组:
+
+```
+// 固定长度为2的uint类型静态数组:
+uint[2] fixedArray;
+// 固定长度为5的string类型的静态数组:
+string[5] stringArray;
+// uint类型动态数组，长度不固定，可以动态添加元素:
+uint[] dynamicArray;
+```
+
+你也可以建立一个 **_结构体_**类型的数组 例如，上一章提到的 `Person`:
+
+```
+Person[] people; // 这是类型为结构体（或者说Person）的名为people的动态数组，可以不断添加元素
+```
+
+记住：状态变量被永久保存在区块链中。所以在你的合约中创建动态数组来保存成结构的数据是非常有意义的。
+
+## **公共数组**
+
+你可以定义 `public` 数组, Solidity 会自动创建 **_getter_** 方法. 语法如下:
+
+```
+Person[] public people;
+```
+
+其它的合约可以从这个数组读取数据（但不能写入数据），所以这在合约中是一个有用的保存公共数据的模式。
+
+## **定义函数**
+
+在 Solidity 中函数定义的句法如下:
+
+```
+function eatHamburgers(string _name, uint _amount) {
+
+}//函数 eatHamburgers 有两个参数，分别是 string 类型的 _name 和 unit 类型的 _amount
+```
+
+这是一个名为 `eatHamburgers` 的函数，它接受两个参数：一个 `string`类型的 和 一个 `uint`类型的。现在函数内部还是空的。
+
+> _注：: 习惯上函数里的变量都是以(_`_`_)开头 (但不是硬性规定) 以区别全局变量。我们整个教程都会沿用这个习惯。_
+
+我们的函数定义如下:
+
+```
+eatHamburgers("vitalik", 100);
+```
+
+## **创建新的结构体**
+
+还记得上个例子中的 `Person` 结构体：
+
+```csharp
+struct Person {
+  uint age;
+  string name;
+}
+
+Person[] public people;
+```
+
+现在创建新的 `Person` 结构，然后把它加入到名为 `people` 的数组中.
+
+```solidity
+// 创建一个新的Person:
+Person satoshi = Person(172, "Satoshi");
+
+// 将新创建的satoshi添加进people数组:
+people.push(satoshi);
+```
+
+你也可以两步并一步，用一行代码更简洁:
+
+```solidity
+people.push(Person(16, "Vitalik"));
+```
+
+> _注：_`array.push()` _在数组的_ **_尾部_** _加入新元素 ，所以元素在数组中的顺序就是我们添加的顺序， 如:_
+
+```solidity
+uint[] numbers;
+numbers.push(5);
+numbers.push(10);
+numbers.push(15);
+// The `numbers` array is now equal to [5, 10, 15]
+```
+
+## **私有 / 公共函数**
+
+Solidity 定义的函数的属性默认为`公共`。 这就意味着任何一方 (或其它合约) 都可以调用你合约里的函数。
+
+显然，不是什么时候都需要这样，而且这样的合约易于受到攻击。 所以将自己的函数定义为`私有`是一个好的编程习惯，只有当你需要外部世界调用它时才将它设置为`公共`。
+
+如何定义一个私有的函数呢？
+
+```solidity
+uint[] numbers;
+
+function _addToArray(uint _number) private{
+  numbers.push(_number);
+}
+```
+
+这意味着只有我们合约中的其它函数才能够调用这个函数，给 `numbers` 数组添加新成员。
+
+> 可以看到，在函数名字后面使用关键字 `private` 即可。和函数的参数类似，私有函数的名字用(`_`)起始。
+
+<aside> 💡
+
+存疑：{ } 外不需 ；
+
+</aside>
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 # 导论
 
 > # **Why Reactive Contracts 为什么选择反应式合同**
