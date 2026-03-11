@@ -15,8 +15,18 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+最近忙AI共学
+
+回头看
+
+![ba46fe09f67663e6f291e6a76f6241fb.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/swen-chan/images/2026-03-11-1773244551191-ba46fe09f67663e6f291e6a76f6241fb.png)
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 可以把 **Reactive Network** 理解成：给区块链加上一层“**事件触发的自动执行系统**”。
 
 核心机制只有 4 步：
@@ -55,6 +65,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 dd
 <!-- DAILY_CHECKIN_2026-03-09_END -->
