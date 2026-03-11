@@ -15,8 +15,92 @@ timezone: UTC+8
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+**事件与回调的工作原理**
+
+**EVM 事件如何工作**
+
+当智能合约发出事件时，事件数据会被存储在交易的日志中。这些日志被附加到区块链的区块上，但不会直接影响区块链的状态，它们提供了一种根据事件参数记录和检索信息的方式，开发者使用 `event` 关键字在智能合约中定义事件，后跟事件名称以及他们想要记录的信息的数据类型。要发出事件，智能合约使用 `emit` 关键字，后跟事件名称和要记录的数据。  
+外部应用程序，例如 dApp 或后端服务，可以监听这些事件。通过指定事件签名，并可选择过滤参数，这些应用程序可以在事件发出时订阅实时更新。
+
+**例如：**  
+Chainlink 的去中心化预言机网络为各种加密货币、商品和其他链外数据提供实时数据馈送，直接将数据送入智能合约。  
+**定义价格更新事件**  
+一个需要实时价格信息来执行其逻辑的智能合约，该合约可能会定义一个如下的事件：
+
+`event PriceUpdated(string symbol, uint256 newPrice);`  
+该事件旨在在价格更新时记录资产的代码及其新价格。  
+**发出事件**  
+当智能合约从 Chainlink 预言机接收到新的价格更新时，它会发出 `PriceUpdated` 事件：  
+`emit PriceUpdated("ETH", newEthPrice);`  
+在这行代码中，`newEthPrice` 是从 Chainlink 获取的以太坊更新后的价格，Chainlink 的预言机会定期更新。
+
+**响应式合约中的事件处理**  
+响应式合约必须实现 `IReactive` 接口来处理传入的事件。
+
+```solidity
+pragma solidity >=0.8.0;
+
+import './IPayer.sol';
+
+interface IReactive is IPayer {
+    struct LogRecord {
+        uint256 chain_id;
+        address _contract;
+        uint256 topic_0;
+        uint256 topic_1;
+        uint256 topic_2;
+        uint256 topic_3;
+        bytes data;
+        uint256 block_number;
+        uint256 op_code;
+        uint256 block_hash;
+        uint256 tx_hash;
+        uint256 log_index;
+    }
+    event Callback(
+        uint256 indexed chain_id,
+        address indexed _contract,
+        uint64 indexed gas_limit,
+        bytes payload
+    );
+    
+    function react(LogRecord calldata log) external;
+}
+```
+
+响应式网络持续监控事件日志，并将其与响应式合约中定义的订阅条件进行匹配。当检测到符合条件的事件时，网络会触发 `react()` 方法，传入相关的详细信息。
+
+响应式合约可以访问所有标准的EVM功能。但是，它们在私有的 ReactVM 中运行，这限制它们只能与同一部署者部署的合约进行交互。这种隔离确保了响应式合约在处理来自响应式网络的事件时，能够维持一个受控且安全的环境。
+
+**处理回调**  
+当 `Callback` 事件被发出时，响应式网络会检测到它并处理 `payload`，其中以特定格式编码了交易细节。然后，响应式网络使用提供的 `chain_id` 和 `gas_limit`，向目标链上的指定合约提交一笔交易。
+
+**关于授权的注意事项**  
+出于安全和授权目的，响应式网络会自动将 `payload` 内调用参数的前 160 位替换为调用该响应式合约的 RVM ID（等同于 ReactVM 地址）。这个 RVM ID 与合约部署者的地址相同。因此，无论你在 Solidity 代码中使用什么变量名，回调函数中的第一个参数始终是 ReactVM 地址（`address` 类型）。
+
+**编码和发出回调事件**  
+为了在目标链上发起操作，你可以将交易细节编码到 `payload` 中并发出 `Callback` 事件。例如，在 Uniswap 止损订单演示中，该过程用于通过目标链合约触发代币销售：
+
+```solidity
+
+bytes memory payload = abi.encodeWithSignature(
+   "stop(address,address,address,bool,uint256,uint256)",
+   address(0),  // ReactVM地址
+   pair,        // 涉及的Uniswap交易对地址
+   client,      // 发起止损订单的客户端地址
+   token0,      // 交易对中第一个代币的地址
+   coefficient, // 决定销售价格的系数
+   threshold    // 触发销售的价格阈值
+);
+emit Callback(chain_id, stop_order, CALLBACK_GAS_LIMIT, payload);
+```
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 反应式合约：
 
 **RCs 与传统智能合约的区别:**  
