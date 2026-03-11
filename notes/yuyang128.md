@@ -15,8 +15,129 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+学习内容
+
+# **Lesson 2: How Events and Callbacks Work**
+
+## 1\. 核心概念：为什么需要“事件”？
+
+在以太坊中，智能合约像一个“黑盒”，外界无法主动感知其内部变化。
+
+-   传统交互： 外部需要不断“轮询”合约来获取状态，成本高且低效。
+    
+-   事件 (Events) 的价值：
+    
+    -   广播机制： 合约通过 `emit` 发出“叮”的一声，外部应用（dApp）即可实时监听到。
+        
+    -   数据检索： 事件被存储在交易日志（Logs）中，方便按参数搜索，且不占用合约主存储，不直接修改链上状态。
+        
+
+* * *
+
+## 2\. 响应式合约 (RC) 的核心大脑：`react()` 与 `IReactive`
+
+RC 通过实现 `IReactive` 接口，将“被动监听”转化为“自主执行”。
+
+### 核心接口组件：
+
+-   `LogRecord` 结构体： 这是 RC 的“感官”，包含了事件触发的所有元数据（链ID、合约地址、Topic 主题、数据载荷等）。
+    
+-   `react()` 方法： 这是 RC 的核心触发器。
+    
+    -   当网络检测到符合条件的事件时，会自动调用此函数。
+        
+    -   合约在 `react()` 内部执行逻辑。
+        
+
+* * *
+
+## 3\. 跨链执行流程：回调 (Callbacks)
+
+当 RC 在 A 链监听到事件，需要去 B 链执行操作时，通过 `Callback` 事件实现跨链控制。
+
+### 处理流程：
+
+1.  **触发回调：** RC 发出 `Callback` 事件。
+    
+2.  **网络捕获：** Reactive Network 检测到该事件。
+    
+3.  **解析负载 (Payload)：** 网络处理 `payload` 中的编码信息。
+    
+4.  **执行交易：** 在目标链（`chain_id`）上向目标合约发送交易。
+    
+
+### 关键架构逻辑图：
+
+* * *
+
+## 4\. 重点提示：安全与权限 (Authorization)
+
+-   **自动替换机制：** 出于安全，Reactive Network 会强制将 `payload` 调用参数的前 160 位替换为 **RVM ID**（即 ReactVM 地址，也等同于合约部署者地址）。
+    
+-   **开发者须知：** 编写回调函数时，第一个参数永远是这个 RVM 地址，无论你在代码里如何命名变量。
+    
+
+* * *
+
+## 5\. 挑战任务的核心技能点（总结表格）
+
+| 动作 | 关键关键字/方法 | 作用 |
+| 定义事件 | event EventName(...) | 声明要记录的数据结构 |
+| 发出事件 | emit EventName(...) | 在逻辑执行后广播信息 |
+| 逻辑处理 | react(LogRecord log) | 接收事件并进行自主决策 |
+| 跨链操作 | emit Callback(...) | 通过 Payload 指令在目标链发起交易 |
+
+## **Code Snippet**
+
+-   **监听模版：** `react()` 函数的标准框架。
+    
+
+```
+// 监听并处理事件的入口函数
+function react(LogRecord calldata log) external override {
+    // 1. 验证事件是否是我们感兴趣的 (例如通过 topic_0 过滤)
+    if (log.topic_0 == EXPECTED_TOPIC_HASH) {
+        
+        // 2. 解析事件中的数据 (根据实际 Event 定义解析)
+        // 使用 abi.decode 将 log.data 还原为可读变量
+        (string memory symbol, uint256 price) = abi.decode(log.data, (string, uint256));
+        
+        // 3. 执行你的自定义逻辑 (例如状态存储、条件判断)
+        if (price > THRESHOLD) {
+            _executeCallback(log.chain_id);
+        }
+    }
+}
+```
+
+-   **回调模版：** 上面这段 `abi.encodeWithSignature` 的构建逻辑。
+    
+
+```
+function _executeCallback(uint256 chain_id) internal {
+    // 1. 准备目标链上的函数调用参数
+    // 注意：第一个 address(0) 会被 Reactive Network 自动替换为你的 RVM ID
+    bytes memory payload = abi.encodeWithSignature(
+        "targetFunctionName(address,uint256,string)", 
+        address(0),       // 这里的占位符是必需的
+        1000,             // 示例参数 1
+        "ExecutionData"   // 示例参数 2
+    );
+
+    // 2. 发出 Callback 事件，触发网络在目标链上执行
+    // chain_id: 目标链编号
+    // targetContract: 目标链上的合约地址
+    // GAS_LIMIT: 执行该回调所需的 Gas 上限
+    emit Callback(chain_id, targetContract, CALLBACK_GAS_LIMIT, payload);
+}
+```
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 # **Reactive Contracts**
 
 ## 背景
@@ -105,6 +226,7 @@ AI给我的回答是
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
