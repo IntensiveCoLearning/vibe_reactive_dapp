@@ -17,10 +17,6 @@ Let’s vibe Reactive dApp
 <!-- Content_START -->
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
-我帮你整理成一份 **结构清晰、适合学习打卡发布的笔记版本**。你可以直接发到 **X / Notion / 学习记录 / Hackathon 打卡**。我也稍微帮你提升了一点专业表达，但保持你自己的学习语气。
-
-* * *
-
 # **今日学习笔记｜Reactive Contract 结构理解**
 
 今天主要学习 **Reactive Contract 的组成结构与执行流程**。
@@ -373,6 +369,7 @@ Reactive Network 的本质是一个：
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
+
 # **今天完成了第一个挑战任务**
 
 [https://github.com/patrick-star-10/reactive-network-day1](https://github.com/patrick-star-10/reactive-network-day1)
@@ -380,6 +377,7 @@ Reactive Network 的本质是一个：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
