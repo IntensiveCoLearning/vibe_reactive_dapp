@@ -15,8 +15,72 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+Reactive Network 完整执行生命周期
+
+User
+
+│
+
+│ tx trigger()
+
+▼
+
+BasicDemoL1Contract
+
+│
+
+│ emit Trigger
+
+▼
+
+Ethereum Log
+
+│
+
+│ indexed by
+
+▼
+
+Reactive Network
+
+│
+
+│ match subscription
+
+▼
+
+ReactVM
+
+│
+
+│ call react()
+
+▼
+
+BasicDemoReactiveContract
+
+│
+
+│ send tx
+
+▼
+
+BasicDemoL1Callback
+
+│
+
+│ emit Reacted
+
+▼
+
+Done
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 傳統 DeFi 架構（Bot 驅動）
 
 flowchart LR
@@ -51,6 +115,7 @@ D --> E\[Send Transaction<br>to target chain\]
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
+
 傳統Smart Contract 是被動的，意思是沒人調用contract, contract 就什麼都不會做。
 
 現在的DeFi系統依賴bots/Keepers 監聽鏈上的交易。
@@ -67,6 +132,7 @@ Reactive Contract 監聽鏈上事件，然後自動執行 contract，核心概�
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 ![Screenshot 2026-03-09 at 7.51.52 PM.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/fuyushiphilip/images/2026-03-09-1773057195173-Screenshot_2026-03-09_at_7.51.52_PM.png)
