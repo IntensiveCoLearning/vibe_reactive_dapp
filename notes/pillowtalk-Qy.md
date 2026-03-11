@@ -15,8 +15,179 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+# 第一关攻略：  
+
+### 1.准备工作  
+  
+在开始之前，你需要准备以下工具和账户：
+
+-   **Ethereum 钱包**（如 MetaMask 或其他钱包）
+    
+-   **Solidity 编译器**（如 Remix 或 Hardhat）
+    
+-   **支持 Reactive Smart Contracts 的链**（可以在示例代码库中找到合适的链或环境）
+    
+
+可以参考[这个仓库](https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/demos/basic)来获取所需的代码和资源。
+
+* * *
+
+### 2\. 部署事件源合约（Origin Contract）
+
+事件源合约是触发跨链事件的地方。当在这个合约上进行某些操作时，会触发事件，Reactive Smart Contract 会在另一个链上进行回调。
+
+步骤：
+
+1.  打开 Remix 或 Hardhat，加载事件源合约代码。
+    
+2.  连接到你想部署的链（例如，Ethereum 测试网如 Rinkeby）。
+    
+3.  编译并部署合约。
+    
+
+```
+// Origin Contract: Event Trigger
+pragma solidity ^0.8.0;
+
+contract OriginContract {
+    event Triggered(address indexed from, uint256 value);
+
+    function triggerEvent(uint256 value) public {
+        emit Triggered(msg.sender, value);
+    }
+}
+```
+
+-   `triggerEvent` 函数会触发 `Triggered` 事件。
+    
+-   事件包含发送者地址和一个值（可以是你自定义的任何信息）。
+    
+
+部署：
+
+1.  在 Remix 中选择合约并点击 **Deploy**。
+    
+2.  部署成功后，记下合约地址和交易哈希。
+    
+
+* * *
+
+### 3\. 部署 Reactive 合约
+
+Reactive 合约会监听另一个链上的事件。当事件触发时，Reactive 合约会执行一些操作，通常是跨链回调。
+
+步骤：
+
+1.  在 Remix 或 Hardhat 中编写 Reactive 合约代码。
+    
+2.  Reactive 合约需要监听事件并做出响应。
+    
+
+```
+// Reactive Contract: Listener and Callback
+pragma solidity ^0.8.0;
+
+interface IOriginContract {
+    event Triggered(address indexed from, uint256 value);
+}
+
+contract ReactiveContract {
+    address public originContract;
+
+    constructor(address _originContract) {
+        originContract = _originContract;
+    }
+
+    function listenToEvent() public {
+        // 模拟监听事件的逻辑
+        // 在实际实现中，需要使用链下监听工具或者 RPC 来获取事件
+    }
+
+    function onEventTriggered(address from, uint256 value) public {
+        // 回调逻辑
+        // 这里可以做跨链操作或者调用其他链上的合约
+    }
+}
+```
+
+-   这里用一个简单的 `onEventTriggered` 函数来模拟事件回调。
+    
+-   需要为 `originContract` 设置正确的地址（即第一步部署的合约地址）。
+    
+
+部署：
+
+1.  在 Remix 中选择 Reactive 合约并点击 **Deploy**。
+    
+2.  记下部署地址。
+    
+
+* * *
+
+### 4\. 部署回调合约（Destination Contract）
+
+回调合约是接收和处理从另一个链上发送的回调事件的合约。可以理解为最终接收触发信息并进行进一步操作的合约。
+
+```
+// Destination Contract: Callback Receiver
+pragma solidity ^0.8.0;
+
+contract DestinationContract {
+    event CallbackReceived(address indexed from, uint256 value);
+
+    function receiveCallback(address from, uint256 value) public {
+        emit CallbackReceived(from, value);
+    }
+}
+```
+
+-   该合约的 `receiveCallback` 函数接收来自 `ReactiveContract` 的回调，并触发 `CallbackReceived` 事件。
+    
+
+部署：
+
+1.  在 Remix 中选择 Destination 合约并点击 **Deploy**。
+    
+2.  记下部署地址。
+    
+
+* * *
+
+### 5\. 触发跨链事件并验证
+
+1.  **在事件源合约上触发事件**：
+    
+    -   通过调用 `triggerEvent` 函数，触发一个事件。
+        
+    -   确保事件被正确触发，并记录事件信息。
+        
+2.  **在 Reactive 合约上监听事件**：
+    
+    -   通过调用 `listenToEvent` 函数，Reactive 合约模拟监听事件。
+        
+    -   在实际应用中，你需要通过链下工具或 RPC 来监听事件（例如 Web3.js 或 Ethers.js）。
+        
+3.  **回调合约处理事件**：
+    
+    -   当 Reactive 合约接收到事件后，调用 `onEventTriggered` 函数，并将信息传递到回调合约。
+        
+    -   回调合约将会触发 `CallbackReceived` 事件。
+        
+
+* * *
+
+### 6\. 验证交易和事件
+
+1.  在区块浏览器（如 Etherscan）上查看交易哈希。
+    
+2.  验证合约事件是否已成功触发，并确保跨链回调正常工作。
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 ```
 
 Origin Contract (链A)
@@ -71,6 +242,7 @@ Trigger(sender, amount)
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 1.互换了些reactive的代币，为之后的作业和Dapp作准备
 
