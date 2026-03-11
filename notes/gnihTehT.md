@@ -15,8 +15,69 @@ shadowdoge，web3新人
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+遇到了一个坑
+
+# 坑 1：`--broadcast` 被当成 constructor 参数
+
+**现象**
+
+明明加了：
+
+```
+--broadcast
+```
+
+但 `forge` 仍然提示：
+
+```
+Warning: Dry run enabled, not broadcasting transaction
+```
+
+**原因**
+
+在 Foundry 的 `forge create` 中：
+
+```
+--constructor-args
+```
+
+后面的内容都会被解析为 **构造函数参数**。
+
+如果 `--broadcast` 写在 `--constructor-args` 后面，例如：
+
+```
+--constructor-args arg1 arg2 arg3 --broadcast
+```
+
+Forge 会把：
+
+```
+--broadcast
+```
+
+当成 **constructor 参数字符串**，而不是命令 flag。
+
+所以命令变成：
+
+```
+forge create (dry run)
+```
+
+**解决方法**
+
+把 `--broadcast` 放在 `--constructor-args` 之前：
+
+```
+--broadcast \
+--constructor-args ...
+```
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 # 为什么你 deploy 会 revert
 
 关键在这个逻辑：
@@ -78,6 +139,7 @@ execution reverted
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 **Reactive Network Demo 的核心逻辑是一个跨链的“监听-触发”机制。**
 
