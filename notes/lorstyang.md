@@ -20,10 +20,362 @@ Let’s vibe Reactive dApp
 ![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-10-1773159556314-image.png)
 
 [https://lasna.reactscan.net/address/0x81a64a537e30eee5d8012886d036e6353013ac08/4](https://lasna.reactscan.net/address/0x81a64a537e30eee5d8012886d036e6353013ac08/4)
+
+# 1\. Reactive Library 概述
+
+**Reactive Library** 是 Reactive Network 提供的一组 **抽象合约 + 接口库**，用于构建 **Reactive Contracts**。
+
+核心能力包括：
+
+-   事件订阅 (Event Subscription)
+    
+-   回调机制 (Callbacks)
+    
+-   支付与费用结算 (Payments)
+    
+-   与 Reactive Network System Contract 交互
+    
+
+安装方式（Foundry）：
+
+forge install Reactive-Network/reactive-lib
+
+* * *
+
+# 2\. Reactive Contract 架构
+
+Reactive Library 提供了一套 **基础抽象合约体系**：
+
+```
+AbstractPayer
+ ├── AbstractReactive
+ │     └── AbstractPausableReactive
+ │
+ └── AbstractCallback
+```
+
+* * *
+
+## AbstractPayer
+
+**资金与支付基础设施**
+
+提供：
+
+-   authorized sender
+    
+-   pay()
+    
+-   coverDebt()
+    
+-   receive()
+    
+
+核心作用：
+
+> 给 Reactive Contract 提供资金管理能力
+
+* * *
+
+## AbstractReactive
+
+继承：
+
+```
+AbstractReactive is AbstractPayer
+```
+
+提供：
+
+-   system contract 接入
+    
+-   subscription service
+    
+-   VM / RN execution mode
+    
+-   react() 入口
+    
+
+核心作用：
+
+> Reactive Contract 的基础运行框架
+
+* * *
+
+## AbstractPausableReactive
+
+继承：
+
+```
+AbstractPausableReactive is AbstractReactive
+```
+
+提供：
+
+-   pause()
+    
+-   resume()
+    
+-   pausable subscriptions
+    
+
+核心作用：
+
+> 给 Reactive Contract 增加暂停订阅功能
+
+* * *
+
+## AbstractCallback
+
+继承：
+
+```
+AbstractCallback is AbstractPayer
+```
+
+提供：
+
+-   callback authorization
+    
+-   rvm\_id
+    
+-   vendor proxy
+    
+
+核心作用：
+
+> 保护 callback 交易来源
+
+# 3\. 核心接口
+
+Reactive Library 提供多个 Interface。
+
+* * *
+
+## IPayable
+
+用于资金管理。
+
+功能：
+
+-   接收 ETH
+    
+-   查询债务
+    
+
+debt(contract)
+
+返回某个 Reactive Contract 的欠款。
+
+* * *
+
+## IPayer
+
+简化支付接口：
+
+-   pay()
+    
+-   receive()
+    
+
+* * *
+
+## IReactive
+
+Reactive Contract 的 **核心接口**。
+
+定义：
+
+### LogRecord
+
+Reactive Network 向合约传递的事件数据：
+
+| 字段 | 含义 |
+| --- | --- |
+| chain_id | 来源链 |
+| contract | 触发事件的合约 |
+| topic_0~3 | Event topics |
+| data | Event data |
+| block_number | 区块 |
+| tx_hash | 交易 |
+| log_index | 日志索引 |
+
+* * *
+
+### Callback Event
+
+Reactive Contract 触发回调时产生：
+
+Callback
+
+包含：
+
+-   chain\_id
+    
+-   contract
+    
+-   gas\_limit
+    
+-   payload
+    
+
+* * *
+
+### react()
+
+Reactive Contract 的核心入口函数：
+
+react(log)
+
+Reactive Network 将事件推送给该函数处理。
+
+* * *
+
+## ISubscriptionService
+
+用于 **管理事件订阅**。
+
+功能：
+
+subscribe()
+
+unsubscribe()
+
+订阅条件：
+
+| 参数 | 含义 |
+| --- | --- |
+| chain_id | 链 |
+| contract | 合约 |
+| topic_0~3 | Event topics |
+
+支持：
+
+Wildcard 匹配（REACTIVE\_IGNORE）。
+
+* * *
+
+## ISystemContract
+
+SystemContract =
+
+IPayable + ISubscriptionService
+
+用于：
+
+-   支付管理
+    
+-   订阅管理
+    
+
+* * *
+
+# 4\. Reactive Network 系统合约
+
+Reactive Network 运行依赖 **三个核心系统合约**。
+
+* * *
+
+## SystemContract
+
+职责：
+
+-   Reactive Contract 费用管理
+    
+-   访问控制（白名单 / 黑名单）
+    
+-   CRON 事件
+    
+
+* * *
+
+## CallbackProxy
+
+作用：
+
+负责 **执行回调交易**
+
+功能：
+
+-   发送 callback transaction
+    
+-   管理 deposits
+    
+-   计算 gas cost
+    
+-   处理 kickback
+    
+
+* * *
+
+## SubscriptionService
+
+负责：
+
+-   事件订阅管理
+    
+-   过滤事件
+    
+-   topic 匹配
+    
+
+* * *
+
+# 5\. CRON 机制
+
+Reactive Network 提供 **链上定时任务机制**。
+
+通过 SystemContract 定期触发事件。
+
+Reactive Contract 可以订阅这些事件实现：
+
+-   自动执行
+    
+-   定时任务
+    
+-   自动策略
+    
+
+* * *
+
+## CRON 事件
+
+| Event | Interval | Approx Time |
+| --- | --- | --- |
+| Cron1 | 每个区块 | ~7s |
+| Cron10 | 每10块 | ~1分钟 |
+| Cron100 | 每100块 | ~12分钟 |
+| Cron1000 | 每1000块 | ~2小时 |
+| Cron10000 | 每10000块 | ~28小时 |
+
+每个事件包含：
+
+number = 当前 block number
+
+* * *
+
+# 10\. Reactive Contract 工作流程
+
+整体流程：
+
+```
+External Event
+     ↓
+Reactive Network Indexer
+     ↓
+Subscription Filter
+     ↓
+Reactive Contract react()
+     ↓
+逻辑处理
+     ↓
+Callback Transaction
+```
 <!-- DAILY_CHECKIN_2026-03-11_END -->
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 ![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-10-1773157873570-image.png)
 
@@ -32,6 +384,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
