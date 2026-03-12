@@ -15,19 +15,27 @@ timezone: UTC+8
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+自己试着写一个demo
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 了解了链上自动化
 <!-- DAILY_CHECKIN_2026-03-11_END -->
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
+
 今天做了一个小项目
 <!-- DAILY_CHECKIN_2026-03-10_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 了解一些基础知识，对区块链有一定的认识
