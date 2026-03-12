@@ -15,8 +15,20 @@ timezone: UTC+8
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+部署合约时发现powershell用不了forge，换成bash就行了。
+
+把密钥、链id等参数写到了.env文件，这样命令更简洁，bash执行source .env把.env文件刷新到环境变量，然后执行命令就行了：
+
+```
+forge create --broadcast --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY src/demos/basic/BasicDemoL1Contract.sol:BasicDemoL1Contract
+```
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 ````markdown
 
 ## Reactive 基础概念
@@ -146,6 +158,7 @@ subscribe(
 
 
 
+
 ## Reactive Basics
 
 1.  源链和目标链、回调代理地址
@@ -225,11 +238,13 @@ Reactive Network 的执行环境
 
 
 
+
 用remix跑了basic的三个合约
 <!-- DAILY_CHECKIN_2026-03-10_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
