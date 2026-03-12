@@ -15,8 +15,14 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+# 继续学习reactive，参与workshop
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 # 今天继续阅读Reactive Contracts 文档，理解 ReactVM 的执行逻辑
 
 ## ReactVM 是 Reactive Network 的心脏，它的执行逻辑与传统 EVM 有本质区别：
@@ -38,6 +44,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 # 今天主要阅读官网 Overview 和文档，理解 Reactive Network 与传统 EVM 的根本区别（主动推送 vs 被动调用）。研究“事件驱动智能合约”的概念。
 
@@ -90,6 +97,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 # 今天来不及学习了，先打卡
