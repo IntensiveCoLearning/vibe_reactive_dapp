@@ -15,8 +15,16 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+26.3.12 今天在做挑战第二关，完成了部署源链合约，目标链合约和reactive合约，并且创建了 uniswap 交易对。  
+
+![屏幕截图 2026-03-12 233834.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Eddie-534/images/2026-03-12-1773330074633-_____2026-03-12_233834.png)
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 26.3.11 今天完成了构建跨链事件与回调合约。  
   
 源合约：0x885c0dfD7894cdeEE3e55afB42f44Bec8757427d
@@ -34,6 +42,7 @@ Reactive合约0x0cF71E200DCf94587f487FF1C34035236A2747a0
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
+
 26.3.10 今天部署了三个合约，连接了 reactive lasna 网络，明天将会触发并验证跨链回调。  
 
 ![屏幕截图 2026-03-10 233540.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Eddie-534/images/2026-03-10-1773157153639-_____2026-03-10_233540.png)
@@ -41,6 +50,7 @@ Reactive合约0x0cF71E200DCf94587f487FF1C34035236A2747a0
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 26.3.9 今天对 reactive network 进行学习和理解：
