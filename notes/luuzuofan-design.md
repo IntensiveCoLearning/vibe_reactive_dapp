@@ -15,8 +15,20 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+# Reactive Dapp 学习第二天
+
+直播学习:
+
+-   不要一开始就让 AI 乱写合约，而是先让它帮你拆需求、做计划、解释流程；等你确认方案后，再让它写代码。代码写出来后，你自己去测试网部署和跑流程，再把结果拿回来让 AI 帮你分析。
+    
+-   案例：Claude 帮他先做一个跨链USDC Bridge的实现方案，先提出具体需求，让 AI 为“Ethereum 到 Base 的 USDC 跨链桥”生成实现计划。这个例子说明 Reactive Network 项目通常会拆成源链合约、Reactive 合约和目标链合约三层，先理清架构再开始编码。理解了 Reactive Contract 的事件处理接口。`LogRecord` 用于统一描述监听到的链上事件，`react()` 是处理这些事件的入口函数，而 `Callback` 事件则用于把处理结果转成发往目标链的执行任务。整个模式不是普通函数调用，而是“监听事件—处理事件—发出回调—目标链执行”的事件驱动流程。
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 # Reactive Dapp 学习第 1 天
 
 -   **传统智能合约**：被动，被调用才执行。机器人-EOA-EVM
