@@ -17,11 +17,379 @@ Let’s vibe Reactive dApp
 <!-- Content_START -->
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
-1
+# Subscriptions
+
+## 1\. 什么是 Subscription
+
+**Subscription（订阅）** 是 Reactive Contracts 的核心机制，用来让合约**自动监听其他合约的事件并触发逻辑**。
+
+流程：
+
+1.  合约通过 `subscribe()` 注册要监听的事件
+    
+2.  当链上出现符合条件的 event log
+    
+3.  Reactive Network 通知订阅合约
+    
+4.  合约执行 `react()` 处理事件
+    
+
+简化流程：
+
+```
+Event 发生
+     ↓
+Reactive Network 检测到
+     ↓
+通知订阅的 Reactive Contract
+     ↓
+调用 react()
+```
+
+* * *
+
+# 2\. 订阅服务接口（ISubscriptionService）
+
+Reactive Contracts 通过 **系统合约 SubscriptionService** 进行订阅。
+
+```
+function subscribe(
+    uint256 chain_id,
+    address _contract,
+    uint256 topic_0,
+    uint256 topic_1,
+    uint256 topic_2,
+    uint256 topic_3
+) external;
+```
+
+取消订阅：
+
+```
+function unsubscribe(...)
+```
+
+### 参数说明
+
+| 参数 | 含义 |
+| --- | --- |
+| chain_id | 事件来源链 |
+| _contract | 触发事件的合约 |
+| topic_0~3 | event topics |
+
+Topics 对应 Solidity 事件的 indexed 参数。
+
+* * *
+
+# 3\. 订阅条件规则
+
+订阅是通过 **chain + contract + topics** 进行过滤。
+
+### Wildcard（通配符）
+
+| 类型 | 写法 |
+| --- | --- |
+| 任何 chain | 0 |
+| 任何 contract | address(0) |
+| 任何 topic | REACTIVE_IGNORE |
+
+### 必须满足
+
+**至少一个参数必须是具体值**
+
+否则订阅没有意义。
+
+* * *
+
+# 4\. 常见订阅示例
+
+## 订阅某个合约的所有事件
+
+```
+service.subscribe(
+    CHAIN_ID,
+    contractAddress,
+    REACTIVE_IGNORE,
+    REACTIVE_IGNORE,
+    REACTIVE_IGNORE,
+    REACTIVE_IGNORE
+);
+```
+
+* * *
+
+## 订阅某个 Event 类型
+
+例如 Uniswap Sync event
+
+```
+service.subscribe(
+    CHAIN_ID,
+    address(0),
+    topic0,
+    REACTIVE_IGNORE,
+    REACTIVE_IGNORE,
+    REACTIVE_IGNORE
+);
+```
+
+* * *
+
+## 同时限定合约 + event
+
+```
+service.subscribe(
+    CHAIN_ID,
+    contractAddress,
+    topic0,
+    REACTIVE_IGNORE,
+    REACTIVE_IGNORE,
+    REACTIVE_IGNORE
+);
+```
+
+* * *
+
+# 5\. Constructor 订阅（静态订阅）
+
+通常在 **constructor 中初始化订阅**：
+
+```
+constructor(...) {
+    if (!vm) {
+        service.subscribe(...);
+    }
+}
+```
+
+原因：
+
+Reactive Contract **会在两个环境部署**
+
+| 环境 | 作用 |
+| --- | --- |
+| Reactive Network | 有 system contract |
+| ReactVM | 没有 system contract |
+
+所以要避免 ReactVM 执行 subscribe。
+
+* * *
+
+# 6\. IReactive 接口
+
+Reactive Contracts 必须实现：
+
+```
+function react(LogRecord calldata log)
+```
+
+### LogRecord 结构
+
+```
+struct LogRecord {
+    chain_id
+    _contract
+    topic_0
+    topic_1
+    topic_2
+    topic_3
+    data
+    block_number
+    block_hash
+    tx_hash
+}
+```
+
+作用：
+
+提供完整的 **event log 信息**
+
+* * *
+
+# 7\. Callback 机制
+
+当 Reactive Contract 处理事件后：
+
+会触发 **Callback**
+
+```
+event Callback(
+    uint256 chain_id,
+    address _contract,
+    uint64 gas_limit,
+    bytes payload
+);
+```
+
+作用：
+
+让 Reactive Network 执行后续操作。
+
+* * *
+
+# 8\. 动态订阅（Dynamic Subscription）
+
+Reactive Contracts 可以根据事件：
+
+-   自动订阅
+    
+-   自动取消订阅
+    
+
+流程：
+
+```
+事件触发
+ ↓
+react() 执行
+ ↓
+emit Callback
+ ↓
+Reactive Network 调用 subscribe/unsubscribe
+```
+
+* * *
+
+# 9\. 动态订阅示例逻辑
+
+react() 中：
+
+```
+if topic == SUBSCRIBE
+    -> emit callback 调用 subscribe()
+
+if topic == UNSUBSCRIBE
+    -> emit callback 调用 unsubscribe()
+
+else
+    -> 处理业务逻辑
+```
+
+示例：
+
+```
+if (log.topic_0 == SUBSCRIBE_TOPIC_0) {
+    emit Callback(... subscribe payload ...);
+}
+```
+
+* * *
+
+# 10\. Subscription 限制
+
+Reactive Network 对订阅有一些限制：
+
+### 不支持
+
+❌ 不支持范围匹配
+
+```
+<
+>
+range
+bitwise
+```
+
+* * *
+
+❌ 不支持复杂逻辑
+
+例如：
+
+```
+(topicA OR topicB)
+```
+
+只能通过 **多次 subscribe** 实现。
+
+* * *
+
+❌ 不允许
+
+```
+所有 chain + 所有 contract
+```
+
+* * *
+
+# 11\. 重复订阅
+
+允许重复 subscribe。
+
+但：
+
+-   每次调用都会产生 gas
+    
+-   系统不会自动去重
+    
+
+开发者需要 **保证 idempotency**。
+
+* * *
+
+# 12\. unsubscribe 成本高
+
+原因：
+
+需要 **查找并删除存储中的 subscription**。
+
+因此建议：
+
+-   减少 unsubscribe
+    
+-   尽量设计长期订阅
+    
+
+* * *
+
+# 13\. 最佳实践
+
+### 1️⃣ constructor 初始化订阅
+
+避免 runtime 注册。
+
+* * *
+
+### 2️⃣ 使用 topic 精确过滤
+
+减少不必要事件。
+
+* * *
+
+### 3️⃣ 避免过多 subscription
+
+否则会产生 **combinatorial explosion**。
+
+* * *
+
+### 4️⃣ react() 逻辑要轻量
+
+因为 callback 有 **gas limit**。
+
+* * *
+
+# 14\. 总结
+
+Reactive Contracts 订阅机制核心：
+
+1️⃣ 使用 `subscribe()` 监听事件  
+2️⃣ Reactive Network 捕获 event  
+3️⃣ 调用 `react()`  
+4️⃣ 合约处理事件并 emit Callback  
+5️⃣ 网络执行后续操作
+
+核心能力：
+
+-   跨链事件监听
+    
+-   自动触发逻辑
+    
+-   动态订阅管理
 <!-- DAILY_CHECKIN_2026-03-12_END -->
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 # Reactive Contracts (RCs) 架构与执行机制
 
@@ -136,6 +504,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -407,6 +776,7 @@ Reactive Network 会自动：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
