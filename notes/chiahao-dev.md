@@ -15,14 +15,22 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+Day4  
+关注了睿应层（Reactive Network）中英文推特账号
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 Day3  
 今天参加了一个项目研讨会，没有时间学习，明天赶上
 <!-- DAILY_CHECKIN_2026-03-11_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 Day 1  
 **Reactive 挑战「第一关」**  
