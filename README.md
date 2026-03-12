@@ -286,7 +286,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [Riemann666](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Riemann666.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [Sacultor](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Sacultor.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [ghostin1024](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/ghostin1024.md) | ✅ | ⭕️ | ✅ |   | | | | | | | | | | |
-| [yedeyu](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yedeyu.md) | ⭕️ | ✅ | ✅ | | | | | | | | | | | |
+| [yedeyu](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yedeyu.md) | ⭕️ | ✅ | ✅ |   | | | | | | | | | | |
 | [finish-blip](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/finish-blip.md) | ✅ | ✅ | ⭕️ | ✅ | | | | | | | | | | |
 | [drinkingmorewater](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/drinkingmorewater.md) | ✅ | ✅ | ✅ |   | | | | | | | | | | |
 | [barryxu-0410](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/barryxu-0410.md) | ✅ | ✅ | ✅ |   | | | | | | | | | | |
@@ -307,7 +307,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [ViVi-SH](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/ViVi-SH.md) | ✅ | ⭕️ | ⭕️ |   | | | | | | | | | | |
 | [Wwangjinghan](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Wwangjinghan.md) | ⭕️ | ⭕️ | ✅ |   | | | | | | | | | | |
 | [317232](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/317232.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
-| [goodperson888](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/goodperson888.md) | ⭕️ | ✅ | ✅ |   | | | | | | | | | | |
+| [goodperson888](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/goodperson888.md) | ⭕️ | ✅ | ✅ | ✅ | | | | | | | | | | |
 | [hy3917-code](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/hy3917-code.md) | ✅ | ✅ | ✅ |   | | | | | | | | | | |
 | [zhangmuf](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/zhangmuf.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [wwwjy1220](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/wwwjy1220.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
