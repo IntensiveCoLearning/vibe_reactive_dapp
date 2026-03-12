@@ -17,11 +17,12 @@ Let’s vibe Reactive dApp
 <!-- Content_START -->
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
--   参加Workshop
+-   参加了Workshop
 <!-- DAILY_CHECKIN_2026-03-12_END -->
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 -   完成 **Reactive 挑战「第一关」**
     
@@ -30,6 +31,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 ## Day 01
