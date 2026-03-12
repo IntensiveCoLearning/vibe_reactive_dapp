@@ -15,8 +15,22 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+Reactive Library 是用于在 Reactive Network 上开发响应式智能合约的基础库，基于 Foundry 构建，提供订阅、回调、支付与系统合约交互能力，安装命令为 `forge install Reactive-Network/reactive-lib`。
+
+库核心是四类抽象合约：AbstractReactive 作为基础合约，提供执行环境区分与系统合约接入；AbstractPayer 处理支付、债务结算与授权发送；AbstractCallback 实现回调权限控制；AbstractPausableReactive 支持订阅暂停与恢复，方便管理链上事件监听。
+
+配套接口定义事件数据结构、订阅与支付标准，其中 IReactive 的 react () 是处理链上事件的入口。系统层由系统合约、回调代理、订阅服务协同，负责费用、权限、事件分发。
+
+库还内置 CRON 定时机制，按区块间隔触发定时事件，支持从每块到万块级周期，无需轮询即可实现自动化任务。整体设计模块化、权限严格，适合开发跨链响应式应用。
+
+听了workshop会议，学了如何使用claude辅助coding
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 ### 1\. EVM 整体架构
 
 -   EVM 是**基于栈的 256 位虚拟机**，沙盒、确定性、图灵完备
@@ -68,6 +82,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 # **学习笔记：Reactive Network 生态案例总结**
@@ -208,6 +223,7 @@ Reactive Network 做的是：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
