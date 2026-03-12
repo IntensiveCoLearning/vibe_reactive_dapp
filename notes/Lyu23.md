@@ -15,8 +15,57 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+\### 1. Reactive Contract 组成结构
+
+**核心概念:**
+
+\- Reactive Contracts (RCs) 是事件驱动的智能合约，用于跨链和链上自动化
+
+\- RCs 监控 EVM 链上的事件日志，当条件满足时自动执行 Solidity 逻辑
+
+\- 无需用户或机器人触发交易，RCs 持续运行并决定何时发送跨链回调交易
+
+**部署环境:**
+
+\- **Reactive Network (RNK)** — 公共链，EOA 与合约交互，管理订阅
+
+\- **ReactVM (RVM)** — 私有执行环境，事件处理在此进行
+
+\- 两份部署使用相同字节码，但独立运行，不共享状态
+
+**状态分离:**
+
+\- ReactVM 状态：订阅事件发生时自动更新
+
+\- Reactive Network 状态：EOA 调用合约函数时更新
+
+\- 合约可通过调用系统合约检测是否在 ReactVM 内执行
+
+**合约验证:**
+
+\- 使用 Sourcify 进行去中心化验证
+
+\- 验证后可在 Reactscan 查看完整源代码
+
+  
+**跨链和自动化机制**
+
+Origin & Destination 模型:  
+
+-   Origin Chain: 事件发生的源链（如 Ethereum, BSC）
+    
+
+-   Destination Chain: 回调执行的目标链
+    
+
+-   使用 Hyperlane 进行跨链消息传输
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 **一、核心概念理解**
 
 **1\. 睿应层 vs 传统 EVM 的根本区别**
@@ -68,6 +117,7 @@ Let's vibe Reactive dApp！
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 部署地址:
 
