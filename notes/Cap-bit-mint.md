@@ -15,8 +15,16 @@ timezone: UTC+8
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+Day-4
+
+今天出差请假一天
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 Day-3
 
 在理解传统 EVM 与 Reactive 的根本区别后，今天深入了解 Reactive 的技术架构
@@ -38,6 +46,7 @@ Day-3
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
+
 Day-2  
   
 基于今天的学习，我想用生活例子来理解 Reactive 与传统 EVM 的区别：
@@ -51,6 +60,7 @@ Day-2
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 Day-1
