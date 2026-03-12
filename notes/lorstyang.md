@@ -15,8 +15,373 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+# ReactVM
+
+Reactive 合约同时存在两个环境：
+
+```
+Reactive Network   +   ReactVM
+```
+
+* * *
+
+# 整体架构
+
+```
+        Origin Chain
+     (Ethereum / BNB / Polygon)
+              │
+              │ Events
+              ▼
+       Reactive Network
+              │
+              │ dispatch
+              ▼
+            ReactVM
+              │
+              │ reaction logic
+              ▼
+      Callback → Destination Chain
+```
+
+核心思想：
+
+```
+Event → React → Callback
+```
+
+* * *
+
+# Reactive Contract 双实例
+
+每个 Reactive Contract 实际存在 **两个实例**
+
+```
+            Reactive Contract
+                    │
+        ┌───────────┴───────────┐
+        │                       │
+Reactive Network Instance   ReactVM Instance
+        │                       │
+  管理 / 订阅事件              处理事件逻辑
+```
+
+-   Same Code
+    
+-   Different State
+    
+-   Different Execution Context
+    
+
+* * *
+
+# 两个运行环境
+
+## Reactive Network
+
+本质：EVM Blockchain
+
+职责：
+
+-   User interaction
+    
+-   Event subscription
+    
+-   System contracts
+    
+-   Administrative control
+    
+
+结构：
+
+```
+User
+  │
+  ▼
+Reactive Network
+  │
+  ├── Event Subscriptions
+  ├── Admin Functions
+  └── System Contracts
+```
+
+* * *
+
+## ReactVM
+
+本质：Event Processing Engine
+
+职责：
+
+-   process events
+    
+-   execute contract logic
+    
+-   trigger callbacks
+    
+
+特点：
+
+-   Isolated
+    
+-   Parallel
+    
+-   Event-driven
+    
+
+结构：
+
+```
+        Event
+          │
+          ▼
+        ReactVM
+          │
+          ▼
+     Contract Logic
+          │
+          ▼
+      Callback
+```
+
+* * *
+
+# ReactVM 分配规则
+
+-   ReactVM 由 **部署地址 (EOA)** 决定。
+    
+-   如果同一地址部署多个合约会 Shared state 和 Internal interaction allowed
+    
+-   官方建议 Different logic → Different ReactVM
+    
+
+* * *
+
+# ReactVM 执行机制
+
+ReactVM **不会被用户调用**
+
+它只会被 Origin Chain Events 触发
+
+完整流程：
+
+```
+Origin Chain Event
+        │
+        ▼
+Reactive Network detects event
+        │
+        ▼
+Event dispatched to ReactVM
+        │
+        ▼
+react() function executed
+        │
+        ▼
+Callback transaction emitted
+```
+
+* * *
+
+# Reactive Contract状态分离
+
+```
+Reactive Network State
+    ≠
+ReactVM State
+```
+
+原因：
+
+-   Parallel execution
+    
+-   Event scalability
+    
+-   Deterministic processing
+    
+
+架构：
+
+```
+ReactVM A State
+ReactVM B State
+ReactVM C State
+        │
+        ▼
+Reactive Network Global State
+```
+
+* * *
+
+# 🔍 Execution Context
+
+Reactive 合约需要知道当前运行在哪个环境：
+
+示意：
+
+```
+        Contract Call
+              │
+              ▼
+      Execution Context
+       │             │
+       ▼             ▼
+Reactive Network   ReactVM
+```
+
+* * *
+
+# 交易类型
+
+Reactive 架构中有 **两种交易来源**
+
+-   User Transactions
+    
+-   Event Transactions
+    
+
+* * *
+
+## User Transactions
+
+发生位置：Reactive Network
+
+示意：
+
+```
+User
+ │
+ ▼
+Reactive Network
+ │
+ ├── pause()
+ ├── resume()
+ └── configuration
+```
+
+* * *
+
+## 2️⃣ Event Transactions
+
+发生位置：ReactVM
+
+流程：
+
+```
+Origin Chain Event
+        │
+        ▼
+Reactive Network
+        │
+        ▼
+ReactVM
+        │
+        ▼
+react()
+        │
+        ▼
+Callback
+```
+
+* * *
+
+# Cross-Chain Callback
+
+ReactVM 可以触发Callback Transaction，执行跨链操作。
+
+结构：
+
+```
+ReactVM
+  │
+  ▼
+Callback Request
+  │
+  ▼
+Reactive Network
+  │
+  ▼
+Destination Chain
+```
+
+* * *
+
+# 并行执行架构
+
+Reactive Network 通过 **ReactVM 分片执行**
+
+示意：
+
+```
+Events
+ │ │ │ │
+ ▼ ▼ ▼ ▼
+VM1 VM2 VM3 VM4
+ │   │   │   │
+ ▼   ▼   ▼   ▼
+Logic Execution
+```
+
+优势：
+
+-   High throughput
+    
+-   High scalability
+    
+-   Event isolation
+    
+
+* * *
+
+# Reactive Contract 生命周期
+
+```
+1 Deploy Contract
+        │
+        ▼
+2 Subscribe Events
+        │
+        ▼
+3 Event Emitted
+        │
+        ▼
+4 Event routed to ReactVM
+        │
+        ▼
+5 react() executed
+        │
+        ▼
+6 Callback emitted
+        │
+        ▼
+7 Destination chain action
+```
+
+* * *
+
+# 总结
+
+```
+Reactive Contract
+      │
+      ▼
+Dual State
+      │
+ ┌────┴────┐
+ │         │
+Network   ReactVM
+ │         │
+Admin     Logic
+ │         │
+Events → Reaction → Callback
+```
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 ![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-10-1773159556314-image.png)
 
 [https://lasna.reactscan.net/address/0x81a64a537e30eee5d8012886d036e6353013ac08/4](https://lasna.reactscan.net/address/0x81a64a537e30eee5d8012886d036e6353013ac08/4)
@@ -377,6 +742,7 @@ Callback Transaction
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
 
+
 ![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-10-1773157873570-image.png)
 
 -   最困难的居然是空钱包搞到Base sepolia ETH，试了挺多只有这个桥接的能用[https://superbridge.app/base-sepolia](https://superbridge.app/base-sepolia)
@@ -384,6 +750,7 @@ Callback Transaction
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
