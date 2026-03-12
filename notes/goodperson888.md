@@ -15,8 +15,534 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+# 一、Reactive Contracts 的真正架构
+
+Reactive Network 的核心模型就是：
+
+```
+event → RC → callback transaction
+```
+
+完整系统：
+
+```
+Origin Chain
+   │
+   │ event
+   ▼
+Reactive Network
+   │
+   │ react()
+   ▼
+Destination Chain
+   │
+   │ callback transaction
+   ▼
+Destination Contract
+```
+
+换一种更工程化理解：
+
+```
+Event Listener
+    ↓
+Compute Logic
+    ↓
+Transaction Executor
+```
+
+对应：
+
+| Reactive 概念 | 实际角色 |
+| --- | --- |
+| event | 数据源 |
+| RC | 自动执行逻辑 |
+| callback | 交易执行 |
+
+* * *
+
+# 二、Reactive Network 的 4 个核心组件
+
+文档里的关键概念其实只有 4 个。
+
+## 1 ReactVM
+
+ReactVM = Reactive Virtual Machine
+
+对比：
+
+| EVM | ReactVM |
+| --- | --- |
+| 函数调用 | 事件触发 |
+| 用户触发 | 自动触发 |
+
+本质：
+
+```
+ReactVM = EVM + Event Engine
+```
+
+* * *
+
+## 2 Subscriptions（订阅）
+
+Reactive Contract 必须 **订阅事件**。
+
+类似：
+
+```
+subscribe(event)
+```
+
+例如：
+
+监听：
+
+```
+Uniswap Pair.swap
+```
+
+* * *
+
+## 3 Oracle
+
+Reactive Network 通过 **Oracle 节点**监听链。
+
+逻辑：
+
+```
+链上事件
+↓
+Oracle 捕获
+↓
+ReactVM 执行 RC
+```
+
+所以 Reactive 其实是：
+
+**Event Oracle Network**
+
+* * *
+
+## 4 Callback Transaction
+
+Reactive Contract 最终会：
+
+```
+发送交易
+```
+
+目标链：
+
+```
+Destination Chain
+```
+
+调用：
+
+```
+DestinationContract.callback()
+```
+
+* * *
+
+# 三、Reactive Contract 核心代码结构
+
+Reactive Contract 的结构非常固定。
+
+核心函数只有一个：
+
+```
+react()
+```
+
+示例结构：
+
+```
+contract MyReactiveContract is Reactive {
+
+    function react(
+        uint256 chainId,
+        address emitter,
+        bytes calldata data
+    ) external {
+
+        // 1 解析事件
+        // 2 执行逻辑
+        // 3 callback
+    }
+
+}
+```
+
+react() 的参数：
+
+| 参数 | 作用 |
+| --- | --- |
+| chainId | 事件来源链 |
+| emitter | 事件合约 |
+| data | 事件数据 |
+
+* * *
+
+# 四、最核心代码解析
+
+### 1 监听事件
+
+Reactive Contract 会监听：
+
+```
+OriginContract.Event
+```
+
+例如：
+
+```
+event Swap(address user, uint amount);
+```
+
+* * *
+
+### 2 react() 被触发
+
+Reactive Network 自动调用：
+
+```
+function react(
+    uint256 chainId,
+    address emitter,
+    bytes calldata data
+) external {
+```
+
+逻辑：
+
+```
+if event happened:
+    run logic
+```
+
+* * *
+
+### 3 解码事件数据
+
+```
+(address user, uint amount) =
+    abi.decode(data,(address,uint));
+```
+
+作用：
+
+解析 event 参数。
+
+* * *
+
+### 4 执行逻辑
+
+例如：
+
+```
+if(amount > threshold){
+```
+
+例如：
+
+```
+触发止损
+```
+
+* * *
+
+### 5 callback
+
+Reactive Contract 会发送交易：
+
+```
+DestinationContract(dest).execute(user,amount);
+```
+
+这一步是：
+
+**跨链执行**
+
+* * *
+
+# 五、Uniswap V2 Stop Order Demo 原理
+
+逻辑：
+
+**价格触发止损**
+
+* * *
+
+传统方式：
+
+```
+price bot
+↓
+monitor pool
+↓
+send tx
+```
+
+Reactive 方式：
+
+```
+Swap event
+↓
+Reactive Contract
+↓
+trigger stop order
+```
+
+* * *
+
+执行流程：
+
+```
+Uniswap Swap
+↓
+emit Swap
+↓
+Reactive Network
+↓
+RC react()
+↓
+execute trade
+```
+
+* * *
+
+核心逻辑：
+
+```
+if(price < stopPrice){
+    sell()
+}
+```
+
+* * *
+
+# 六、Liquidation Protection Demo
+
+**自动清算保护**
+
+例如：
+
+Aave / lending protocol
+
+* * *
+
+流程：
+
+```
+Health factor < threshold
+↓
+event
+↓
+Reactive Contract
+↓
+repay loan
+```
+
+作用：
+
+```
+防止爆仓
+```
+
+* * *
+
+# 七、Foundry 构建流程
+
+Demo 使用：
+
+```
+Foundry
+```
+
+安装：
+
+```
+curl -L https://foundry.paradigm.xyz | bash
+foundryup
+```
+
+* * *
+
+构建项目：
+
+```
+forge build
+```
+
+测试：
+
+```
+forge test
+```
+
+部署：
+
+```
+forge script script/Deploy.s.sol --broadcast
+```
+
+* * *
+
+# 八、环境变量（必须配置）
+
+Reactive Demo 需要 3 条链。
+
+环境变量：
+
+```
+ORIGIN_RPC
+DESTINATION_RPC
+REACTIVE_RPC
+```
+
+还有：
+
+```
+PRIVATE_KEY
+```
+
+示例：
+
+```
+export ORIGIN_RPC=https://rpc.origin
+export DESTINATION_RPC=https://rpc.dest
+export REACTIVE_RPC=https://rpc.reactive
+```
+
+* * *
+
+# 九、部署顺序（非常关键）
+
+正确顺序：
+
+### 第一步
+
+部署：
+
+```
+Origin Contract
+```
+
+* * *
+
+### 第二步
+
+部署：
+
+```
+Destination Contract
+```
+
+* * *
+
+### 第三步
+
+部署：
+
+```
+Reactive Contract
+```
+
+因为 RC 需要：
+
+```
+origin address
+destination address
+```
+
+* * *
+
+# 十、如何证明 Demo 成功
+
+作业需要提交：
+
+### 1 部署地址
+
+```
+Origin contract
+Reactive contract
+Destination contract
+```
+
+* * *
+
+### 2 transaction hash
+
+例如：
+
+```
+0xabc123...
+```
+
+* * *
+
+### 3 event 证明
+
+浏览器：
+
+```
+Event Logs
+```
+
+* * *
+
+### 4 callback 交易
+
+目标链：
+
+```
+Destination contract call
+```
+
+* * *
+
+# 十一、解释 Reactive Network：
+
+> Reactive Network 是一个自动监听区块链事件的系统。
+> 
+> 当某个合约 emit event 时，Reactive Contract 会自动运行 react() 函数。
+> 
+> 然后它可以在另一条链上发送交易，完成跨链操作。
+
+* * *
+
+# 十二、Reactive Network 最容易被忽视的核心机制
+
+Reactive Contract **不是直接监听链**。
+
+真实流程：
+
+```
+Chain Event
+↓
+Reactive Oracle
+↓
+ReactVM
+↓
+react()
+```
+
+所以 Reactive Network 是：
+
+```
+Event Oracle Network
+```
+
+* * *
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 **Reactive Network 最经典的三合约架构**。  
 理解了这一个模型，等于理解了 **Reactive Network 的 80% 工作方式**。
 
@@ -378,6 +904,7 @@ if event:
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 # Reactive Network 本质是什么
 
