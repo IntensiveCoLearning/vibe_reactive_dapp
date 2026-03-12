@@ -15,8 +15,306 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+# **L2.1 - Uniswap V2**
+
+# 流动性池
+
+在传统的交易所（如纳斯达克或币安），交易是靠“订单簿”完成的：有人想买，有人想卖，价格匹配才能成交。
+
+但在 Uniswap V2 中，交易不需要等待对手方。**流动性池就像是一个“智能自动售货机”**：
+
+-   它始终包含**两种代币**（例如 ETH 和 USDT）。  
+    
+-   池子里储备了大量的这两种代币，由“流动性提供者”（LP）存入。  
+    
+-   当你来交易时，你不是在和另一个人交易，而是在**和这个智能合约里的储备金交易**。
+    
+
+这种流动性池时去中心化的，因为其包含两个特点：
+
+-   **无需许可 (Permissionless)**：不需要传统的做市商（机构或银行）来提供流动性。任何人都可以把自己的代币存入池中成为流动性提供者，并赚取交易手续费。  
+    
+-   **透明性 (Transparency)**：所有的操作都发生在以太坊区块链上。这意味着每一笔兑换、每一次存钱或取钱，在 **Etherscan** 这样的区块浏览器上都是公开透明、不可篡改的。
+    
+
+智能合约在这里：
+
+-   管理着这些储备金，确保没有人能随便把钱提走。  
+    
+-   它强制执行一套数学规则（即**恒定乘积模型**），决定了你用多少代币 A 能换回多少代币 B。  
+    
+-   它保证了交易的原子性：要么交易成功，代币交换完成；要么交易失败，资金退回。
+    
+
+# 恒定乘积公式
+
+Uniswap数学上遵循 x \\cdot y = k 这一恒定乘积公式。
+
+-   **x 和 y**：池中两种代币的实时储备量。  
+    
+-   **k**：乘积不变量。  
+    
+-   **原理**：在不考虑手续费的情况下，交易前后的 x 和 y 的乘积必须保持不变。
+    
+    -   如果你想从池子里拿走一些代币 y（输出），你就必须放入足够多的代币 x（输入），使得新的储备量 x' \\cdot y' \\ge k。  
+        
+    -   这导致了一个特性：当你买入某种代币时，它的价格会随着你买入数量的增加而呈指数级上升（滑动价差）。
+        
+
+一段 Uniswap V2 swap() 函数的简化片段：
+
+```solidity
+function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external {  
+require(amount0Out > 0 || amount1Out > 0, "UniswapV2: INSUFFICIENT_OUTPUT_AMOUNT");  
+(uint112 reserve0, uint112 reserve1,) = getReserves(); // fetches reserves of the pool  
+require(amount0Out < reserve0 && amount1Out < reserve1, "UniswapV2: INSUFFICIENT_LIQUIDITY");  
+  
+uint balance0;  
+uint balance1;  
+{  
+uint amount0In = reserve0 - (balance0 = reserve0 - amount0Out);  
+uint amount1In = reserve1 - (balance1 = reserve1 - amount1Out);  
+require(amount0In > 0 || amount1In > 0, "UniswapV2: INSUFFICIENT_INPUT_AMOUNT");  
+  
+uint balanceAdjusted0 = balance0 * 1000 - amount0In * 3;  
+uint balanceAdjusted1 = balance1 * 1000 - amount1In * 3;  
+require(balanceAdjusted0 * balanceAdjusted1 >= uint(reserve0) * uint(reserve1) * (1000**2), "UniswapV2: K");  
+  
+// Emit the Swap event  
+emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, to);  
+}  
+  
+_update(balance0, balance1, reserve0, reserve1);  
+  
+if (amount0Out > 0) _safeTransfer(token0, to, amount0Out);  
+if (amount1Out > 0) _safeTransfer(token1, to, amount1Out);  
+  
+if (data.length > 0) {  
+IUniswapV2Callee(to).uniswapV2Call(msg.sender, amount0Out, amount1Out, data);  
+}  
+}
+```
+
+我们可以将这段代码拆解为四个主要阶段：
+
+**预检查阶段** (Guards)
+
+```solidity
+require(amount0Out > 0 || amount1Out > 0, "UniswapV2: INSUFFICIENT_OUTPUT_AMOUNT");
+(uint112 reserve0, uint112 reserve1,) = getReserves();
+require(amount0Out < reserve0 && amount1Out < reserve1, "UniswapV2: INSUFFICIENT_LIQUIDITY");
+```
+
+首先确保用户不是在做“零交易”，且请求提取的数量不能超过池子现有的储备金（Reserve）。这里使用的是 `amountOut`。在 Uniswap V2 中，交易是“乐观的”，你先告诉合约你想拿走多少，合约会在最后验证你是否存入了足够的钱。
+
+**计算输入金额** (Input Calculation)
+
+```solidity
+uint amount0In = reserve0 - (balance0 = reserve0 - amount0Out);
+uint amount1In = reserve1 - (balance1 = reserve1 - amount1Out);
+require(amount0In > 0 || amount1In > 0, "UniswapV2: INSUFFICIENT_INPUT_AMOUNT");
+```
+
+这段代码通过对比“交易前储备”和“交易后余额”来算出用户到底转入了多少代币。在完整的 Uniswap 合约中，`balance0` 会通过 `token.balanceOf(address(this))` 获取。这里简化了逻辑，核心是确保你必须存入（In）了一些东西，才能拿走（Out）东西。
+
+**手续费与恒定乘积验证**
+
+在代码层面上实现了 x \\cdot y = k。
+
+```solidity
+uint balanceAdjusted0 = balance0 * 1000 - amount0In * 3;
+uint balanceAdjusted1 = balance1 * 1000 - amount1In * 3;
+require(balanceAdjusted0 * balanceAdjusted1 >= uint(reserve0) * uint(reserve1) * (1000**2), "UniswapV2: K");
+```
+
+-   **手续费处理**：Uniswap V2 收取 **0.3%** 的手续费。
+    
+    -   逻辑是：在检查乘积不变量之前，先从你的输入金额中扣除 0.3%。  
+        
+    -   为了避免浮点数计算，它全员乘以 1000。  
+        
+    -   `balance0 * 1000 - amount0In * 3` 实际上等于 1000 \\times (Balance - 0.003 \\times Input)。  
+        
+-   **验证公式**：
+    
+    (x\_{new} \\cdot 1000 - x\_{in} \\cdot 3) \\times (y\_{new} \\cdot 1000 - y\_{in} \\cdot 3) \\ge (x\_{old} \\cdot y\_{old}) \\times 1000^2
+    
+    只要这个等式成立，说明交易后池子的流动性（考虑手续费后）没有减少。
+    
+
+**乐观转账与回调** (Flash Swaps)
+
+```solidity
+if (amount0Out > 0) _safeTransfer(token0, to, amount0Out);
+if (amount1Out > 0) _safeTransfer(token1, to, amount1Out);
+
+if (data.length > 0) {
+    IUniswapV2Callee(to).uniswapV2Call(msg.sender, amount0Out, amount1Out, data);
+}
+```
+
+-   **先给钱，后验证**：注意到 `_safeTransfer`（给用户钱）发生在 K 值验证（第3步）的逻辑包裹中或紧随其后。  
+    
+-   **闪电贷接口**：如果 `data` 长度大于 0，合约会触发接收地址的 `uniswapV2Call`。
+    
+    -   **这允许用户：** 先把代币拿走，利用这些代币在其他地方套利，只要在同一个交易结束前把钱还回来并支付 0.3% 的手续费，交易就能成功。这就是“闪电贷”。
+        
+
+整个代码需要注意以下特点：
+
+-   **输入与输出的确定**：
+    
+    在 V2 中，用户先通过代币合约把代币“转入”池子，然后调用 `swap()` 告知合约你想“拿走”多少。代码中的 `amount0In` 和 `amount1In` 是通过当前余额减去旧储备量计算出来的。  
+    
+-   **0.3% 手续费的处理**：
+    
+    代码中出现了 `* 1000 - amount0In * 3`。这实际上是在验证 k 值。
+    
+    -   逻辑是：在验证 x \\cdot y \\ge k 之前，先从输入金额中扣除 0.3% 的手续费。  
+        
+    -   乘以 1000 是为了处理小数点（Solidity 不支持浮点数），即 997/1000 = 99.7\\%。  
+        
+-   **悲观检查 (Optimistic Checks)**：
+    
+    Uniswap V2 支持**闪电兑换 (Flash Swaps)**。它允许你先拿走代币（`_safeTransfer`），只要在交易结束前你把钱（加上手续费）还回来，让最后那个 `require`（验证 k 值）通过即可。如果没还钱，整个交易会回滚。
+    
+
+# Uniswap V2 中的事件
+
+## Swap
+
+对于 Uniswap V2 这种高频交易协议，`Swap` 事件是外界感知交易发生的最主要途径。
+
+在区块链上，改变合约状态（比如资金池里的代币变少了）是不会主动通知外部的。如果你想知道刚刚谁买入了 ETH，你不能一直去查询合约的余额（那太慢且贵），而是应该**监听** `Swap` **事件**。
+
+-   **实时性**：交易一旦打包，事件就会立即出现在区块日志中。  
+    
+-   **低成本**：存储事件日志比存储合约变量要便宜得多。  
+    
+-   **可追溯性**：你可以通过事件历史轻松查出过去一年内所有的交易记录。
+    
+
+具体参数如下：
+
+```solidity
+event Swap(
+    address indexed sender, // 谁调用的 swap 函数（通常是路由合约）
+    uint amount0In,         // 存入池子的 Token0 数量
+    uint amount1In,         // 存入池子的 Token1 数量
+    uint amount0Out,        // 从池子拿走的 Token0 数量
+    uint amount1Out,        // 从池子拿走的 Token1 数量
+    address indexed to      // 最终谁收到了这些代币
+);
+```
+
+-   `indexed` **关键字**：标记为 `indexed` 的参数（如 `sender` 和 `to`）可以被高效过滤。比如，你可以搜索“所有发送给某特定地址的交易”。  
+    
+-   **In vs Out**：在一个典型的交易中，通常是一个 `In` 为正，另一个 `Out` 为正。
+    
+    -   _场景 A（用 Token0 买 Token1）_：`amount0In > 0`, `amount1In = 0`, `amount0Out = 0`, `amount1Out > 0`。  
+        
+    -   _场景 B（用 Token1 买 Token0）_：与之相反。
+        
+
+## Sync
+
+如果说 `Swap` 事件记录的是过程（谁换了多少钱），那么 `Sync` **事件记录的就是结果（池子里现在还剩多少钱）**。
+
+在 Uniswap V2 中，`Sync` 事件是流动性池状态的“最终真相”。以下是这一部分的深度解析：
+
+`Sync` 事件非常简单，只包含两个数据：
+
+```solidity
+event Sync(uint112 reserve0, uint112 reserve1);
+```
+
+-   **reserve0 和 reserve1**：代表交易完成后，池子中 Token0 和 Token1 的**最新总余额**。  
+    
+-   **uint112**：这是一个专门优化的数据类型，为了节省 Gas 费，Uniswap 将两个 112 位的整数打包存放在一个 256 位的插槽中。
+    
+
+`Sync` 处理了三种 `Swap` 事件覆盖不到的情况：
+
+1.  **添加/移除流动性 (Mint/Burn)**：
+    
+    当流动性提供者（LP）存入或取走代币时，不会触发 `Swap` 事件，但池子的储备金变了，此时必须发出 `Sync` 事件来更新价格参考。
+    
+2.  **直接转账 (Donations)**：
+    
+    如果有人直接把代币转入池子的合约地址（而不是通过交易），池子的余额也会增加。`Sync` 能够捕捉到这些变化，并将其强制同步到合约的状态变量中。
+    
+3.  **计算价格的“基准线”**：
+    
+    在 Uniswap 中，**价格是计算出来的**。  
+    Price\_{Token0} = \\frac{reserve1}{reserve0}
+    
+    如果没有最新的 `reserve` 数据，你就无法算出下一笔交易的精确报价。
+    
+
+## Reactive Network的意义
+
+睿应式网络可以监听 `swap` 和 `sync` 事件，从而达到想要的效果：
+
+-   利用 `Swap` 事件进行“自动化交易与套利”
+    
+
+`Swap` 事件提供了交易的动态信息（进出金额、交易者地址）。Reactive Network 利用它来做**意图（Intent）执行**。
+
+-   **Reactive 逻辑**：RSC 监控 `Swap` 事件中的 `amountIn` 和 `amountOut`。  
+    
+-   **自动化操作**：
+    
+    -   **跟单交易（Copy Trading）**：如果监测到某个“高胜率地址”（Whale）在 `Swap` 事件中买入某代币，Reactive Contract 可以立即在另一个 DEX 执行相同的买入指令。  
+        
+    -   **自动止盈止损**：当 `Swap` 事件导致的价格变动触及用户的止损线时，Reactive Network 自动发起交易卖出代币。  
+        
+-   **优势**：相比传统的链下监控脚本，Reactive Network 在共识层处理事件，延迟更低且更安全。
+    
+
+* * *
+
+-   利用 `Sync` 事件构建“实时价格预言机”
+    
+
+由于 `Sync` 事件包含了池子最新的储备量 (reserve0 和 reserve1)，它是计算**瞬时价格**最准的数据源。
+
+-   **Reactive 逻辑**：RSC 订阅特定流动性池的 `Sync` 事件。  
+    
+-   **计算公式**：每当 `Sync` 触发，RSC 自动计算 Price = \\frac{reserve1}{reserve0}。  
+    
+-   **应用场景**：**跨链价格同步**。
+    
+    -   例如：当以太坊上 Uniswap 的价格发生波动时，Reactive Network 可以瞬间感知，并自动更新其它链（如 Polygon 或 Arbitrage）上的借贷协议利率或清算价格，无需等待中心化预言机（如 Chainlink）的延迟更新。
+        
+
+* * *
+
+-   利用 `Sync` 监控“流动性风险”
+    
+
+`Sync` 事件在添加或移除流动性时也会触发。
+
+-   **安全监控**：如果监测到 `Sync` 事件显示的 reserve 突然大幅度下降（可能发生了 Rug Pull 或大额撤资），Reactive Contract 可以触发**紧急避险**。  
+    
+-   **操作**：自动将用户的资金从相关的矿池中提出，或者在协议被掏空前执行对冲。
+    
+
+* * *
+
+在 Reactive Network 的开发中，利用这两个事件通常分为三步：
+
+| 步骤 | 操作内容 | 对应 Uniswap 事件 |
+| --- | --- | --- |
+| 1. 订阅 (Subscribe) | RSC 告知 Reactive 节点监控特定池子的合约地址。 | 监控 Swap / Sync 的 Topic ID |
+| 2. 过滤 (Filter) | 设置触发条件（例如：amountIn > 100 ETH）。 | Swap 事件中的参数 |
+| 3. 执行 (Callback) | 当事件匹配时，在目标链发起一个 Transaction。 | 调用另一链的 transfer 或 buy |
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 # **L1.5 - 预言机**
 
 **blog:**[**https://beautifulremi.dpdns.org/**](https://beautifulremi.dpdns.org/)
@@ -196,6 +494,7 @@ contract ChainlinkPriceReactor is IReactive {
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 # **L1.3 - ReactVM和睿应式网络**
 
@@ -927,6 +1226,7 @@ require(evm_id == owner, 'Wrong EVM ID');
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 # 睿应式合约
