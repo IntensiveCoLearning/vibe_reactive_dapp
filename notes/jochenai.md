@@ -15,8 +15,31 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+Lesson 5:  
+Oracles act as essential bridges between blockchains and the real world, enabling smart contracts to access off-chain data—such as price feeds, weather reports, or event outcomes—while maintaining decentralization and trustlessness. This solves the **oracle problem**: reliably importing external information onto the blockchain without creating single points of failure or excessive trust requirements.
+
+Decentralized oracle networks like **Chainlink** and **Band Protocol** fetch data from multiple sources, aggregate it, and often use multisig protocols to ensure consensus before submitting data on-chain, minimizing manipulation risks. Popular applications include DeFi (price-based lending/liquidations), parametric insurance (automatic payouts on verified events), and trustless online betting.
+
+The article provides a Chainlink code example for fetching ETH/USD prices, but highlights a key limitation: traditional smart contracts are passive—they only query oracles when explicitly called by an Externally Owned Account (EOA), preventing true real-time reactivity.
+
+**Reactive Contracts** address this by actively monitoring on-chain events (including oracle emissions) and automatically executing actions, potentially across chains. Integrating oracles with Reactive Contracts enables dynamic, real-time responses to off-chain events once they are brought on-chain, greatly expanding blockchain's utility.
+
+**Key notes:**
+
+-   Oracles are vital for connecting smart contracts to real-world data.
+    
+-   Decentralized networks (e.g., Chainlink) ensure secure, reliable data feeds.
+    
+-   Traditional contracts lack proactive behavior; Reactive Contracts enable event-driven automation.
+    
+-   Oracle + Reactive Contract synergy unlocks powerful, real-time decentralized applications.
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 # Reactive Contracts: Dual-State Architecture and Subscriptions
 
 **Dual-State Environment:** Each RC exists in two instances—one on the Reactive Network (a blockchain with system contracts) and one in a ReactVM (an isolated virtual machine). The Reactive Network handles user-initiated transactions and event subscriptions, while the ReactVM executes business logic when triggered by events. Detection of the execution context uses a `detectVm()` function checking for system contract code at a specific address. Modifiers (`rnOnly` and `vmOnly`) enforce which functions execute in each environment.
@@ -38,6 +61,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 # Summary of Reactive Contracts Lessons 1-2
 
@@ -73,6 +97,7 @@ By shifting from centralized bots to decentralized automation, RCs provide faste
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 # 1\. What Reactive Contracts Are
