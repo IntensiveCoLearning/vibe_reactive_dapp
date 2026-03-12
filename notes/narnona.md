@@ -15,8 +15,18 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+Reactive为什么分为RNK与RVM两个环境？
+
+**效率和可扩展性 (Efficiency & Scalability)**
+
+如果让一个单一的区块链既处理用户交易，又实时监听并响应成千上万个来自不同链的事件，网络会变得异常拥堵和缓慢。通过将“监听和反应”这个高频、重复性的工作剥离到专门的、可并行运行的 RVM 中，主网络 (RNK) 就可以专注于处理用户交互和状态共识，从而实现整个系统的高效和可扩展
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 ## Reactive Network 存储查询不一致 (RNK vs RVM)
 
 ### **1\. 背景信息**
@@ -69,6 +79,7 @@ curl --location '<https://lasna-rpc.rnk.dev/>' \\
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 学习了reactive智能合约的编写，并尝试编写一个跨链传输的demo。
 
