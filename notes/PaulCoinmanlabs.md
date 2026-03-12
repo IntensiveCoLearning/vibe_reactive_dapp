@@ -15,8 +15,23 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+针对于昨天的问题：共识更多的是依赖价格，类比chainlink，Chainlink 因为它有一群**信誉极高、经过身份审核**的节点（比如 T-Systems, Deutsche Telekom 等）。Reactive Network 为了保证商用级的稳定性，也会采用类似的路径。
+
+-   **质押门槛**：节点必须锁定大量代币作为“保证金”。
+    
+-   **作恶惩罚 (Slashing)**：如果节点报了假警，它的保证金会被瞬间没收。
+    
+-   **多重签名共识**：和 Chainlink 的 OCR (Off-Chain Reporting) 类似，Reactive 节点之间也需要对“以太坊上确实发生了事件”这一事实达成共识。
+    
+
+Chainlink 像是一个“搬运工”**，把价格等数据搬到链上，你还得写代码去读取这个价格。 Reactive 像是一个**“全自动机器人”。它不仅验证了事件的真实性，还直接在它自己的 EVM（ReactVM）里运行了 业务逻辑
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 -   传统的开发开发者需要自己维护后端服务器，不断向 RPC 节点发送请求询问，这种模式存在高延迟、中心化单点故障且浪费服务器资源，在Reactive模式下，通过 `subscribe` 向网络提交**逻辑预案**（If-this-then-that）。你不需要主动看链，而是让链在事件发生时主动推你。这种控制权的移交，使得智能合约第一次拥有了**原生的异步处理能力。**
     
 -   在 Ethereum 上开发，交易是原子的（Atomic），要么全成，要么全败，在编写 `react()` 函数时，必须极其严谨地处理**权限校验 (**`onlySystem`**)**。因为 Reactive 响应不再依赖用户的私钥签名，而是依赖节点的共识触发，防御虚假回调是商业级安全的第一要素。
@@ -25,6 +40,7 @@ Let’s vibe Reactive dApp
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
+
 -   深入学习reactive的理论知识
     
 -   构思自己的reactive的demo
@@ -32,6 +48,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 **1.学习Reacitve相关的理论知识，比如主网配置、测试TOKEN的获取**
