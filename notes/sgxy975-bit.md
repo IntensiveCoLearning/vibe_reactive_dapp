@@ -15,8 +15,188 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+Solidity：storage 和 memory 赋值行为 + 应用场景
+
+一、先记住核心本质（决定所有行为）
+
+1\. **storage = 引用赋值（改副本 = 改原数据）**
+
+2\. **memory = 拷贝赋值（改副本 = 不改原数据）**
+
+二、storage 赋值行为 & 应用场景
+
+1\. 赋值特点
+
+\- 把\*\*链上数据的引用\*\*给变量
+
+\- 修改这个变量 = **直接修改区块链上的数据**
+
+\- 永久生效，花费 Gas
+
+2\. 典型应用场景
+
+场景 1：在函数里直接修改链上状态
+
+\`\`\`solidity
+
+contract Demo {
+
+uint256 public num = 10; // storage
+
+function test() public {
+
+// 把链上变量赋值给 storage 变量
+
+uint256 storage x = num;
+
+x = 100;
+
+// num 也变成 100！直接改链上数据
+
+}
+
+}
+
+\`\`\`
+
+场景 2：操作结构体、数组（批量修改链上数据）
+
+\`\`\`solidity
+
+struct User {
+
+uint256 age;
+
+}
+
+User\[\] public users; // storage 数组
+
+function updateAge(uint256 index) public {
+
+// 获取 storage 引用
+
+User storage user = users\[index\];
+
+user.age = 20; // 直接修改链上数据
+
+}
+
+\`\`\`
+
+场景 3：睿应层合约中自动更新状态
+
+反应式合约需要\*\*实时修改链上状态\*\*，必须用 storage。
+
+\---
+
+三、memory 赋值行为 & 应用场景
+
+1\. 赋值特点
+
+\- 复制一份\*\*临时数据\*\*
+
+\- 修改副本\*\*不会影响原数据\*\*
+
+\- 临时使用，不花 Gas，函数结束消失
+
+2\. 典型应用场景
+
+场景 1：读取数据但不修改（安全）
+
+\`\`\`solidity
+
+function getUserName() public view returns(string memory) {
+
+string memory name = userName; // 复制一份
+
+return name;
+
+// 原数据 userName 完全不变
+
+}
+
+\`\`\`
+
+场景 2：函数参数传递（不污染原数据）
+
+\`\`\`solidity
+
+function setName(string memory \_name) public {
+
+// \_name 是临时拷贝，不会影响外部
+
+userName = \_name;
+
+}
+
+\`\`\`
+
+场景 3：临时计算、排序、逻辑处理
+
+\`\`\`solidity
+
+function calculate(uint256\[\] memory arr) public pure returns(uint256) {
+
+arr\[0\] = 999; // 只改临时拷贝，原数据不变
+
+return arr\[0\];
+
+}
+
+\`\`\`
+
+场景 4：返回新创建的数组/结构体
+
+\`\`\`solidity
+
+function createUser() public pure returns(User memory) {
+
+User memory user; // 临时创建
+
+user.age = 18;
+
+return user;
+
+}
+
+\`\`\`
+
+\# 四、一张表看懂所有区别（必背）
+
+| 特性 | storage 赋值 | memory 赋值 |
+
+|-----|-------------|-------------|
+
+| 数据位置 | 区块链硬盘 | 内存 |
+
+| 赋值方式 | 引用（改副本=改原数据） | 拷贝（改副本=不改原） |
+
+| 永久保存 | ✅ 是 | ❌ 否 |
+
+| 花费 Gas | ✅ 费 | ❌ 不费 |
+
+| 主要用途 | 修改链上状态 | 临时计算、传参、返回 |
+
+\---
+
+\# 五、最简单使用口诀
+
+想改链上数据 → storage
+
+只想临时用用 → memory
+
+引用赋值会改原数据
+
+拷贝赋值安全不影响
+
+\`\`\`
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 Solidity 语法基础
 
 一、开头必须写：版本声明
@@ -262,6 +442,7 @@ require做校验
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 反应式智能合约：解锁Web3自动化新范式——Ivan Ivanskitiy深度访谈解读
 
