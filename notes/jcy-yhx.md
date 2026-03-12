@@ -15,8 +15,65 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+# 经济模型-反应式合约如何支付执行和跨链回调费用-**实际运行时的费用支付流程**
+
+## **RVM Transactions**
+
+RVM 交易在执行时不包含 gas 价格。费用将在后续区块（通常是下一个区块）的 BaseFee 基础上计算并收取。由于记账在区块级别聚合，Reactscan 无法将费用与单个 RVM 交易一一对应。
+
+## **最大 Gas 上限**
+
+**RVM 交易的最大 gas 上限为 900,000 个单位。**
+
+费用计算公式：  
+fee = BaseFee ⋅ GasUsed
+
+其中：
+
+-   BaseFee：记账区块中每个 gas 单位的基础费用
+    
+-   GasUsed：执行过程中实际消耗的 gas
+    
+
+## Reactive Network 交易
+
+RNK 交易遵循标准的 EVM gas 模型（提前支付）。
+
+## 费用支付流程总结
+
+| 概念 | 说明 | 处理方式 | 资金不足后果 |
+| --- | --- | --- | --- |
+| REACT 代币 | 用于所有 gas 和费用 | 提前充值合约 | 债务累积 |
+| RVM Gas 模型 | 先执行，后付费（BaseFee × GasUsed） | 充值 + 结算债务 | 合约 inactive |
+| 回调 Gas 下限 | 最低 100,000 gas | 目标链上充值回调合约 | 请求被忽略 / 黑名单 |
+| 债务结算 | 手动 coverDebt() 或 自动 depositTo() | 直接转账或系统/代理 | 黑名单，停止执行 |
+| 黑名单机制 | 债务过高 → 无法执行任何 tx/callback | 结算债务恢复 | 操作完全停止 |
+
+# Uniswap V2 止损示例代码学习
+
+## **合约结构概览**
+
+### 1.**Reactive 合约**:UniswapDemoStopTakeProfitReactive.sol
+
+部署在 Reactive Network 上，订阅用户回调合约的生命周期事件以及指定的 Uniswap V2 交易对sync日志，检测价格阈值并触发执行。
+
+### **2.回调合约:UniswapDemoStopTakeProfitCallback**
+
+部署在目的链（Sepolia），管理订单的创建、执行、暂停/取消，实际把 token 从用户钱包转给路由器并完成 swap。
+
+### 3.辅助合约:RescuableBase
+
+为回调合约提供了救援 ETH/ERC20 的通用功能。
+
+两个主要合约之间通过**callback**事件和 Reactive Network 的服务（service.subscribe/service.unsubscribe）交互：  
+Reactive 监控到条件满足后 emit 一个回调事件发送到目的链；回调合约的authorizedSenderOnly修饰符确保只有 Reactive 网络代理调用 executeStopOrder。
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 # **ReactVM 与反应式网络作为双态环境**
 
 **每个反应式合同有两个实例——一个在反应式网络上，另一个在其独立的 ReactVM。**
@@ -199,6 +256,7 @@ function getLatestPrice() public view returns (int) {
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
+
 # Basic Demo 实操
 
 ## Basic Demo 三个合约详解与流程合约角色
@@ -299,6 +357,7 @@ function subscribe(
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 ## **什么是睿应层（Reactive Network）**
