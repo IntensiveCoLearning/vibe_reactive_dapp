@@ -59,6 +59,77 @@ Let’s vibe Reactive dApp
 
 -   **传统模式 (预言机 + 普通合约)**：预言机更新了价格 -> 价格静静地躺在链上 -> 用户手动发交易 -> 合约执行（**慢且依赖人工**）。
     
+
+Solidity
+
+```
+pragma solidity ^0.8.0;
+
+import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
+
+contract PriceConsumerV3 {
+
+    AggregatorV3Interface internal priceFeed;
+
+    /**
+     * Network: Ethereum Mainnet
+     * Aggregator: ETH/USD
+     * Address: 0x... (Chainlink ETH/USD Price Feed Contract Address)
+     */
+    constructor() public {
+        priceFeed = AggregatorV3Interface(0x...);
+    }
+
+    /**
+     * Returns the latest price
+     */
+    function getLatestPrice() public view returns (int) {
+        (
+            /* uint80 roundID */,
+            int price,
+            /* uint startedAt */,
+            /* uint timeStamp */,
+            /* uint80 answeredInRound */
+        ) = priceFeed.latestRoundData();
+        return price;
+    }
+}
+
+```
+
+代码解释：
+
+```
+### 1. 编译版本与接口导入
+
+- **`pragma`**：声明这段代码使用 0.8.0 或更高版本的 Solidity 编译器编译。
+    
+- **`import`**：这是关键。智能合约想要调用另一个合约（这里是 Chainlink 的官方喂价合约），必须知道对方长什么样（有哪些函数、返回值是什么）。`AggregatorV3Interface.sol` 就是 Chainlink 提供的一份“API 说明书”（接口）。
+    
+
+### 2. 状态变量声明
+
+- 这里声明了一个名为 `priceFeed` 的状态变量，它的类型就是我们刚刚导入的 `AggregatorV3Interface`。
+    
+- `internal` 意味着这个变量只能在当前合约内部使用，外部用户无法直接读取它。你可以把它理解为**“一部专门用来给 Chainlink 打电话的专线座机”**。
+    
+
+### 3. 构造函数 (初始化)
+
+- **`constructor`**：这是合约部署时**只执行一次**的初始化函数。（_注：在 0.8.0 以上的 Solidity 中，构造函数不需要写 `public`，这里算是老版本代码留下的一点小习惯。_）
+    
+- **绑定地址**：`0x...` 应该是 Chainlink 官方在以太坊主网上部署的 ETH/USD 喂价合约的具体地址（比如以太坊主网上是 `0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419`）。这行代码的作用是把你的“专线座机”插上特定的电话线，明确告诉它去找谁要数据。
+    
+
+### 4. 核心功能：获取最新价格
+
+- **`public view`**：`public` 表示任何人都可以调用这个函数；`view` 表示这个函数**只读取数据，不修改区块链状态**。因此，如果你在链下（比如在前端页面）调用它，是**完全免费、不消耗 Gas 的**。
+    
+- **`priceFeed.latestRoundData()`**：你拿起座机按下了查询键。Chainlink 的合约会返回一组数据（共 5 个返回值）。
+    
+- **“逗号占位法”（元组解构）**：这是 Solidity 的特色语法。因为 `latestRoundData()` 返回 5 个值（轮次ID、价格、开始时间、时间戳、回答轮次），但你的业务逻辑**只需要 `price`（价格）**。为了节省变量声明带来的 Gas 消耗，代码中用 `/* 注释 */,` 的方式把不需要的返回值直接留空忽略掉了，只把第二个返回值赋给了 `price` 变量。
+```
+
 -   **响应模式 (预言机 + RC)**：预言机更新价格时，通常会 `emit` 一个类似 `PriceUpdated` 的事件 -> **Reactive Network 瞬间监听到该事件** -> 自动唤醒 ReactVM -> 执行你的 `react()` 逻辑 -> 抛出 Callback 自动执行止损/清算（**全自动化、毫秒级响应**）。  
     
 
@@ -77,6 +148,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 ## 1\. ReactVM：响应式合约的“私人大脑”
 
@@ -136,6 +208,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 ## 🌟 一、 范式转移：什么是响应式智能合约 (RSC)?
