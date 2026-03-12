@@ -15,8 +15,312 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+Reactive Network 学习总结
+
+第二阶段 Day 1
+
+主题：Reactive 技术结构与开发模型
+
+\==================================================
+
+一、Reactive 技术的核心目标
+
+\==================================================
+
+Reactive Network 的目标是：
+
+让智能合约具备“自动响应能力”。
+
+传统 EVM 合约：
+
+事件发生
+
+↓
+
+用户 / Bot 发送交易
+
+↓
+
+合约执行
+
+Reactive 模型：
+
+事件发生
+
+↓
+
+Reactive Network 监听
+
+↓
+
+自动触发 Reactive Contract
+
+↓
+
+执行 callback
+
+核心思想：
+
+Event → Trigger → Callback
+
+\==================================================
+
+二、Reactive Contract 的基本结构
+
+\==================================================
+
+Reactive Contract 是一种特殊的智能合约，
+
+其核心功能是：订阅事件并自动执行逻辑。
+
+基本组成：
+
++-------------------+
+
+| Reactive Contract |
+
++-------------------+
+
+| subscribe() | 订阅链上事件
+
+| trigger() | 事件触发逻辑
+
+| callback() | 执行响应操作
+
++-------------------+
+
+结构流程：
+
+subscribe
+
+│
+
+▼
+
+链上事件发生
+
+│
+
+▼
+
+trigger
+
+│
+
+▼
+
+callback
+
+\==================================================
+
+三、Reactive 的开发模型
+
+\==================================================
+
+Reactive 开发模式核心为：
+
+Subscribe / Trigger / Callback
+
+三个组件职责如下：
+
++-----------+--------------------------------------+
+
+| 模块 | 作用 |
+
++-----------+--------------------------------------+
+
+| Subscribe | 订阅链上事件 |
+
+| Trigger | 判断是否触发 Reactive Contract |
+
+| Callback | 执行自动化逻辑 |
+
++-----------+--------------------------------------+
+
+\==================================================
+
+四、ReactVM 执行逻辑
+
+\==================================================
+
+Reactive Network 引入 ReactVM，
+
+用于执行 Reactive Contract。
+
+ReactVM 的核心特点：
+
+双状态执行模型
+
+ReactVM State Model：
+
++-------------------+----------------------------------+
+
+| 状态类型 | 作用 |
+
++-------------------+----------------------------------+
+
+| Reactive State | 存储订阅关系 |
+
+| Execution State | 执行 callback |
+
++-------------------+----------------------------------+
+
+执行流程：
+
+Event
+
+│
+
+▼
+
+Reactive State
+
+│
+
+▼
+
+Trigger Check
+
+│
+
+▼
+
+Execution State
+
+│
+
+▼
+
+Callback Execution
+
+\==================================================
+
+五、Reactive 的跨链机制
+
+\==================================================
+
+Reactive Network 支持跨链自动执行。
+
+基本流程：
+
+Chain A 事件触发
+
+│
+
+▼
+
+Reactive Network 监听
+
+│
+
+▼
+
+Reactive Contract Callback
+
+│
+
+▼
+
+Chain B 执行交易
+
+\==================================================
+
+六、Reactive Library
+
+\==================================================
+
+Reactive Library 提供开发接口：
+
+主要组件：
+
++--------------------+--------------------------+
+
+| 组件 | 功能 |
+
++--------------------+--------------------------+
+
+| subscription API | 订阅事件 |
+
+| callback API | 回调执行 |
+
+| trigger interface | 触发逻辑 |
+
++--------------------+--------------------------+
+
+开发者通常通过Reactive Library，实现 Subscribe / Callback。
+
+\==================================================
+
+七、Reactive 的自动化能力
+
+\==================================================
+
+Reactive Network 可以实现：
+
+无需 Bot 的自动化执行。
+
+传统 DeFi 自动化：
+
+用户
+
+↓
+
+Bot
+
+↓
+
+合约
+
+Reactive 模型：
+
+用户
+
+↓
+
+Reactive Contract
+
+↓
+
+自动执行
+
+\==================================================
+
+八、Uniswap Stop Order 示例理解
+
+\==================================================
+
+Stop Order 示例说明：
+
+Reactive 可以实现自动交易。
+
+流程示意：
+
+Uniswap Price Event
+
+│
+
+▼
+
+Reactive Subscribe
+
+│
+
+▼
+
+Trigger Check
+
+│
+
+▼
+
+Execute Swap
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 在本次作业中，我主要围绕 Reactive Network 的跨链事件与回调机制进行了开发实践。首先梳理了系统整体架构，理解了 **Origin Contract、Reactive Contract 和 Destination Contract** 在跨链事件流程中的角色划分。Origin Contract 部署在源链上，用于触发事件；Reactive Contract 运行在 Reactive Network 上，用于监听指定事件并执行响应逻辑；Destination Contract 部署在目标链上，用于接收回调交易并执行最终操作。
 
 在开发过程中，我重点学习了 Reactive Smart Contract 的基本结构以及事件监听与回调的触发方式，并理解了 Reactive Network 的事件驱动执行模式。相比传统依赖 off-chain bot 监听事件再手动发送交易的方式，Reactive Network 将事件监听和自动执行逻辑通过合约形式进行编程，实现了更自动化的跨链响应机制。通过这一过程，我对事件驱动智能合约以及跨链自动化执行的设计思路有了更直观的认识。
@@ -28,6 +332,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 \# Reactive Network 学习总结
 
@@ -148,6 +453,7 @@ react(LogRecord log)
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 # **Reactive Network 学习总结**
