@@ -15,8 +15,242 @@ Web3 实习计划 2025 冬季实习生
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-11
+<!-- DAILY_CHECKIN_2026-03-11_START -->
+# Reactive Network 学习笔记
+
+## 跨链 Reactive Contracts（RCs）
+
+## 一、核心概念
+
+Reactive Contracts（RCs）是一种能够**自动响应区块链事件并执行跨链逻辑的智能合约系统**。
+
+RCs 会监听 EVM 兼容链上的 **event（事件）**，然后根据逻辑执行操作，并在目标链上触发 **callback transaction（回调交易）**。
+
+一个简单的心智模型：
+
+```
+event → RC logic → callback transaction
+```
+
+流程解释：
+
+1️⃣ **Event（事件）**  
+某个智能合约在链上触发事件，例如：
+
+-   Swap
+    
+-   Transfer
+    
+-   Borrow
+    
+-   Liquidation
+    
+
+2️⃣ **RC Logic（Reactive Contract逻辑）**  
+Reactive Network 监听该事件，并执行预设逻辑。
+
+3️⃣ **Callback Transaction（回调交易）**  
+RC 在另一条链或同一条链上执行交易。
+
+这使得智能合约可以实现 **事件驱动的跨链自动化系统**。
+
+* * *
+
+# 二、Reactive Contracts 能解锁的三大能力
+
+Reactive Contracts 的能力可以总结为三个核心支柱：
+
+## 1️⃣ 跨链执行（Cross-chain Execution）
+
+RC 可以实现：
+
+-   监听 **链 A 的事件**
+    
+-   执行逻辑
+    
+-   在 **链 B 触发交易**
+    
+
+典型应用包括：
+
+-   跨链桥
+    
+-   跨链借贷
+    
+-   跨链预言机
+    
+-   跨链自动化策略
+    
+
+示例：
+
+```
+Ethereum: Swap event
+        ↓
+Reactive Contract
+        ↓
+Arbitrum: Execute trade
+```
+
+* * *
+
+## 2️⃣ 链上自动化（On-chain Automation）
+
+传统自动化依赖：
+
+```
+Chain → Off-chain bot → Chain
+```
+
+问题：
+
+-   机器人必须在线
+    
+-   需要运维
+    
+-   可能被攻击
+    
+
+Reactive Network 的方式：
+
+```
+Chain → Reactive Network → Callback transaction
+```
+
+无需长期运行的机器人。
+
+常见场景：
+
+### 自动收取手续费
+
+自动在多个 DeFi 池中收取费用。
+
+### 止损 / 止盈订单（Stop Orders）
+
+例如：
+
+-   价格跌破某阈值
+    
+-   自动卖出资产
+    
+
+### 清算保护（Liquidation Protection）
+
+当借贷仓位接近清算：
+
+-   自动补充抵押
+    
+-   或部分平仓
+    
+
+### 定期任务
+
+例如：
+
+-   资金归集
+    
+-   自动再平衡
+    
+-   定期维护任务
+    
+
+* * *
+
+## 3️⃣ 模块化扩展（Modularity）
+
+RC 的一个重要设计理念是：
+
+> **无需修改原合约即可添加功能**
+
+你不需要：
+
+-   fork 合约
+    
+-   upgrade 合约
+    
+
+只需要：
+
+**订阅事件 → 构建扩展逻辑**
+
+例如：
+
+Uniswap 止损订单系统：
+
+```
+Uniswap Swap Event
+      ↓
+Reactive Contract
+      ↓
+Execute Sell
+```
+
+你不需要修改 Uniswap，只需要监听其事件。
+
+这种模式类似：
+
+```
+Plugin Architecture
+```
+
+* * *
+
+# 三、Reactive Network 架构组件
+
+Reactive Network 的关键组件包括：
+
+## 1️⃣ ReactVM
+
+Reactive Network 运行 RC 的执行环境。
+
+作用：
+
+-   执行 reactive contracts
+    
+-   处理订阅事件
+    
+-   触发 callback
+    
+
+类似：
+
+```
+Reactive Network = Automation Layer
+```
+
+* * *
+
+## 2️⃣ Subscriptions
+
+RC 可以订阅特定事件，例如：
+
+```
+UniswapV2Pair.Swap
+ERC20.Transfer
+Aave.Borrow
+```
+
+订阅之后：
+
+Reactive Network 会持续监听。
+
+* * *
+
+## 3️⃣ Oracles
+
+Reactive Network 通过 oracle 机制获取链上数据，例如：
+
+-   事件
+    
+-   状态
+    
+-   价格数据
+<!-- DAILY_CHECKIN_2026-03-11_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 # 学习笔记：构建一个跨链事件与回调合约
 
 ## 一、作业目标理解
