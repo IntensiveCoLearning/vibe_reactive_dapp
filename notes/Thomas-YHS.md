@@ -15,8 +15,107 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+今天主要关注了React VM相关的内容，并且阅读了Reactive的源码，下面是总结的笔记：  
+文档目标
+
+-   仅解释 ReactVM 在 Reactive 架构中的角色。
+    
+-   重点说明为什么代码里会出现 `if (!vm)`、`vmOnly`，以及“副本/双状态”的真实含义。
+    
+
+## 1\. ReactVM 是什么
+
+ReactVM 是 Reactive Network 中用于执行 Reactive Contract 自动化逻辑的私有执行环境。
+
+当源链事件匹配订阅条件后，事件处理并不是由普通 EOA 直接执行，而是由 ReactVM 执行 `react(...)`。
+
+## 2\. 为什么会说有“两个副本”
+
+同一份 Reactive 合约代码在系统中对应两个执行语境：
+
+-   Reactive Network 侧实例：负责控制面动作，例如 `subscribe()` / `unsubscribe()`。
+    
+-   ReactVM 侧执行实例：负责执行面动作，例如响应日志并运行 `react(...)`。
+    
+
+这就是“副本”的含义：同一逻辑、不同环境、职责拆分。
+
+## 3\. 双状态（Dual-State）含义
+
+Reactive 文档中的双状态可以理解为：
+
+-   Reactive Network State：由你直接发交易调用合约函数时更新。
+    
+-   ReactVM State：由订阅事件触发、在 ReactVM 执行 `react(...)` 时更新。
+    
+
+两者不是自动强一致同步关系，因此要明确区分“谁在更新哪一侧状态”。
+
+## 4\. 为什么 `if (!vm)` 必须存在
+
+在你的 `ReactiveContract` 里：
+
+```solidity
+if (!vm) {
+    service.subscribe(originChainId, _originContract, _originTopic0, REACTIVE_IGNORE, REACTIVE_IGNORE, REACTIVE_IGNORE);
+}
+```
+
+这里的目的：只在 Reactive Network 侧注册订阅，避免在 ReactVM 执行副本里重复做控制面操作。
+
+文档语义上，`subscribe()` / `unsubscribe()` 在 VM 内调用无效或不应依赖，因此应在非 VM 分支执行。
+
+## 5\. 为什么 `vmOnly` 必须存在
+
+在 `react(LogRecord calldata log)` 上使用 `vmOnly`，表示该入口只允许 ReactVM 执行。
+
+这样可以保证：
+
+-   普通外部调用者不能伪造事件直接驱动回调逻辑。
+    
+-   执行路径与 Reactive Runtime 的事件触发模型一致。
+    
+
+## 6\. 与你项目的映射
+
+-   Origin 合约发 `Received` 事件。
+    
+-   Reactive Network 实例已通过 `subscribe` 注册监听。
+    
+-   事件命中后由 ReactVM 调用 `react(...)`。
+    
+-   `react(...)` 满足阈值后发 `Callback` 事件。
+    
+-   目标链 callback proxy 调用 Destination 合约并触发 `CallbackReceived`。
+    
+
+## 7\. 常见误区
+
+1.  误区：一个合约只有一份状态。
+    
+
+结论：Reactive 架构下存在执行语境拆分与双状态概念。
+
+1.  误区：在 `react()` 里动态 `subscribe` 就能生效。
+    
+
+结论：订阅属于控制面，应在非 VM 路径管理。
+
+1.  误区：`vmOnly` 只是普通权限控制。
+    
+
+结论：它核心是执行环境约束，不只是地址 ACL。
+
+## 8\. 一句话总结
+
+Reactive 的关键是“控制面（Network 订阅）与执行面（ReactVM 响应）分离”。理解这点，就能理解为什么代码里同时出现 `if (!vm)` 和 `vmOnly`。
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 # 文档目的
 
 沉淀 `ReactiveDemo1` 的最小可复现工程流程：从编码到部署、触发、验收。
@@ -264,6 +363,7 @@ cast send "$ORIGIN_ADDR" --rpc-url "$ORIGIN_RPC" --private-key "$ORIGIN_PRIVATE_
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
+
 今天完成了Demo的部署并运行，具体的实现如下文所示：  
 \# 跨链事件与回调作业提交
 
@@ -308,6 +408,7 @@ cast send "$ORIGIN_ADDR" --rpc-url "$ORIGIN_RPC" --private-key "$ORIGIN_PRIVATE_
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 终于又开始了新的残酷共学，这次一定要坚持下来，这次想看看能不能做一个简单的链上套利机器人。  
