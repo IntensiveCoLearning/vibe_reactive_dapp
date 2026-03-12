@@ -15,8 +15,70 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+# 使用 AI 构建 Reactive Contracts (跨链智能合约)
+
+## 一、 核心心法：AI 时代的开发者定位
+
+-   **AI 是增强工具，而非替代品**：AI 能提升开发速度和代码质量，但**无法替代开发者对现实世界业务逻辑的理解**
+    
+-   **终极目标是“学习”**：在 Hackathon 或早期项目中，不要只追求“把东西建出来然后忘掉”，而是要通过阅读和验证 AI 生成的代码来提升自己的技术深度
+    
+-   **人类的独特价值在于“原创性”**：AI 擅长搜索、编译和解释，但不擅长提出全新的架构思路（例如讲座中提到的应对区块重组的“Ping-pong”机制，就是 CTO 原创的思路，而非 AI 提出的）
+    
+
+## 二、 推荐工具栈
+
+-   **首选 AI**：**Claude AI** (讲座团队目前认为其在代码生成上表现最佳)
+    
+-   _推荐用法_：使用 **VS Code 扩展 (CLI 命令行工具)**，如 Claude Code。它可以直接在本地仓库文件夹中创建和修改文件，免去了在网页端来回复制粘贴的繁琐
+    
+-   **备选 AI**：Cursor, GitHub Copilot, ChatGPT, DeepSeek 。 (注：讲者认为 Gemini 目前在编程能力上可能不如 Claude )
+    
+-   **开发环境**：推荐使用 **Foundry** 进行以太坊/EVM 智能合约开发
+    
+
+## 三、 标准 AI 结对编程工作流 (SOP)
+
+这是本次讲座最核心的实操指南，建议在开发新功能时严格遵循：
+
+1.  **第一步：让 AI 先写“架构计划”，绝不要直接写代码**
+    
+
+_Prompt 要点_：明确说明你要构建什么（如 USDC 跨链桥），并**强制要求包含具体技术栈**（如：“Make a plan for implementation using **Reactive Network**”）
+
+_模型选择_：在规划阶段，使用最强大的模型（如 Claude 3.5 Sonnet 或 Opus），因为架构设计是最复杂的环节
+
+2.  **第二步：极限施压与验证计划**
+    
+
+仔细阅读 AI 给出的架构设计（Origin Contract -> Reactive Contract -> Destination Contract）
+
+针对漏洞提问：例如询问“如何防止双花 (Double spend)？”、“如何处理区块重组 (Reorgs)？”
+
+多轮迭代，直到你完全理解并认可该计划，没有任何遗留疑问
+
+3.  **第三步：生成代码与阅读审核**
+    
+
+确认计划无误后，再下达指令：“Ask Claude to implement the plan”
+
+**必须通读所有智能合约代码**。如果遇到不懂的行，像请教人类导师一样让 AI 逐行解释
+
+4.  **第四步：手动部署与调试 (Human-in-the-loop)**
+    
+
+目前不建议让 AI 自动执行部署代理
+
+开发者需自己准备钱包、领水，并将合约部署到测试网（Ethereum Sepolia, Base Sepolia, Reactive Kopli）
+
+将链上交易哈希或区块浏览器链接（Etherscan/Reactscan）发给 AI，让它帮你分析执行结果
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 # Reactive Staking Season 的结构
 
 Reactive 的 staking 不是永久池，而是 **Season 机制**：
@@ -121,6 +183,7 @@ Reactive 初期 staking APY 曾达到 **约 15–35% 区间**
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
+
 # 一、Reactive Network 与传统 EVM 的根本区别
 
 ## 1️⃣ 传统 EVM：**请求驱动（Request-driven）**
@@ -216,6 +279,7 @@ Reactive Contract监听事件
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 今天是第一天！打算先来了解一下概念！
