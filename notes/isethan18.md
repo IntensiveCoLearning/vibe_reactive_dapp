@@ -15,8 +15,38 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+2026.03.13
+
+## ReactVM 双状态模型与执行逻辑
+
+**今日重点：** 理解 Reactive Network 的“大脑”是如何工作的，以及它为什么快。
+
+-   **ReactVM 双状态模型：**
+    
+    -   **Global State（全局状态）：** 记录所有链（如 Ethereum, Polygon）同步过来的原始数据。
+        
+    -   **Local State（局部状态）：** 你的 Reactive Contract 运行时的私有状态。
+        
+-   **执行流 (The Pipeline)：**
+    
+    1.  **Catch：** 捕获源链的 Event Log。
+        
+    2.  **Process：** 在 ReactVM 中运行逻辑判断（是否满足触发条件）。
+        
+    3.  **Emit：** 生成一个 Callback 交易。
+        
+-   **跨链与自动化机制：**
+    
+    -   Reactive Network 本身不存储资产，它充当的是**跨链指挥官**。它通过私钥分片或中继机制，在目标链上代表你发起交易。
+        
+-   **学习资料：**[**ReactVM 深度解析**](https://dev.reactive.network/reactvm)
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 ## Day 3：挑战任务实战（终极目标）
 
 **核心点：按照 Notion 指引完成跨链自动化**
@@ -39,6 +69,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 ## 2026.03.10
 
@@ -87,6 +118,7 @@ bytes calldata data
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 ## 2026.03.09
