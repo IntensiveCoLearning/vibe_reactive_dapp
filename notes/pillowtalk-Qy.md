@@ -15,8 +15,71 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+The meeting discussed how to use AI to build reactive contracts, including workflow, tips, and application examples, as follows:
+
+1.  **Workflow for Building with AI**:
+    
+
+-   **Ask for a plan**: Explain what to build and specify using reactive contracts.
+    
+-   **Verify the plan**: Read the plan, ask additional questions, and iterate until satisfied.
+    
+-   **Implement the plan**: After the plan is approved, ask AI to write the code.
+    
+-   **Read and understand the code**: Read the code written by AI and ask questions to understand it.
+    
+-   **Deploy the contracts**: Deploy the contracts on testnets and share the results with AI for explanations.
+    
+-   **Create a summary**: Ask AI to create a summary and verify it.
+    
+
+2.  **Tips for Using AI**:
+    
+
+-   **Provide the latest information**: Give AI the latest links and code examples to avoid using old indexed data.
+    
+-   **Verify AI's work**: Ask AI to verify what it has done and what you have done.
+    
+-   **Be clear in communication**: Over - explain and provide details to ensure AI understands your requirements.
+    
+-   **Understand the output**: Make sure you understand what AI has built and use AI as a tool to learn and grow.
+    
+
+3.  **Examples of Reactive Contracts**:
+    
+
+-   **Stop - loss and take - profit orders**: Build on decentralized exchanges.
+    
+-   **Bridge**: Use a ping - pong system to prevent reorgs and double - spending.
+    
+-   **Liquidation protection**: Protect positions on liquidity pools.
+    
+-   **Automatic fee collection**: Collect fees from multiple chains and transfer them to a vault.
+    
+-   **Auto - looper**: Implement on - chain leverage.
+    
+-   **Cross - chain Oracle**: Migrate data from one chain to another.
+    
+
+4.  **AI Security Concerns**:
+    
+
+-   **Security risks**: Although modern operating systems have permission controls, there may still be risks, especially for less - experienced developers.
+    
+-   **Alternative solution**: Working in a browser can be an alternative for those with security concerns.
+    
+
+5.  **Learning from AI**:
+    
+
+-   Ask AI questions in the same way as you would ask a human. AI is more patient and can answer as many questions as you want.
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 # 第一关攻略：  
 
 ### 1.准备工作  
@@ -188,6 +251,7 @@ contract DestinationContract {
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
+
 ```
 
 Origin Contract (链A)
@@ -242,6 +306,7 @@ Trigger(sender, amount)
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 1.互换了些reactive的代币，为之后的作业和Dapp作准备
