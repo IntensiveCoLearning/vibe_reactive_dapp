@@ -40,7 +40,7 @@ The meeting discussed how to use AI to build reactive contracts, including workf
 
 -   **Provide the latest information**: Give AI the latest links and code examples to avoid using old indexed data.
     
--   **Verify AI's work**: Ask AI to verify what it has done and what you have done.
+-   **Verify AI’s work**: Ask AI to verify what it has done and what you have done.
     
 -   **Be clear in communication**: Over - explain and provide details to ensure AI understands your requirements.
     
@@ -75,10 +75,14 @@ The meeting discussed how to use AI to build reactive contracts, including workf
     
 
 -   Ask AI questions in the same way as you would ask a human. AI is more patient and can answer as many questions as you want.
+    
+
+![a9b4e51b5c186618e8283e86451fd1dd.jpg](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/pillowtalk-Qy/images/2026-03-12-1773331112969-a9b4e51b5c186618e8283e86451fd1dd.jpg)
 <!-- DAILY_CHECKIN_2026-03-12_END -->
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 # 第一关攻略：  
 
@@ -252,6 +256,7 @@ contract DestinationContract {
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
 
+
 ```
 
 Origin Contract (链A)
@@ -306,6 +311,7 @@ Trigger(sender, amount)
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
