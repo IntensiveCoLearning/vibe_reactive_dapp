@@ -10,7 +10,7 @@ timezone: UTC+8
 
 ## Self-introduction
 
-Let’s vibe Reactive dApp
+learning
 
 ## Notes
 
