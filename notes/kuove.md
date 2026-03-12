@@ -15,8 +15,14 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+根据第二阶段notion笔记自学
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 Reactive Network 的核心本质是：**它不是在处理“状态”，而是在处理“状态的增量（Events）”。**
 
 * * *
@@ -47,6 +53,7 @@ RSC 与普通的 Solidity 合约在编写逻辑上有显著区别。在 Reactive
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 # Reative NetWork
 
