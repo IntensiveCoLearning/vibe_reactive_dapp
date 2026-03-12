@@ -21,9 +21,9 @@ Let’s vibe Reactive dApp
 
 **“把监听事件 + 后台 bot 判断 + 跨链再发交易”这整套流程，做成统一的事件驱动执行层。”** 官方首页也是这样定位它的：面向 EVM 的 event-driven execution layer，用来做跨链、链上自动化。
 
-用一个关于**“从 Polygon 上点跨链，自动在另一条链上铸币”** 的简化例子来理解：
+用一个关于\*\*“从 Polygon 上点跨链，自动在另一条链上铸币”\*\* 的简化例子来理解：
 
-先记 3 个角色：
+3 个角色：
 
 -   **Origin chain**：事件发生的链。比如用户在 Polygon 上发起桥接请求。
     
@@ -58,16 +58,9 @@ Reactive 的目标链侧会通过一个 **Callback Proxy** 合约转发这次调
 **7）目标链执行最终动作**  
 例如 mint 代币、释放资产、触发某个函数。Reactive Bridge 的官方示例里，Reactive Contract 监听源链 `BridgeRequest`，然后在目标链触发 mint。
 
-你可以把它压缩成一句话：
+可以把它压缩成一句话：
 
 **源链发事件 → Reactive Network 发现 → ReactVM 运行** `react()` **→ 发 callback → 目标链执行结果。**
-
-对初学者最重要的理解是：
-
--   普通合约：**别人调用我，我才动。**
-    
--   Reactive Contract：**我先订阅事件，事情一发生，我就自动按规则继续做。**
-    
 
 还有一个很关键但容易忽略的点：
 
@@ -79,6 +72,7 @@ Reactive 的目标链侧会通过一个 **Callback Proxy** 合约转发这次调
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
+
 最近忙AI共学
 
 回头看
@@ -88,6 +82,7 @@ Reactive 的目标链侧会通过一个 **Callback Proxy** 合约转发这次调
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 可以把 **Reactive Network** 理解成：给区块链加上一层“**事件触发的自动执行系统**”。
@@ -128,6 +123,7 @@ Reactive 的目标链侧会通过一个 **Callback Proxy** 合约转发这次调
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
