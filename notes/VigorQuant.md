@@ -15,8 +15,52 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+第一周：3.9-3-11
+
+-   理解睿应层（Reactive Network）与传统 EVM 的根本区别
+    
+    -   睿应层 是什么？
+        
+    
+    > 睿应层（Reactive Network）是一个兼容EVM（以太坊虚拟机）的区块链执行层，专为构建响应式智能合约（Reactive Contracts）而设计；
+    > 
+    > 目的：旨在推动Web3从“用户手动操作”向“事件自动驱动”的转变，让去中心化应用（dApp）能够跨链感知外部事件、自动执行逻辑，并在全链上结算；这种基础设施的核心在于将智能合约从传统的被动模式（即等待用户或外部调用）转变为主动响应模式，例如当特定事件发生时，合约能自动触发动作，而无需人工干预。
+    
+    -   区别
+        
+    -   Data lives on one chain, execution happened on another;
+        
+    -   smart contract cannot watch and react across both, Reactive contracts can;
+        
+    
+    > 传统EVM的智能合约是“被动的工具”——它只有在有人/有交易“叫醒”它时才工作；
+    > 
+    > 睿应层的Reactive Contracts是“活的主体”——它能自己持续监听世界（链上事件），一旦感兴趣的事情发生，就自动醒来做事，无需任何人叫它。
+    
+-   核心架构：ReactVM + 睿应层（Reactive Network）环境
+    
+    -   Reactive Network：监听事件 → 判断逻辑 → 自动触发交易
+        
+    -   ReactVM ：专门运行 reactive smart contracts 的虚拟机
+        
+-   理解“事件驱动智能合约”，什么是 reactive smart contracts（睿应式智能合约）
+    
+    -   传统智能合约，被动执行，用户调用；
+        
+    -   RC：自动对链上事件作出反应的合约
+        
+-   知道睿应层（Reactive Network）适合解决什么问题
+    
+    -   链上事件，自动执行；
+        
+    -   例如：自动化defi，预测市场，Cross-chain automation，等
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 # **3.9-11 - 第一阶段：理解睿应层（Reactive Network）思维**
 
 Demo 展示了两个关键特性：
