@@ -15,8 +15,36 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+### **实时监控问题解答**
+
+**监控原理**：市场波动与Reactive实时监控无关，其监控每条链的每个区块，并对合约订阅的事件做出反应。
+
+**特殊情况说明**：在极端波动如黑客攻击或调试时，一个区块内的反应可能不足，但总体仍有时间监控数据，需确保交易及时并支付足够Gas费用。
+
+### **应用场景讨论**
+
+**跨链操作痛点**：Reactive可解决跨链操作繁琐、用户体验差及安全性隐患问题，目前跨链操作低效，合约间缺乏通讯机制，跨链桥存在中心化问题。
+
+**潜在解决方案**：Reactive可弥补通讯机制空缺，避免因不同链合约缺乏沟通导致的清算不及时问题。
+
+**全链上方案补充**：全链上跨链方案在链下较脆弱且无法自动化，跨链桥和预言机存在中心化问题。
+
+### **经济生态问题探讨**
+
+**币价影响**：有同学提出Reactive部署节点需质押代币，币价下跌会降低作恶成本，可能导致应用层出现问题。
+
+**POS机制疑问**：大家讨论了POS机制能否保障安全，认为以太坊因市值高作恶成本高，但Reactive代币市值低时存在作恶可能。
+
+**与预言机对比**：该同学认为Reactive与Chainlink机制类似，都需质押代币成为节点，且都面临共识安全问题。
+
+**中心化解决方案**：提出可通过中心化控制部分节点解决问题，但会导致中心化程度过高，影响使用意愿。
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 1\. **Transaction Rollback and Reorg Handling**
 
 **Network Failure** ：When a node encounters a network failure, transactions will not be rolled back. The state of non - failed nodes is considered correct.
@@ -74,6 +102,7 @@ Let’s vibe Reactive dApp
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
+
 # **Basic Reactive Demo：理解“监听-反应”闭环**
 
 这个 Demo 是 Reactive 的 "Hello World"。流程很简单：在 Sepolia 上转账 -> Reactive 监听到 -> 自动通知 Sepolia 上的回调合约。
@@ -124,6 +153,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 # **我所理解的睿应层（Reactive Network）**
