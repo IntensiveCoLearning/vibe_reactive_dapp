@@ -15,8 +15,21 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+今日完成：
+
+1、Dev 文档核心模块学习；  
+2、demo跟敲；
+
+今日感想：
+
+1、今天学习时间不够，明天补上
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 今日完成：
 
 1、睿应层（Reactive Network）官网 Overview[https://reactive.network/；](https://reactive.network/)
@@ -35,6 +48,7 @@ Let’s vibe Reactive dApp
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
+
 今日完成：
 
 1、睿应层（Reactive Network）官网 Overview学习完成；
@@ -48,6 +62,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 今日完成：
