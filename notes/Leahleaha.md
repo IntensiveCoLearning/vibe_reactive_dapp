@@ -15,8 +15,18 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+# 参加Reactive Workshop
+
+如何用AI开发反应式智能合约，相关实操技巧
+
+在开发领域，基于反应式智能合约开发的场景下，AI存在的局限性
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 差点忘记
 
 先打一个卡
@@ -24,6 +34,7 @@ Let's vibe Reactive dApp！
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 Reactive 作业核心是一条最小自动化链路：
 
