@@ -15,8 +15,536 @@ Reactive 探索者
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+# **Lesson 3: ReactVM and Reactive Network As a Dual-State Environment**
+
+响应式合约的另一个关键特性：它们在响应式网络和 ReactVM 中以两个具有独立状态的实例存在。
+
+## **Differences Between the Reactive Network and ReactVM**
+
+![reactvm-17a16c9fc446c26761db5e2e9619a585](https://dev.reactive.network/assets/images/reactvm-17a16c9fc446c26761db5e2e9619a585.jpg)
+
+每个响应式合约都有两个实例——一个位于响应式网络上，另一个位于其独立的 ReactVM 中。需要注意的是，这两个实例都实际存储在每个网络节点上并由其执行。并行化响应式合约是一种架构决策，旨在确保即使处理大量事件也能保持高性能。
+
+Reactive Network 的运行方式与典型的 EVM 区块链类似，但它增加了系统合约，允许用户订阅和取消订阅以太坊、BNB、Polygon 或 Optimism 上的源链事件。每个部署地址都拥有一个专用的 ReactVM。
+
+ReactVM 是一个受限虚拟机，旨在隔离地处理事件。从一个地址部署的合约在同一个 ReactVM 中执行。它们可以相互交互，但不能与响应式网络上的其他合约交互。
+
+单个 ReactVM 中的合约可以通过两种方式与外部世界交互，这两种方式都通过响应式网络实现：
+
+-   它们会对订阅的特定事件做出反应，并在这些事件发生时执行。
+    
+-   ReactVM 根据事件输入执行代码，向响应式网络发送请求，以获取回调到目标链，从而执行相应的链上操作。
+    
+
+对于每个已部署的 RC，都会有两个实例，它们处于不同的状态，但代码相同。每个方法都预期在一个或两个环境中执行，并与一个或两个状态进行交互。
+
+## **Identifying the Execution Context**
+
+### **如何检测**
+
+```
+function detectVm() internal {
+```
+
+```
+    uint256 size;
+```
+
+```
+    // solhint-disable-next-line no-inline-assembly
+```
+
+```
+    assembly { size := extcodesize(0x0000000000000000000000000000000000fffFfF) }
+```
+
+```
+    vm = size == 0;
+```
+
+```
+}
+```
+
+**设置 vm 标志** ：如果 `size == 0` ，则表示该地址处没有代码。这表明我们正在 ReactVM 实例中运行，因此 `vm` 设置为 `true` 。否则，如果 `size > 0` ，则表示存在系统合约，确认我们正在响应式网络上，因此 `vm` 保持为 `false` 。
+
+**Enforcing Execution Context**
+
+使用修饰符来确保每个函数只能在其预期的环境中调用。
+
+```
+modifier rnOnly() {
+```
+
+```
+    require(!vm, 'Reactive Network only');
+```
+
+```
+    _;
+```
+
+```
+}
+```
+
+```
+​
+```
+
+```
+modifier vmOnly() {
+```
+
+```
+    require(vm, 'VM only');
+```
+
+```
+    _;
+```
+
+```
+}
+```
+
+## **Managing Dual Variable Sets for Each State**
+
+在响应式架构中，每个已部署的合约都可以在两种运行状态下运行：
+
+### **Reactive Network State**
+
+-   直接与系统合约交互。
+    
+-   使用 `service.subscribe(...)` 订阅事件。
+    
+-   使用注册和管理活动订阅所需的变量和方法。
+    
+
+### **ReactVM State**
+
+-   包含对已订阅事件做出反应的业务逻辑。
+    
+-   使用在接收到事件时执行的变量和方法。
+    
+
+## **Reactive Network Variables**
+
+如果一个响应式契约继承自 `AbstractReactive` ，则在后台可以使用以下变量和方法：
+
+-   用于订阅事件的 `service` （ `ISubscriptionService` ）。
+    
+-   （布尔值），指示执行是在 ReactVM 上还是在 Reactive Network 上下文中发生。
+    
+-   额外的继承实用方法（例如， `service.subscribe(...)` ）。
+    
+
+在 [Uniswap Stop Order 响应式合约](https://github.com/Reactive-Network/reactive-smart-contract-demos/blob/main/src/demos/uniswap-v2-stop-order/UniswapDemoStopOrderReactive.sol)的构造函数中，您可以注意到 `if (!vm)` 会检查我们是否运行在响应式网络 (Reactive Network) 状态下。如果是，合约会注册接收来自 `pair` 和 `stop_order` 事件。订阅后，这些事件只有在我们处于 ReactVM 状态时才会触发我们的 `react()` 逻辑。
+
+```
+// State specific to ReactVM instance of the contract.
+```
+
+```
+​
+```
+
+```
+bool private triggered;
+```
+
+```
+bool private done;
+```
+
+```
+address private pair;
+```
+
+```
+address private stop_order;
+```
+
+```
+address private client;
+```
+
+```
+bool private token0;
+```
+
+```
+uint256 private coefficient;
+```
+
+```
+uint256 private threshold;
+```
+
+```
+​
+```
+
+```
+constructor(
+```
+
+```
+    address _pair,
+```
+
+```
+    address _stop_order,
+```
+
+```
+    address _client,
+```
+
+```
+    bool _token0,
+```
+
+```
+    uint256 _coefficient,
+```
+
+```
+    uint256 _threshold
+```
+
+```
+) payable {
+```
+
+```
+    triggered = false;
+```
+
+```
+    done = false;
+```
+
+```
+    pair = _pair;
+```
+
+```
+    stop_order = _stop_order;
+```
+
+```
+    client = _client;
+```
+
+```
+    token0 = _token0;
+```
+
+```
+    coefficient = _coefficient;
+```
+
+```
+    threshold = _threshold;
+```
+
+```
+​
+```
+
+```
+    if (!vm) {
+```
+
+```
+        service.subscribe(
+```
+
+```
+            SEPOLIA_CHAIN_ID,
+```
+
+```
+            pair,
+```
+
+```
+            UNISWAP_V2_SYNC_TOPIC_0,
+```
+
+```
+            REACTIVE_IGNORE,
+```
+
+```
+            REACTIVE_IGNORE,
+```
+
+```
+            REACTIVE_IGNORE
+```
+
+```
+        );
+```
+
+```
+        service.subscribe(
+```
+
+```
+            SEPOLIA_CHAIN_ID,
+```
+
+```
+            stop_order,
+```
+
+```
+            STOP_ORDER_STOP_TOPIC_0,
+```
+
+```
+            REACTIVE_IGNORE,
+```
+
+```
+            REACTIVE_IGNORE,
+```
+
+```
+            REACTIVE_IGNORE
+```
+
+```
+        );
+```
+
+```
+    }
+```
+
+```
+}
+```
+
+## **ReactVM Variables**
+
+以下变量和方法专门用于在接收到事件之后：
+
+```
+bool private triggered;
+```
+
+```
+bool private done;
+```
+
+```
+address private pair;
+```
+
+```
+address private stop_order;
+```
+
+```
+address private client;
+```
+
+```
+bool private token0;
+```
+
+```
+uint256 private coefficient;
+```
+
+```
+uint256 private threshold;
+```
+
+这些变量处理 `react()` 函数中的逻辑：
+
+```
+// Methods specific to ReactVM instance of the contract.
+```
+
+```
+function react(LogRecord calldata log) external vmOnly {
+```
+
+```
+    assert(!done);
+```
+
+```
+​
+```
+
+```
+    if (log._contract == stop_order) {
+```
+
+```
+        if (
+```
+
+```
+            triggered &&
+```
+
+```
+            log.topic_0 == STOP_ORDER_STOP_TOPIC_0 &&
+```
+
+```
+            log.topic_1 == uint256(uint160(pair)) &&
+```
+
+```
+            log.topic_2 == uint256(uint160(client))
+```
+
+```
+        ) {
+```
+
+```
+            done = true;
+```
+
+```
+            emit Done();
+```
+
+```
+        }
+```
+
+```
+    } else {
+```
+
+```
+        Reserves memory sync = abi.decode(log.data, ( Reserves ));
+```
+
+```
+        if (below_threshold(sync) && !triggered) {
+```
+
+```
+            emit CallbackSent();
+```
+
+```
+            bytes memory payload = abi.encodeWithSignature(
+```
+
+```
+                "stop(address,address,address,bool,uint256,uint256)",
+```
+
+```
+                address(0),
+```
+
+```
+                pair,
+```
+
+```
+                client,
+```
+
+```
+                token0,
+```
+
+```
+                coefficient,
+```
+
+```
+                threshold
+```
+
+```
+            );
+```
+
+```
+            triggered = true;
+```
+
+```
+            emit Callback(log.chain_id, stop_order, CALLBACK_GAS_LIMIT, payload);
+```
+
+```
+        }
+```
+
+```
+    }
+```
+
+```
+}
+```
+
+-   一旦满足阈值条件， `triggered` 将阻止多次回调。
+    
+-   表示最终停止已经发生。
+    
+-   `pair` 、 `stop_order` 和 `client` 引用外部合约和用户数据。
+    
+-   `token0` 、 `coefficient` 和 `threshold` 定义了何时触发停止的数学原理。
+    
+
+实际逻辑（检查流动性储备和发出回调）位于 ReactVM 内部。由于 `react()` `被标记为`vmOnly\` ，因此它**仅**在 ReactVM 上下文中，且事件日志匹配时才会被底层系统调用。
+
+## **Transaction Execution**
+
+在使用响应式合约 (RC) 时，交易主要发生在两个环境中：响应式网络和 ReactVM。
+
+### **Reactive Network Transactions**
+
+反应式网络上的交易可以通过两种方式发起：直接由用户发起，或由源链上的事件触发。
+
+**用户发起的交易**
+
+用户可以调用响应式网络 (Reactive Network) 的 RC 实例上的方法来执行管理功能或更新合约状态。例如，暂停事件订阅可以通过调用 `pause()` 函数来实现：
+
+**事件触发交易**
+
+即使用户没有直接发起交易，响应式网络也会监控源链上的事件。当出现感兴趣的事件时，响应式网络会将其分发给所有活跃的订阅者，通常是专门的 ReactVM 实例。这种分发会触发订阅者执行进一步的操作或状态更改。
+
+### **ReactVM Transactions**
+
+在 ReactVM 中，用户不能直接调用事务。相反，当响应式网络从源链转发相关事件时，事务会自动触发：
+
+-   源链上发出的事件
+    
+-   反应网络调度事件
+    
+-   ReactVM 接收并处理事件
+    
+
+当运行在 ReactVM 中的 RC 接收到事件时，它通常会调用其核心反应函数 `react()` 来处理该事件。`react` react()\` 函数包含以下业务逻辑：
+
+-   根据接收到的事件更新内部状态。
+    
+-   向目标链发出回调，然后可以触发这些链上的交易。
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 # **Lesson 2: How Events and Callbacks Work**
 
 本课重点讲解事件和回调在智能合约中的作用。通过学习如何发出、处理和监听事件，开发者可以创建能够实时响应区块链变化的动态去中心化应用（dApp）。我们还将探讨响应式合约如何使用 `react()` 方法处理事件，并通过回调发起跨链交易，从而增强响应式网络的功能。
@@ -102,6 +630,7 @@ For security and authorization purposes, the Reactive Network automatically repl
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
+
 # 学习计划
 
 1.  学习：[https://dev.reactive.network/education/module-1/reactive-contracts](https://dev.reactive.network/education/module-1/reactive-contracts)
@@ -167,6 +696,7 @@ RC 可以监控来自不同智能合约、兼容 EVM 的区块链的数据，它
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
