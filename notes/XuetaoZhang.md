@@ -15,8 +15,29 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+今日完成：
+
+1、今天重新读了一遍官方文档，并且重新把之前布置过的basic demo对照着文档理解重新看了一遍，尝试梳理一下Reactive的最小必要MVP：
+
+**Contract：源合约，部署在源链上，主要定义和发射事件，这里是发射Received事件，当获得一笔eth转账后，发射Received事件；**  
+**Callback：目标合约，部署在目标链上，主要定义定义和发射事件，这里是定义CallbackReceived和发射CallbackReceived事件，重点是重写了AbstractCallback 中的Callback函数，从Callback函数中发射CallbackReceived事件；**
+
+**ReactiveContract：反应合约，部署在Reactive Network和ReactVM上，主要是绑定传入的目标链订阅事件，然后重写AbstractReactive 的React函数，直接调用callback方法，**
+
+bytes memory payload = abi.encodeWithSignature("callback(address)", address(0));
+
+emit Callback(destinationChainId, callback, GAS\_LIMIT, payload);
+
+**这里为什么传address(0)作为参数还没懂，可能是占位符，最后把目标链，载荷等作为参数发射Callback事件；**
+
+**睿应层自建了个Reactive Network网络，持续不断检测evm的事件，可能是轮询evm的日志系统（这个需要了解），如果有对应已经注册的事件直接提交抓取到内容给ReactVM来处理，触发**destinationChainId，的callback合约的**Callback方法；**
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 今日完成：
 
 1、Dev 文档核心模块学习；  
@@ -29,6 +50,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 今日完成：
 
@@ -49,6 +71,7 @@ Let’s vibe Reactive dApp
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
 
+
 今日完成：
 
 1、睿应层（Reactive Network）官网 Overview学习完成；
@@ -62,6 +85,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
