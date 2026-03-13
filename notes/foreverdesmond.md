@@ -15,8 +15,20 @@ Web3 实习计划 2025 冬季实习生
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+今天完成了第一阶段学习的最后部分，重点是根据 Challenge 要求完成示例实践，并进一步巩固对 **Reactive Network** 开发模式的理解。
+
+首先回顾了前两天学习的核心概念，包括 Reactive Network 的事件驱动执行模式，以及其运行环境 ReactVM 的基本机制。相比运行在 **Ethereum Virtual Machine** 上的传统智能合约，Reactive Smart Contract 不需要用户主动发送交易触发，而是通过监听链上事件自动执行逻辑，这种模式更适合自动化任务、链上策略执行等场景。
+
+在代码实践方面，今天根据 Challenge 的指引，继续在官方 reactive-smart-contract-demos 的 basic 示例上进行练习。通过阅读和修改示例代码中的事件监听逻辑以及执行函数，进一步理解了 Reactive Contract 的代码结构、事件触发方式以及合约执行流程，并完成了基础示例的编译与运行。
+
+此外，今天还学习并回顾了昨晚的 Reactive Network Workshop 内容。Workshop 中对 Reactive Network 的整体架构、事件监听机制以及典型应用场景进行了讲解，并通过 Demo 演示了 Reactive Contract 的实际运行流程。这部分内容帮助我从开发者角度更清晰地理解了 Reactive Network 的设计思路，也加深了对事件驱动智能合约模式的认识。
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 今天的学习重点从理论理解转向实际开发实践，开始尝试运行官方示例并熟悉 Reactive Network 的开发流程。
 
 首先根据官方开发文档完成了开发环境的准备，并进一步阅读了 Reactive Developer Introduction，对 Reactive 合约的运行流程有了更清晰的认识。相比传统部署在 Ethereum Virtual Machine 上的智能合约，Reactive 合约需要运行在 ReactVM 环境中，通过监听链上事件来触发执行逻辑，因此在开发思路上更接近事件驱动的程序设计模式。
@@ -43,6 +55,7 @@ Web3 实习计划 2025 冬季实习生
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
+
 今天进一步阅读了官方 Overview 和开发文档，对 Reactive Network 的整体架构有了进一步步认识。重点理解了 Reactive Network 提供 Event Driven（事件驱动） 的执行模式，当链上事件发生时，系统可以自动触发合约执行。这个机制依赖其执行环境 ReactVM，能够监听链上事件并触发 Reactive Smart Contracts 自动运行。同时也理解了，由于链上出块时间的限制，Reactive技术并不适合做高频交易的底层原理。
 
 代码方面，今天已经完成了官方 Demo 仓库的环境准备，并浏览了 reactive-smart-contract-demos 中 basic 示例的项目结构。目前代码仍处于阅读和理解阶段，还没有开始实际部署或运行合约。
@@ -52,6 +65,7 @@ Web3 实习计划 2025 冬季实习生
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 今天由于时差，错过了Co-learning  
