@@ -217,7 +217,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yly46967-source](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yly46967-source.md) | ✅ | ✅ | ✅ | ✅ | ✅ | | | | | | | | | |
 | [taozhiyuzhuo](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/taozhiyuzhuo.md) | ✅ | ⭕️ | ✅ | ✅ |   | | | | | | | | | |
 | [Tadaaaaaaaaa](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Tadaaaaaaaaa.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
-| [resurrection-i](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/resurrection-i.md) | ✅ | ✅ | ✅ | ✅ |   | | | | | | | | | |
+| [resurrection-i](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/resurrection-i.md) | ✅ | ✅ | ✅ | ✅ | ✅ | | | | | | | | | |
 | [Uoghluvm](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Uoghluvm.md) | ✅ | ✅ | ⭕️ | ⭕️ |   | | | | | | | | | |
 | [Ryat2899](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Ryat2899.md) | ✅ | ⭕️ | ⭕️ | ❌ | | | | | | | | | | |
 | [JadeTwinkle](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/JadeTwinkle.md) | ✅ | ✅ | ✅ | ✅ | ✅ | | | | | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
