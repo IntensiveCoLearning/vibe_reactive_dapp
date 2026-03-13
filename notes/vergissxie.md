@@ -15,8 +15,174 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+# Uniswap V2 核心机制与响应式止损单 (Stop-Order)
+
+## 🌟 核心理念 (Overview)
+
+要编写一个能在去中心化交易所（DEX）上自动执行交易的机器人，首先必须彻底弄懂 **Uniswap V2** 的底层数学模型和事件机制。结合 Reactive Contracts (RC)，我们可以将“被动”的 Uniswap 变成一个支持“条件触发（如止损/止盈）”的现代化自动交易引擎。
+
+* * *
+
+## 🦄 第一部分：Uniswap V2 运行机制 (Lesson 6)
+
+Uniswap V2 抛弃了传统的“订单薄（Order Book）”模型，采用了 **自动化做市商 (AMM)** 机制。其核心是由两个代币组成的**流动性池 (Liquidity Pools)**。
+
+### 1\. 核心算法：恒定乘积公式 (Constant Product Formula)
+
+> \[!info\] **$x \* y = k$**
+> 
+> -   $x$ 和 $y$ 分别代表资金池中两种代币的储备量（Reserves）。
+>     
+> -   $k$ 是一个常数。
+>     
+> -   **核心法则**：无论发生什么交易，交易后的 $x$ 和 $y$ 的乘积必须等于（或大于，因为有手续费）交易前的 $k$。这使得代币价格会根据资金池中代币的稀缺程度自动浮动。
+>     
+
+### 2\. `swap()` 函数的工作流
+
+当你在 Uniswap 上用 Token A 换 Token B 时，智能合约底层执行了以下严格的校验：
+
+1.  **输入输出检查**：确保你要换出的数量 `amountOut` 大于 0，且不掏空池子。
+    
+2.  **计算真实输入**：通过池子余额的差值，计算出你实际打进来的 Token A 数量 `amountIn`。
+    
+3.  **扣除手续费并校验 $k$ 值**：扣除 0.3% 的千分之三手续费后，强制要求新的 $x \* y \\ge k$。
+    
+4.  **更新与转账**：调用 `_update` 刷新池子储备，并将 Token B 转给你。
+    
+5.  **发出事件**：`emit Swap(...)`。
+    
+
+### 3\. RC 开发者的“雷达”：Swap 与 Sync 事件
+
+对于响应式合约来说，我们不关心代码怎么跑，我们只关心**链上留下了什么日志（Events）**。
+
+-   `Swap` **事件**：记录了\*\*“谁”**用**“多少 A”**换了**“多少 B”\*\*。
+    
+-   `Sync` **事件**：记录了交易发生后，池子里\*\*“最新的储备量 (reserve0, reserve1)”\*\*。
+    
+
+> \[!tip\] **为什么 RC 更喜欢监听** `Sync` **事件？**
+> 
+> 因为 $x \* y = k$ 模型中，**价格 = reserve0 / reserve1**。监听 `Sync` 事件，RC 就能在每次交易发生后，瞬间计算出该交易对的**最新精确价格**，这正是触发“止损”的最佳信号！
+
+* * *
+
+## 🤖 第二部分：响应式止损合约实战 (Lesson 7)
+
+我们现在来拆解 `UniswapDemoStopOrderReactive` 这个合约。它的目标是：**紧盯某个 Uniswap 池子的** `Sync` **事件，一旦价格跌破阈值，立即自动发起一笔卖出交易（止损）。**
+
+### 1\. 合约状态变量 (State Variables)
+
+回顾我们学过的**双状态 (Dual-State)**，这个合约的数据分为两类：
+
+-   **常量 (Constants)**：`SEPOLIA_CHAIN_ID`，以及预先计算好的 `UNISWAP_V2_SYNC_TOPIC_0` 和 `STOP_ORDER_STOP_TOPIC_0`（事件签名的哈希）。
+    
+-   **RVM 私有状态 (RVM Variables)**：
+    
+    -   `triggered` (布尔值)：**极其重要！** 用于防止价格暴跌时，合约在几毫秒内发出一百次回调指令。
+        
+    -   `done` (布尔值)：标记整个止损流程是否彻底完结。
+        
+    -   业务参数：`pair` (池子地址), `client` (用户), `threshold` (止损阈值), `coefficient` (精度系数)。
+        
+
+### 2\. 初始化与订阅 (Constructor)
+
+部署合约时，配置业务参数，并在 **RN 主网 (**`!vm`**)** 上向系统申请订阅两个事件：
+
+1.  监听 Uniswap 池子的 `Sync` 事件（盯盘）。
+    
+2.  监听目标链止损合约的 `Stop` 事件（确认交易是否成功）。
+    
+
+### 3\. 核心大脑：`react()` 函数逻辑
+
+这是运行在 RVM 沙盒里的核心调度中心：
+
+Solidity
+
+```
+function react(LogRecord calldata log) external vmOnly {
+    assert(!done); // 如果已经彻底完结，直接拦截
+
+    // 🌟 分支 1：如果是目标链发来的 "已成功止损" 事件
+    if (log._contract == stop_order) {
+        // 校验是不是真的成功了
+        if (triggered && log.topic_0 == STOP_ORDER_STOP_TOPIC_0 && ...) {
+            done = true; // 彻底关闭流程
+            emit Done();
+        }
+    } 
+    // 🌟 分支 2：如果是 Uniswap 资金池发来的 "价格更新(Sync)" 事件
+    else {
+        // 解析出池子的最新储备量
+        Reserves memory sync = abi.decode(log.data, (Reserves));
+        
+        // 如果价格低于阈值 (below_threshold) 且 尚未触发过 (!triggered)
+        if (below_threshold(sync) && !triggered) {
+            
+            // 1. 打包目标链的执行指令 (调用 stop 函数)
+            bytes memory payload = abi.encodeWithSignature(
+                "stop(address,address,address,bool,uint256,uint256)",
+                address(0), pair, client, token0, coefficient, threshold
+            );
+            
+            // 2. 锁死触发器，保证幂等性 (Idempotency)
+            triggered = true;
+            
+            // 3. 发出 Callback 跨链指令
+            emit Callback(log.chain_id, stop_order, CALLBACK_GAS_LIMIT, payload);
+        }
+    }
+}
+```
+
+### 4\. 数学判定：`below_threshold()`
+
+智能合约不支持浮点数，所以在计算价格 $P = r\_1 / r\_0$ 是否小于阈值 $T$ 时，通常采用**交叉相乘**的方法避免小数：
+
+Solidity
+
+```
+function below_threshold(Reserves memory sync) internal view returns (bool) {
+    if (token0) {
+        // 本质是：(reserve1 / reserve0) * coefficient <= threshold
+        // 转换为乘法避免精度丢失：
+        return (sync.reserve1 * coefficient) / sync.reserve0 <= threshold;
+    } else {
+        return (sync.reserve0 * coefficient) / sync.reserve1 <= threshold;
+    }
+}
+```
+
+* * *
+
+## 🎯 总结：全自动化闭环工作流 (Execution Flow)
+
+1.  **部署 (Initialization)**: 合约在 RN 注册，开始监听 Uniswap 资金池。
+    
+2.  **盯盘 (Event Monitoring)**: 有人在 Uniswap 砸盘，池子抛出 `Sync` 事件。
+    
+3.  **判断 (React & Math)**: RVM 瞬间苏醒，解码 `Sync` 数据，发现价格触发了 `threshold`。
+    
+4.  **行动 (Callback)**: RVM 发出 Callback 并将 `triggered` 设为 `true`。
+    
+5.  **执行 (Destination Chain)**: Reactive 代理在目标链执行真实的 `stop` 卖出代币操作。
+    
+6.  **归档 (Completion)**: 目标链卖出成功抛出 `Stop` 事件，RVM 再次苏醒，将 `done` 设为 `true`，机器人完美下班。
+    
+
+> \[!success\] **进阶思考**
+> 
+> 传统 Web2 的量化机器人需要一台中心化服务器 24 小时开机通过 API 轮询价格，一旦宕机就面临爆仓风险。而这个 Reactive Contract 完全运行在去中心化网络上，只要以太坊在出块，你的止损逻辑就绝对不会失效。这就是 Web3 自动化的终极魅力！
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 ## 🌟 核心理念 (Overview)
 
 虽然响应式合约 (RC) 非常擅长监听**链上 (On-chain)** 事件，但区块链本身是一个封闭的、确定性的系统，它无法直接知道今天的以太坊价格或是明天的天气。 **预言机 (Oracles)** 就是解决这个问题的特殊类别：它们负责将**链下数据 (Off-chain data)** 搬运到区块链上。当 RC 结合了预言机抛出的事件时，智能合约就真正拥有了感知并响应“现实世界”的能力。
@@ -150,6 +316,7 @@ contract PriceConsumerV3 {
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
 
+
 ## 1\. ReactVM：响应式合约的“私人大脑”
 
 在响应式网络中，**ReactVM** 是专门为执行响应式合约（RC）设计的 EVM 环境。它与传统以太坊环境最大的区别在于其\*\*双状态（Dual-State）\*\*特性：
@@ -208,6 +375,7 @@ contract PriceConsumerV3 {
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
