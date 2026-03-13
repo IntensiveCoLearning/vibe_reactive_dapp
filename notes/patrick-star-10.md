@@ -15,8 +15,200 @@ learning
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+# **今日学习总结：ReactVM 执行逻辑理解**
+
+今天主要学习并理解了 **ReactVM 的执行逻辑以及 Reactive Contract 的运行流程**。ReactVM 是 Reactive Network 中专门用于执行响应式合约（Reactive Contracts）的运行环境，它的核心特点是 **事件驱动执行，而不是用户调用执行**。
+
+* * *
+
+## **一、ReactVM 的核心概念**
+
+在传统的 EVM 合约中，合约函数通常是由用户主动发送交易触发执行，例如：
+
+```
+用户调用函数 → 合约执行
+```
+
+而在 Reactive Network 中，执行模式发生了改变：
+
+```
+链上事件发生 → Reactive Network 监听到日志 → ReactVM 执行响应式合约逻辑 → 触发 callback
+```
+
+因此 Reactive Contract 的核心思想是：
+
+**不是等用户调用，而是对链上事件自动作出反应。**
+
+ReactVM 就是专门运行这种 **事件驱动逻辑** 的执行环境。
+
+* * *
+
+## **二、ReactVM 的输入数据**
+
+ReactVM 接收的输入不是普通函数参数，而是 **区块链日志（Log）数据**。
+
+当某个合约执行 emit event 时，EVM 会生成一条日志，主要包含：
+
+-   topic0：事件签名哈希
+    
+-   topic1/topic2：indexed 参数
+    
+-   data：非 indexed 参数
+    
+-   contract：事件来源合约
+    
+-   chainId：来源链
+    
+-   block / tx 信息
+    
+
+Reactive Network 的节点会监听这些日志，当匹配到订阅规则时，就会把日志传入 ReactVM 执行。
+
+* * *
+
+## **三、Reactive Contract 的执行流程**
+
+Reactive Contract 的执行大致分为以下几个步骤：
+
+### **1 订阅事件（Subscribe）**
+
+响应式合约首先声明要监听的事件，例如：
+
+-   来源链
+    
+-   来源合约
+    
+-   事件签名 topic0
+    
+-   其他 topic 过滤条件
+    
+
+这一步的作用是告诉系统：
+
+**哪些事件发生时需要触发合约执行。**
+
+* * *
+
+### **2 监听事件（Trigger）**
+
+当源链合约执行 emit event 时，会生成日志。
+
+Reactive Network 节点会实时监听这些日志，并检查是否符合订阅条件。
+
+如果匹配成功，就会触发 Reactive Contract 执行。
+
+* * *
+
+### **3 ReactVM 执行 react()**
+
+ReactVM 会调用响应式合约中的 react() 函数，并把日志信息作为输入参数传入。
+
+在 react() 中通常需要做以下事情：
+
+-   解析 topic 和 data
+    
+-   使用 abi.decode 解包事件参数
+    
+-   判断逻辑条件是否满足
+    
+-   决定是否触发 callback
+    
+
+* * *
+
+### **4 构造 callback payload**
+
+如果条件成立，Reactive Contract 会构造回调数据，例如：
+
+```
+bytes memory payload = abi.encodeWithSignature(
+    "callback(address,uint256,address,address,uint256,uint256)",
+    ...
+);
+```
+
+这里实际上是：
+
+**把目标函数选择器 + 参数打包成可执行数据。**
+
+* * *
+
+### **5 发送 callback**
+
+Reactive Network 会根据 payload 向目标链的目标合约发送 callback 交易，从而执行目标函数。
+
+最终业务逻辑通常是在 **目标链合约中完成**。
+
+* * *
+
+## **四、ReactVM 的角色**
+
+ReactVM 的角色更像一个 **自动化决策层**：
+
+1.  接收链上日志
+    
+2.  解析事件数据
+    
+3.  判断是否满足执行条件
+    
+4.  决定是否发起 callback
+    
+
+真正的业务执行通常发生在 **callback 目标链合约** 中。
+
+* * *
+
+## **五、Reactive 模型的核心结构**
+
+Reactive Network 的自动化逻辑可以总结为三个步骤：
+
+```
+Subscribe → Trigger → Callback
+```
+
+具体流程是：
+
+```
+源链事件发生
+      ↓
+Reactive Network 监听日志
+      ↓
+ReactVM 执行 Reactive Contract
+      ↓
+解析事件数据并判断条件
+      ↓
+构造 callback payload
+      ↓
+向目标链发送 callback
+```
+
+* * *
+
+## **六、今天理解到的关键思想**
+
+通过学习 ReactVM，我理解到 Reactive Network 的设计目标是：
+
+**把传统依赖 bot 或服务器的自动化执行逻辑，变成链上的原生事件驱动执行。**
+
+这意味着：
+
+-   自动化逻辑不依赖中心化服务器
+    
+-   执行逻辑由合约控制
+    
+-   整个系统更加去中心化
+    
+
+ReactVM 本质上就是：
+
+**一个专门处理链上事件并触发自动化执行的执行环境。**
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 # **今日学习笔记**
 
 ## **理解 Subscribe / Trigger / Callback 模型（Reactive 思维）**
@@ -399,6 +591,7 @@ Callback  = 执行动作
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
+
 # **今日学习笔记｜Reactive Contract 结构理解**
 
 今天主要学习 **Reactive Contract 的组成结构与执行流程**。
@@ -753,6 +946,7 @@ Reactive Network 的本质是一个：
 
 
 
+
 # **今天完成了第一个挑战任务**
 
 [https://github.com/patrick-star-10/reactive-network-day1](https://github.com/patrick-star-10/reactive-network-day1)
@@ -760,6 +954,7 @@ Reactive Network 的本质是一个：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
