@@ -15,8 +15,386 @@ Web3 实习计划 2025 冬季实习生
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-12
+<!-- DAILY_CHECKIN_2026-03-12_START -->
+# Reactive Layer（响应层）学习笔记
+
+## 1\. 什么是 Reactive Layer
+
+**Reactive Layer（响应层）** 是一种 **事件驱动的链上自动化执行层**，用于监听区块链事件，并在满足条件时自动执行逻辑或触发新的交易。
+
+核心思想：
+
+```
+Event（链上事件）
+      ↓
+Reactive Logic（响应逻辑）
+      ↓
+Callback Transaction（回调交易）
+```
+
+Reactive Layer 允许开发者构建：
+
+-   跨链自动化
+    
+-   事件驱动合约
+    
+-   无需机器人（bot）的自动执行系统
+    
+
+它类似：
+
+-   **Chainlink Automation**
+    
+-   **Gelato**
+    
+-   **Eigenlayer AVS**
+    
+
+但 Reactive Network 的特点是 **通过 Reactive Contracts 实现链间响应逻辑**。
+
+* * *
+
+# 2 Reactive Layer 的核心组件
+
+Reactive Layer 通常包含三个关键组件。
+
+## 2.1 Event Source（事件源）
+
+事件源是 **产生事件的智能合约**。
+
+例如：
+
+```
+event Deposit(address user, uint amount);
+```
+
+当用户存款时：
+
+```
+Deposit Event
+```
+
+就会被 Reactive Layer 监听。
+
+常见事件源：
+
+-   DEX 交易
+    
+-   NFT Mint
+    
+-   DeFi 清算
+    
+-   跨链桥锁仓
+    
+-   Oracle 更新
+    
+
+* * *
+
+## 2.2 Reactive Contract（响应合约）
+
+Reactive Contract 是 **监听事件并执行逻辑的核心组件**。
+
+功能：
+
+-   监听指定链上的事件
+    
+-   解析事件参数
+    
+-   执行逻辑判断
+    
+-   触发回调交易
+    
+
+示例逻辑：
+
+```
+监听 Ethereum 上的 Deposit 事件
+↓
+判断 amount > 100
+↓
+在 BSC 上触发奖励合约
+```
+
+伪代码：
+
+```
+function react(Event e) {
+    if(e.amount > 100){
+        callbackChain.executeReward(e.user);
+    }
+}
+```
+
+* * *
+
+## 2.3 Callback Transaction（回调交易）
+
+当 Reactive Contract 判定满足条件后，会触发 **回调交易**。
+
+例如：
+
+```
+Ethereum Event
+↓
+Reactive Layer
+↓
+Arbitrum Callback Transaction
+```
+
+回调交易可以执行：
+
+-   调用合约函数
+    
+-   触发转账
+    
+-   mint NFT
+    
+-   更新状态
+    
+
+* * *
+
+# 3 Reactive Layer 的工作流程
+
+完整流程如下：
+
+```
+用户交易
+↓
+Origin Contract 发出 Event
+↓
+Reactive Layer 监听事件
+↓
+Reactive Contract 执行逻辑
+↓
+Callback Transaction
+↓
+Destination Contract 执行
+```
+
+流程图：
+
+```
+User
+  ↓
+Origin Contract
+  ↓
+Event
+  ↓
+Reactive Layer
+  ↓
+Reactive Contract
+  ↓
+Callback Transaction
+  ↓
+Destination Contract
+```
+
+* * *
+
+# 4 Reactive Layer 能解决什么问题
+
+## 4.1 跨链自动化
+
+传统跨链：
+
+```
+用户操作 → Bridge → 手动执行
+```
+
+Reactive：
+
+```
+事件 → 自动执行 → 另一链回调
+```
+
+应用：
+
+-   跨链 DeFi
+    
+-   跨链清算
+    
+-   跨链 NFT
+    
+
+* * *
+
+## 4.2 链上自动化
+
+无需机器人：
+
+传统：
+
+```
+Bot 监听 → Bot 发交易
+```
+
+Reactive：
+
+```
+Event → 自动执行
+```
+
+例子：
+
+-   自动清算
+    
+-   自动奖励
+    
+-   自动分红
+    
+
+* * *
+
+## 4.3 复杂事件工作流
+
+Reactive Layer 可以构建 **链上工作流**：
+
+例如：
+
+```
+Mint NFT
+↓
+触发空投
+↓
+触发积分系统
+↓
+更新排行榜
+```
+
+* * *
+
+# 5 Reactive Layer vs 传统架构
+
+| 方式 | 特点 |
+| --- | --- |
+| Bot Automation | 需要服务器 |
+| Cron Job | 定时触发 |
+| Oracle | 数据驱动 |
+| Reactive Layer | 事件驱动自动执行 |
+
+Reactive Layer 的优势：
+
+-   无需 bot
+    
+-   更去中心化
+    
+-   可跨链
+    
+-   自动执行
+    
+
+* * *
+
+# 6 Reactive Layer 的典型应用
+
+### 1 跨链桥
+
+```
+Lock Token (Chain A)
+↓
+Reactive Layer
+↓
+Mint Token (Chain B)
+```
+
+* * *
+
+### 2 自动清算
+
+```
+Health Factor < 1
+↓
+Reactive Layer
+↓
+触发清算
+```
+
+* * *
+
+### 3 自动奖励
+
+```
+用户达到交易量
+↓
+Reactive Layer
+↓
+Mint NFT / 发 Token
+```
+
+* * *
+
+### 4 链上游戏
+
+```
+Game Event
+↓
+Reactive Contract
+↓
+奖励发放
+```
+
+* * *
+
+# 7 Reactive Layer 的优势
+
+优点：
+
+-   去中心化自动执行
+    
+-   事件驱动
+    
+-   支持跨链
+    
+-   无需 off-chain bot
+    
+
+缺点：
+
+-   复杂度较高
+    
+-   Gas 成本
+    
+-   需要可靠的事件监听机制
+    
+
+* * *
+
+# 8 总结
+
+Reactive Layer 的核心思想：
+
+```
+Event → Logic → Callback
+```
+
+它提供了一种 **链上自动化执行架构**，能够：
+
+-   监听区块链事件
+    
+-   自动执行逻辑
+    
+-   触发跨链回调
+    
+
+适用于：
+
+-   DeFi
+    
+-   GameFi
+    
+-   NFT
+    
+-   跨链协议
+    
+-   自动化工作流
+<!-- DAILY_CHECKIN_2026-03-12_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 # Reactive Network 学习笔记
 
 ## 跨链 Reactive Contracts（RCs）
@@ -250,6 +628,7 @@ Reactive Network 通过 oracle 机制获取链上数据，例如：
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 # 学习笔记：构建一个跨链事件与回调合约
 
