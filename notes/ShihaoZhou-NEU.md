@@ -15,8 +15,134 @@ Reactive 探索者
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+# **Lesson 4: How Subscriptions Work**
+
+-   静态和动态地配置和管理订阅。
+    
+-   在智能合约中处理订阅和取消订阅事件。
+    
+-   了解在响应式合约中使用订阅的局限性和最佳实践。
+    
+
+## **如何实现订阅**
+
+订阅是通过响应式网络系统合约中的 `subscribe` 方法设置的
+
+响应式合约还必须处理由于在响应式网络（具有系统合约）和其部署者的私有 ReactVM（其中不存在系统合约）上部署而导致的回滚。
+
+### **ISubscriptionService Interface**
+
+```
+ pragma solidity >=0.8.0;
+ ​
+ import './IPayable.sol';
+ ​
+ interface ISubscriptionService is IPayable {
+     function subscribe(
+         uint256 chain_id,
+         address _contract,
+         uint256 topic_0,
+         uint256 topic_1,
+         uint256 topic_2,
+         uint256 topic_3
+     ) external;
+     
+     function unsubscribe(
+         uint256 chain_id,
+         address _contract,
+         uint256 topic_0,
+         uint256 topic_1,
+         uint256 topic_2,
+         uint256 topic_3
+     ) external;
+ }
+```
+
+Unsubscribing is an expensive operation due to the necessity of searching and removing subscriptions. Duplicate or overlapping subscriptions are allowed, but clients must ensure idempotency.
+
+### **IReactive Interface**
+
+[IReactive](https://github.com/Reactive-Network/reactive-lib/blob/main/src/interfaces/IReactive.sol) 接口定义了响应式合约的标准，这些合约可以接收和处理与其订阅匹配的事件通知。它扩展了 [IPayer](https://github.com/Reactive-Network/reactive-lib/blob/main/src/interfaces/IPayer.sol) 接口，表明它包含了与支付相关的功能。
+
+```
+ pragma solidity >=0.8.0;
+ ​
+ import './IPayer.sol';
+ ​
+ interface IReactive is IPayer {
+     struct LogRecord {
+         uint256 chain_id;
+         address _contract;
+         uint256 topic_0;
+         uint256 topic_1;
+         uint256 topic_2;
+         uint256 topic_3;
+         bytes data;
+         uint256 block_number;
+         uint256 op_code;
+         uint256 block_hash;
+         uint256 tx_hash;
+         uint256 log_index;
+     }
+ ​
+     event Callback(
+         uint256 indexed chain_id,
+         address indexed _contract,
+         uint64 indexed gas_limit,
+         bytes payload
+     );
+     
+     function react(LogRecord calldata log) external;
+ }
+```
+
+### **Constructor Subscribtion**
+
+```
+ // State specific to reactive network instance of the contract
+ address private _callback;
+ ​
+ // State specific to ReactVM instance of the contract
+ uint256 public counter;
+ ​
+ constructor(
+         address _service,
+         address _contract,
+         uint256 topic_0,
+         address callback
+     ) payable {
+         service = ISystemContract(payable(_service));
+         if (!vm) {
+             service.subscribe(
+                 CHAIN_ID,
+                 _contract,
+                 topic_0,
+                 REACTIVE_IGNORE,
+                 REACTIVE_IGNORE,
+                 REACTIVE_IGNORE
+             );
+         }
+         _callback = callback;
+     }
+```
+
+### **Subscription Criteria 订阅标准**
+
+-   通配符用法：使用 `address(0)` 表示按任何合约地址过滤， `uint256(0)` 表示按任何链 ID 过滤，使用 `REACTIVE_IGNORE` 表示按任何主题过滤。
+    
+-   Concrete Values: At least one criterion must be a specific value to ensure meaningful subscriptions.
+    
+
+## **Dynamic Subscriptions 动态订阅**
+
+响应式合约可以根据传入事件动态管理其订阅。由于负责管理订阅的系统合约只能从响应式网络访问，因此 ReactVM 的合约副本会处理这些操作，并使用回调与响应式网络通信。
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 # **Lesson 3: ReactVM and Reactive Network As a Dual-State Environment**
 
 响应式合约的另一个关键特性：它们在响应式网络和 ReactVM 中以两个具有独立状态的实例存在。
@@ -545,6 +671,7 @@ function react(LogRecord calldata log) external vmOnly {
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
+
 # **Lesson 2: How Events and Callbacks Work**
 
 本课重点讲解事件和回调在智能合约中的作用。通过学习如何发出、处理和监听事件，开发者可以创建能够实时响应区块链变化的动态去中心化应用（dApp）。我们还将探讨响应式合约如何使用 `react()` 方法处理事件，并通过回调发起跨链交易，从而增强响应式网络的功能。
@@ -631,6 +758,7 @@ For security and authorization purposes, the Reactive Network automatically repl
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
 
+
 # 学习计划
 
 1.  学习：[https://dev.reactive.network/education/module-1/reactive-contracts](https://dev.reactive.network/education/module-1/reactive-contracts)
@@ -696,6 +824,7 @@ RC 可以监控来自不同智能合约、兼容 EVM 的区块链的数据，它
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
