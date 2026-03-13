@@ -15,8 +15,279 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+## 顺序安排思路
+
+```
+先懂事件结构(topic) → 再懂怎么订阅 → 再懂react()怎么处理 → 再懂回调怎么发出 → 最后懂怎么部署
+```
+
+* * *
+
+## 第一步：LogRecord 里的 topic0~3 分别是什么？
+
+以太坊每个事件日志的结构是这样的：
+
+```
+event Transfer(address indexed from, address indexed to, uint256 value);
+```
+
+当这个事件触发时，日志里会有：
+
+| 字段 | 内容 |
+| --- | --- |
+| topic0 | 事件签名的哈希，永远是这个，固定的 |
+| topic1 | 第一个 indexed 参数，即 from |
+| topic2 | 第二个 indexed 参数，即 to |
+| topic3 | 第三个 indexed 参数（如果有的话） |
+| data | 非 indexed 参数，即 value |
+
+**所以规律是：**
+
+-   `topic0` = 永远是事件本身的"名字"（签名哈希）
+    
+-   `topic1~3` = 你在事件里标了 `indexed` 的参数，按顺序排列
+    
+-   没有 `indexed` 的参数 → 在 `data` 里，不在 topic 里
+    
+
+* * *
+
+## 第二步：subscribe() 参数怎么填？填 0 是什么意思？
+
+solidity  坚固性
+
+```solidity
+service.subscribe(
+    chain_id,      // 监听哪条链（如Sepolia = 11155111）
+    contract,      // 监听哪个合约地址
+    topic0,        // 监听哪种事件（事件签名哈希）
+    topic1,        // 过滤条件：from地址
+    topic2,        // 过滤条件：to地址
+    topic3         // 过滤条件：第三个indexed参数
+);
+```
+
+**填** `REACTIVE_IGNORE` **的意思是"不过滤这个字段"，即任何值都接受。**
+
+例子：
+
+solidity  坚固性
+
+```solidity
+// 只监听Transfer事件，不管from/to是谁
+service.subscribe(
+    11155111,
+    tokenAddress,
+    keccak256("Transfer(address,address,uint256)"),
+    REACTIVE_IGNORE,  // 任何from都行
+    REACTIVE_IGNORE,  // 任何to都行
+    REACTIVE_IGNORE
+);
+```
+
+**一个合约可以同时订阅多个事件吗？可以！** 在构造函数里多次调用 `subscribe()` 即可：
+
+solidity  坚固性
+
+```solidity
+constructor() {
+    service.subscribe(...); // 订阅事件A
+    service.subscribe(...); // 订阅事件B
+    service.subscribe(...); // 订阅事件C
+}
+```
+
+# 一、Reactive Library 整体架构总览
+
+Reactive Network 的基础库由 **6 个核心接口 / 抽象合约**组成，它们构成了 Reactive Contract 运行的 **底层协议层（Protocol Layer）**。
+
+这些合约主要解决三个问题：
+
+1️⃣ **谁需要付钱（Payer）**  
+2️⃣ **钱付给谁（Payable）**  
+3️⃣ **如何订阅事件（Subscription）**
+
+换句话说：
+
+> Reactive Network 本质是一个 **“事件订阅 + 自动执行 + 费用结算” 的系统**
+
+因此整个库围绕 **事件系统 + 费用系统**设计。
+
+* * *
+
+# 二、核心合约关系结构
+
+你给出的结构实际上可以整理为 **两条核心体系**：
+
+### 1️⃣ 费用系统（Payment System）
+
+```
+IPayable
+   ↑
+IPayer
+   ↑
+AbstractPayer
+```
+
+作用：
+
+```
+Reactive Contract 支付费用
+```
+
+* * *
+
+### 2️⃣ Reactive 执行系统
+
+```
+ISubscriptionService
+        ↑
+ISystemContract
+        ↑
+IReactive
+```
+
+作用：
+
+```
+Reactive Contract 订阅事件
+Reactive Network 调用 react()
+```
+
+* * *
+
+# 三、完整依赖关系（最准确结构）
+
+整理后的真实结构如下：
+
+```
+IPayable
+     ↑
+ISubscriptionService
+     ↑
+ISystemContract
+     
+IPayer
+     ↑
+IReactive
+     ↑
+AbstractPayer
+```
+
+功能解释：
+
+| 合约 | 类型 | 作用 |
+| --- | --- | --- |
+| IPayable | interface | 被支付对象 |
+| IPayer | interface | 支付者 |
+| ISubscriptionService | interface | 事件订阅 |
+| ISystemContract | interface | Reactive系统 |
+| IReactive | interface | Reactive Contract接口 |
+| AbstractPayer | abstract contract | 自动支付实现 |
+
+* * *
+
+# 四、IPayable.sol — 债务查询接口
+
+## 1️⃣ IPayable 的核心概念
+
+IPayable 定义：
+
+> **谁可以收钱**
+
+在 Reactive Network 中，主要有两个对象可以收钱：
+
+1️⃣ **System Contract**  
+2️⃣ **Callback Proxy**
+
+它们都实现了 **IPayable 接口**。
+
+* * *
+
+## 2️⃣ IPayable 完整结构
+
+```
+interface IPayable {
+
+    receive() external payable;
+
+    function debt(
+        address _contract
+    ) external view returns (uint256);
+}
+```
+
+接口只有两个功能：
+
+| 函数 | 作用 |
+| --- | --- |
+| receive() | 接收ETH |
+| debt() | 查询欠款 |
+
+* * *
+
+# 五、receive() 的作用
+
+```
+receive() external payable;
+```
+
+这是 Solidity 的 **特殊函数**。
+
+作用：
+
+```
+允许合约接收ETH
+```
+
+触发条件：
+
+当有人向该合约 **直接转账ETH** 时触发。
+
+例如：
+
+```
+payable(systemContract).transfer(1 ether);
+```
+
+系统合约就会执行：
+
+```
+receive()
+```
+
+* * *
+
+### 在 Reactive Network 中的意义
+
+Reactive Contract 在运行时会产生费用，例如：
+
+| 行为 | 费用来源 |
+| --- | --- |
+| 事件监听 | subscription fee |
+| react()执行 | execution fee |
+| callback交易 | gas fee |
+
+如果费用没有及时支付：
+
+```
+系统会记录债务
+```
+
+然后：
+
+```
+暂停你的订阅
+```
+
+直到你还清。
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 # Reactive Contract 三个模板完整总结
 
 * * *
@@ -640,6 +911,7 @@ Destination Chain 执行交易
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
+
 # 使用AI演示和分析了reactive contract的工作原理，图片和简单动画演示
 
 [Reactive\_Contract步骤分析](https://may-tonk.github.io/html_may_tonk_web/reactive_contract_image.html/second_reactiveframe.html)
@@ -878,6 +1150,7 @@ Destination Chain 执行交易
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -1166,6 +1439,7 @@ L1Callback 开门之前要检查：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
