@@ -15,8 +15,28 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+Reactive Contract 作用
+
+监听 Origin 事件并执行自动逻辑。
+
+核心逻辑：
+
+订阅 event topic
+
+在 react() 中解析 event
+
+构造 callback payload
+
+发送 callback 到目标链
+
+Reactive Contract 是整个系统的核心。
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 # 参加Reactive Workshop
 
 如何用AI开发反应式智能合约，相关实操技巧
@@ -27,6 +47,7 @@ Let's vibe Reactive dApp！
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
+
 差点忘记
 
 先打一个卡
@@ -34,6 +55,7 @@ Let's vibe Reactive dApp！
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 Reactive 作业核心是一条最小自动化链路：
