@@ -15,8 +15,71 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+How Oracles Work
+
+-   学习目标：
+    
+    -   理解 oracle 桥接区块链与现实世界数据的角色。
+        
+    -   解决 oracle problem（如何信任地将 off-chain 数据引入链上）。
+        
+    -   掌握 oracle 在智能合约中的集成（以 Chainlink 为例）。
+        
+    -   认识 Reactive Contracts + oracle 的协同优势：实现 off-chain 事件的实时 on-chain 响应。
+        
+-   核心概念：
+    
+    -   Oracle 作用：从外部源（API、金融市场、政府数据库、IoT 等）获取数据，验证后以去中心化方式 relay 到链上。
+        
+    -   Oracle Problem：区块链确定性环境无法直接访问外部数据；需信任最小化解决。
+        
+    -   机制：多源聚合 + Multisig 协议（多签名验证，防止单点操纵）；主流提供者：Chainlink、Band Protocol。
+        
+-   与 Reactive Contracts 集成：
+    
+    -   Reactive 合约订阅 oracle 合约的事件（如 Chainlink 的 AnswerUpdated）。
+        
+    -   数据更新 emit → ReactVM 接收日志 → 评估条件 → 自动触发回调（e.g. 价格阈值 → DeFi 动作）。
+        
+    -   优势：克服传统合约需外部轮询的局限，实现 Inversion of Control + 实时响应 off-chain 事件。
+        
+-   代码示例（Chainlink 价格喂价）：
+    
+    solidity
+    
+    ```solidity
+    pragma solidity ^0.8.0;
+    import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
+    
+    contract PriceConsumerV3 {
+        AggregatorV3Interface internal priceFeed;
+        constructor() { priceFeed = AggregatorV3Interface(0x...); }  // ETH/USD feed
+        function getLatestPrice() public view returns (int) {
+            (,int price,,,) = priceFeed.latestRoundData();
+            return price;
+        }
+    }
+    ```
+    
+    Reactive 版：订阅事件，回调中比较价格并执行自动化逻辑。
+    
+-   实际应用：
+    
+    -   DeFi：价格喂价驱动借贷利率、清算、swap。
+        
+    -   保险：自然灾害等事件触发自动赔付。
+        
+    -   在线投注：体育结果上链结算。
+        
+
+一句话总结：Oracle 为 Reactive 提供 off-chain “感知”，事件驱动 + oracle 集成 = 连接现实世界的自治合约。打卡心得（简版）：
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 How Subscriptions Work（订阅机制详解）
 
 **1\. 学习目标（Lesson Objectives）**
@@ -156,6 +219,7 @@ How Subscriptions Work（订阅机制详解）
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
+
 **ReactVM and Reactive Network As a Dual-State Environment**
 
 **1\. 学习目标（Lesson Objectives）**
@@ -249,6 +313,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
 
+
 **Events and Callbacks 工作原理**
 
 **1\. 学习目标（Lesson Objectives**）
@@ -323,6 +388,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
