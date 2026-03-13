@@ -15,8 +15,14 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+还卡在 Uniswap V2 止损单配置，明天继续研究。
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 再！跑！Uniswap V2 止损：
 
 这次按着 GitHub 的 [readme.md](http://readme.md) 来走：
@@ -45,6 +51,7 @@ Deployer: 0x74217992032536E195DAD5aDa6E7bDf127B0A1E4 Deployed to: 0x15D5ed21F405
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
+
 1\. 今天贴个我曾经给Reactive写的推文吧：[https://x.com/JaggerLam/status/2022665535197204713](https://x.com/JaggerLam/status/2022665535197204713) 比较粗浅的认知，但是毕竟跑过玩具Demo，也看了一些相关资料，写了这么一篇。
 
 2\. 日拱一卒，Solidity 和 EVM 还得学。今天解开一个小困惑，关于tx.origin, msg.sender, msg.value. 原来这是 Solidity 语言内置的、在合约执行时可访问的全局变量。
@@ -54,6 +61,7 @@ Deployer: 0x74217992032536E195DAD5aDa6E7bDf127B0A1E4 Deployed to: 0x15D5ed21F405
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 其实在实习计划时候跑过最简单的callback了，uniswap没跑成功。对Reactive有点了解，但是不太体系。对EVM + Solidity也不是很熟悉，所以还得递归学习很多东西。
