@@ -15,8 +15,56 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+# 用 AI 构建睿应式合约
+
+1.  **AI 在开发中的角色**
+    
+    -   **增强开发者能力**：AI 并非替代开发者，而是在三方面增强其能力：快速获取知识、提高开发速度、提升产出质量。
+        
+    -   **开发者的核心职责**：开发者仍需理解问题、熟悉所用技术，并对 AI 的输出进行验证。
+        
+2.  **使用 AI 的建议**
+    
+    -   **Claude AI 工具**：建议使用 CLI 工具或 Vscode 扩展，因为它可以直接在代码仓库中生成代码（已在上文以实体形式提及）。
+        
+    -   **其他 AI 选项**：也可使用 Cursor、GitHub Copilot、ChatGPT 和 DeepSeek 等替代方案。
+        
+3.  **与 AI 合作的工作流**
+    
+    -   **规划阶段**：让 AI 制定实现计划，验证该计划，反复提问直到满意为止。
+        
+    -   **实现阶段**：在计划确定后，让 AI 实施计划，仔细阅读 AI 生成的代码，并向 AI 提问以充分理解。
+        
+    -   **部署与总结**：将合约部署到测试网，运行预期工作流，然后让 AI 输出总结，但需人工验证该总结。
+        
+4.  **与 AI 交互的技巧**
+    
+    -   **提供最新信息**：向 AI 提供最新的链接与代码示例，确保其使用的是最新资料。
+        
+    -   **验证 AI 输出**：要求 AI 自我验证其所做的工作，同时开发者也要亲自核验。
+        
+    -   **沟通要清晰且需理解**：确保 AI 明确你的需求，同时你也要理解 AI 所构建的内容。
+        
+5.  **睿应式合约的应用场景**
+    
+    -   **常见用例**：止损/止盈单、桥接（bridges）、清算保护、自动收费、自动循环器（auto-looper）、跨链预言机（cross-chain Oracles）等。
+        
+6.  **问答要点**
+    
+    -   **Claude AI 的安全性**：存在安全性上的顾虑，但现代操作系统提供权限控制；在浏览器中工作可作为替代方案。
+        
+    -   **无法使用 Claude 时的替代 AI**：若因地区或其它原因无法使用 Claude，可选择文中提到的其他 AI。
+        
+    -   **向 AI 提供 token 问题**：睿应层无法直接赠送 AI 代币，但可以尝试联系 AI 公司申请资助或 grant。
+        
+    -   **向 AI 询问解释**：可以像问人一样向 AI 提问，AI 在回答上通常更有耐心。
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 ### **实时监控问题解答**
 
 **监控原理**：市场波动与Reactive实时监控无关，其监控每条链的每个区块，并对合约订阅的事件做出反应。
@@ -44,6 +92,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 1\. **Transaction Rollback and Reorg Handling**
 
@@ -103,6 +152,7 @@ Let’s vibe Reactive dApp
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
 
+
 # **Basic Reactive Demo：理解“监听-反应”闭环**
 
 这个 Demo 是 Reactive 的 "Hello World"。流程很简单：在 Sepolia 上转账 -> Reactive 监听到 -> 自动通知 Sepolia 上的回调合约。
@@ -153,6 +203,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
