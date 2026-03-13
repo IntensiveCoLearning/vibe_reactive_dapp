@@ -15,8 +15,18 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+摸个鱼
+
+今天准备meetup和共学
+
+等下写写项目
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 可以把 Reactive Network 粗略理解成：
 
 **“把监听事件 + 后台 bot 判断 + 跨链再发交易”这整套流程，做成统一的事件驱动执行层。”** 官方首页也是这样定位它的：面向 EVM 的 event-driven execution layer，用来做跨链、链上自动化。
@@ -73,6 +83,7 @@ Reactive 的目标链侧会通过一个 **Callback Proxy** 合约转发这次调
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
 
+
 最近忙AI共学
 
 回头看
@@ -82,6 +93,7 @@ Reactive 的目标链侧会通过一个 **Callback Proxy** 合约转发这次调
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -123,6 +135,7 @@ Reactive 的目标链侧会通过一个 **Callback Proxy** 合约转发这次调
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
