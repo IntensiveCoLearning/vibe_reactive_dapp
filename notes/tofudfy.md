@@ -15,8 +15,252 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+Reactive Network 学习总结
+
+一、学习主题与目标
+
+\------------------------------------------------
+
+结合：
+
+Reactive Dev Docs
+
+[https://dev.reactive.network/](https://dev.reactive.network/)
+
+Reactive Smart Contract Demos
+
+[https://github.com/Reactive-Network/reactive-smart-contract-demos](https://github.com/Reactive-Network/reactive-smart-contract-demos)
+
+Uniswap Stop Order 示例
+
+[https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/demos/uniswap-v2-stop-order](https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/demos/uniswap-v2-stop-order)
+
+重点理解：
+
+1 Reactive contract 如何定义事件订阅
+
+2 ReactVM 如何检测并触发事件
+
+3 Trigger 逻辑如何过滤事件
+
+4 Callback 如何执行链上操作
+
+5 Reactive Node 如何连接多链状态
+
+核心问题：
+
+Reactive contract 与传统 EVM contract 的本质区别是什么？
+
+二、Reactive 的核心设计思想
+
+\------------------------------------------------
+
+Reactive Network 的设计目标是：
+
+让智能合约从“被调用执行”变为“自动触发执行”。
+
+传统 EVM 模型：User Transaction → Contract Execution
+
+Reactive 模型：External Event → Trigger Condition → Contract Execution
+
+Reactive contract 本质上是一个事件驱动自动化程序。
+
+三、Subscription：事件订阅机制
+
+\------------------------------------------------
+
+Subscription 是 Reactive contract 的第一层逻辑，其作用是定义需要监听的链上事件。
+
+Reactive Network 允许订阅以下信息：
+
+1 chain
+
+2 contract address
+
+3 event signature
+
+4 topic filter
+
+5 event parameters
+
+Subscription 的作用类似：区块链上的 “event indexer + filter”。
+
+Subscription 的一般结构：
+
+Subscription {
+
+chain
+
+contract
+
+event
+
+filter
+
+}
+
+例如：
+
+监听 Uniswap V2 Swap 事件：
+
+Swap(
+
+address sender,
+
+uint amount0In,
+
+uint amount1In,
+
+uint amount0Out,
+
+uint amount1Out,
+
+address to
+
+)
+
+Reactive Node 会持续扫描新区块：Block → Log → Event → Match Subscription
+
+匹配成功后：Event → Trigger evaluation
+
+四、Trigger：事件触发条件
+
+\------------------------------------------------
+
+Subscription 仅表示监听事件，但并不是所有事件都需要触发 callback。因此需要 Trigger，即对事件进行逻辑判断。
+
+Trigger 的输入：
+
+1 event parameters
+
+2 contract state
+
+3 reactive state
+
+Trigger 的典型形式：
+
+if condition(event) == true
+
+execute callback
+
+例如 Stop Order 场景：
+
+Swap Event -> Calculate Price -> Price < StopPrice ? -> Trigger callback
+
+Trigger 可以依赖：
+
+1 event data
+
+2 external chain state
+
+3 reactive contract internal state
+
+Trigger 的执行由 ReactVM 负责。
+
+五、Callback：自动执行逻辑
+
+\------------------------------------------------
+
+Callback 是 Reactive contract 的执行部分。
+
+当 Trigger 满足时，ReactVM 调用 Callback，执行：
+
+1 on-chain transaction
+
+2 contract call
+
+3 cross-chain operation
+
+Callback 可以调用：DEX、ERC20、Bridge、Arbitrage contract等等
+
+六、ReactVM 的执行模型
+
+\------------------------------------------------
+
+ReactVM 是 Reactive Network 的执行环境。
+
+其作用类似：
+
+EVM → transaction execution
+
+ReactVM → event-driven execution
+
+ReactVM 的主要模块：
+
+1 Event Listener
+
+2 Subscription Matcher
+
+3 Trigger Engine
+
+4 Callback Executor
+
+执行流程：
+
+New Block
+
+|
+
+Extract Logs
+
+|
+
+Subscription Match
+
+|
+
+Trigger Evaluation
+
+|
+
+Callback Execution
+
+ReactVM 的关键特点：
+
+1 非交易驱动
+
+2 自动执行
+
+3 支持多链监听
+
+七、ReactVM 的双状态模型
+
+\------------------------------------------------
+
+Reactive Network 使用Dual State Model，即Reactive State (contract data) + External State (blockchain data)
+
+External State 来源：Ethereum、Arbitrum、BNB Chain、Polygon等等
+
+Reactive State 包括：
+
+1 contract parameters
+
+2 trigger thresholds
+
+3 order status
+
+4 user configuration
+
+Trigger 计算时需要同时读取两种状态。
+
+八、Reactive 模型与传统 DeFi 的差异
+
+\------------------------------------------------
+
+传统 DeFi：User Bot → Monitor Events → Send Transaction
+
+Reactive DeFi：Reactive Node → Monitor Events → Auto Execute
+
+传统模式：Off-chain bot，为中心化
+
+Reactive 模式：Protocol-level automation，实现去中心化
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 Reactive Network 学习总结
 
 第二阶段 Day 1
@@ -321,6 +565,7 @@ Execute Swap
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
+
 在本次作业中，我主要围绕 Reactive Network 的跨链事件与回调机制进行了开发实践。首先梳理了系统整体架构，理解了 **Origin Contract、Reactive Contract 和 Destination Contract** 在跨链事件流程中的角色划分。Origin Contract 部署在源链上，用于触发事件；Reactive Contract 运行在 Reactive Network 上，用于监听指定事件并执行响应逻辑；Destination Contract 部署在目标链上，用于接收回调交易并执行最终操作。
 
 在开发过程中，我重点学习了 Reactive Smart Contract 的基本结构以及事件监听与回调的触发方式，并理解了 Reactive Network 的事件驱动执行模式。相比传统依赖 off-chain bot 监听事件再手动发送交易的方式，Reactive Network 将事件监听和自动执行逻辑通过合约形式进行编程，实现了更自动化的跨链响应机制。通过这一过程，我对事件驱动智能合约以及跨链自动化执行的设计思路有了更直观的认识。
@@ -332,6 +577,7 @@ Execute Swap
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 \# Reactive Network 学习总结
@@ -453,6 +699,7 @@ react(LogRecord log)
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
