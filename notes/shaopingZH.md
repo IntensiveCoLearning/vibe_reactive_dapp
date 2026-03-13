@@ -139,6 +139,7 @@ Observable.combineLatest(
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
+
 # 📝 笔记：线程调度
 
 ## 1\. 核心定义：打破“默认同步”的幻觉
@@ -191,6 +192,7 @@ Observable.combineLatest(
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -288,6 +290,7 @@ Observable.combineLatest(
 
 
 
+
 **map 与 flatMap 的区别**
 
 在处理数据流时，我们经常需要对流中的元素进行转换。map 和 flatMap 都是用来做转换的，但它们的“维度”处理完全不同。
@@ -370,6 +373,7 @@ flatMap 是**并发执行**的。如果你连续发出请求，flatMap 内部产
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
