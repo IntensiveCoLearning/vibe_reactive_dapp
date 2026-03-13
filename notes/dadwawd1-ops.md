@@ -15,13 +15,20 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+参加co-learning
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 参加reactive workshop
 <!-- DAILY_CHECKIN_2026-03-12_END -->
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 ### Reactive Contracts 与传统智能合约的区别
 
@@ -109,6 +116,7 @@ Let’s vibe Reactive dApp
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
 
+
 ### 1\. 事件源合约 (Origin Contract)
 
 -   **核心目标**：在源链（比如以太坊 Sepolia）上执行某项操作，并向外广播一个信号。
@@ -142,6 +150,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
