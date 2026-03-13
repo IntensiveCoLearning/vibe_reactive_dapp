@@ -15,8 +15,16 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+3.13:
+
+比我想得有些小难度，不过会解决的。
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 3.12：
 
 参与workshop
@@ -27,6 +35,7 @@ Let's vibe Reactive dApp！
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
+
 3/10：
 
 参加了co-learning；
@@ -36,6 +45,7 @@ Let's vibe Reactive dApp！
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 参加了第一场co-learning，邀请了Reactive方面的大佬拉来讲一些事情。
