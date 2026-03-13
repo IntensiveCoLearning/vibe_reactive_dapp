@@ -15,13 +15,20 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+**I'm stuck with a bug**
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 trying to run **Reactive Network Demo**
 <!-- DAILY_CHECKIN_2026-03-12_END -->
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 Step 1: 部署事件源合約 (Origin Contract) —— 「土壤濕度感測器」
 
@@ -62,6 +69,7 @@ Step 3: 部署睿应合約 (Reactive Contract) —— 「自動控制主機」
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 ### 1\. 根本區別：Reactive 與傳統 EVM
