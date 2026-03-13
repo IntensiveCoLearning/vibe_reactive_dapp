@@ -269,7 +269,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [Toby1009](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Toby1009.md) | ✅ | ✅ | ⭕️ | ⭕️ |   | | | | | | | | | |
 | [Miranda-777](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Miranda-777.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [Evanlove4ever](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Evanlove4ever.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
-| [lorstyang](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/lorstyang.md) | ✅ | ✅ | ✅ | ✅ |   | | | | | | | | | |
+| [lorstyang](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/lorstyang.md) | ✅ | ✅ | ✅ | ✅ | ✅ | | | | | | | | | |
 | [yayehuang2-ship-it](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yayehuang2-ship-it.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [starrujian](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/starrujian.md) | ✅ | ✅ | ✅ | ✅ | ✅ | | | | | | | | | |
 | [joycefey](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/joycefey.md) | ✅ | ✅ | ✅ | ✅ | ✅ | | | | | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
