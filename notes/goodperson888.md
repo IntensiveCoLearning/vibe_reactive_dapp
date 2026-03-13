@@ -15,8 +15,146 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+## **1\. 跨链事件与回调合约架构概述**
+
+### **整体数据流**
+
+```
+源链（Sepolia）                Reactive Network（Kopli）        目标链（Sepolia）
+─────────────────             ──────────────────────────       ─────────────────
+                              
+用户发送 ETH                                                    
+    │                                                           
+    ▼                                                           
+BasicDemoL1Contract                                             
+  receive()                                                     
+    │                                                           
+    ├─ emit Received(origin, sender, value)                     
+    │         │                                                 
+    │         │  Reactive Network 监听到事件                    
+    │         ▼                                                 
+    │   BasicDemoReactiveContract                               
+    │     react(log)                                            
+    │         │                                                 
+    │         │ if log.topic_3 >= 0.001 ether                   
+    │         │                                                 
+    │         ├─ emit Callback(chainId, callbackAddr, gas, payload)
+    │         │         │                                       
+    │         │         │  Reactive Network 执行跨链调用        
+    │         │         ▼                                       
+    │         │   BasicDemoL1Callback                           
+    │         │     callback(rsc_address)                       
+    │         │         │                                       
+    │         │         └─ emit CallbackReceived(origin, sender, reactive_sender)
+    │         │                                                 
+    └─ 退还 ETH 给 tx.origin                                    
+```
+
+### **三合约角色**
+
+| 合约 | 部署链 | 角色 | 核心功能 |
+| --- | --- | --- | --- |
+| BasicDemoL1Contract | 源链（Sepolia） | 事件触发器 | 接收 ETH，发出 Received 事件 |
+| BasicDemoReactiveContract | Reactive Network（Kopli） | 事件监听器 + 决策者 | 订阅事件，满足条件时触发回调 |
+| BasicDemoL1Callback | 目标链（Sepolia） | 回调接收器 | 接收跨链回调，记录 CallbackReceived 事件 |
+
+* * *
+
+## **2\. 核心概念**
+
+### **2.1 Reactive Network 是什么**
+
+Reactive Network 是一个专门用于跨链事件响应的区块链基础设施。它：
+
+-   **监听**其他链上的智能合约事件
+    
+-   **执行**用户定义的响应逻辑（RSC）
+    
+-   **触发**目标链上的合约调用
+    
+
+类比：Reactive Network 就像一个"链上的 IFTTT"（If This Then That）。
+
+### **2.2 RSC（Reactive Smart Contract）**
+
+RSC 是部署在 Reactive Network 上的特殊合约，具备：
+
+-   **订阅能力**：通过 `service.subscribe()` 注册对其他链事件的监听
+    
+-   **响应能力**：实现 `react()` 函数处理接收到的事件
+    
+-   **触发能力**：通过 `emit Callback()` 触发目标链上的函数调用
+    
+
+### **2.3 双重部署机制（vm 变量）**
+
+这是 Reactive Network 最重要的设计之一：
+
+```
+同一份合约代码 → 部署到 Reactive Network
+                        │
+              ┌─────────┴─────────┐
+              │                   │
+        主网实例               RVM 副本
+        vm = false             vm = true
+              │                   │
+        执行 subscribe()      执行 react()
+        注册事件订阅          处理事件通知
+```
+
+**检测原理**：
+
+```solidity
+function _detectVm() internal {
+    uint256 size;
+    assembly { size := extcodesize(0x0000000000000000000000000000000000fffFfF) }
+    vm = (size == 0);
+    // 系统合约在主网有代码（size > 0，vm = false）
+    // 系统合约在 RVM 沙箱无代码（size = 0，vm = true）
+}
+```
+
+### **2.4 EVM 日志结构**
+
+每个 EVM 事件日志包含：
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ topic_0  │ 事件签名哈希 keccak256("EventName(type1,type2)") │
+├─────────────────────────────────────────────────────────────┤
+│ topic_1  │ 第1个 indexed 参数（最多32字节）                  │
+├─────────────────────────────────────────────────────────────┤
+│ topic_2  │ 第2个 indexed 参数                               │
+├─────────────────────────────────────────────────────────────┤
+│ topic_3  │ 第3个 indexed 参数                               │
+├─────────────────────────────────────────────────────────────┤
+│ data     │ 非 indexed 参数的 ABI 编码                       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+`Received(address indexed origin, address indexed sender, uint256 indexed value)` 的 topic\_0：
+
+```
+keccak256("Received(address,address,uint256)")
+= 0x8cabf31d2b1b11ba52dbb302817a3c9c83e4b2a5194d35121ab1354d69f6a4cb
+```
+
+### **2.5 REACTIVE\_IGNORE**
+
+订阅时用于"不过滤"某个 topic 的特殊魔法值：
+
+```
+REACTIVE_IGNORE = 0xa65f96fc951c35ead38878e0f0b7a3c744a6f5ccc1476b313353ce31712313ad
+```
+
+传入此值表示"我不关心这个 topic 的具体值，匹配所有"。
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 # 一、Reactive Contracts 的真正架构
 
 Reactive Network 的核心模型就是：
@@ -543,6 +681,7 @@ Event Oracle Network
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
+
 **Reactive Network 最经典的三合约架构**。  
 理解了这一个模型，等于理解了 **Reactive Network 的 80% 工作方式**。
 
@@ -904,6 +1043,7 @@ if event:
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 # Reactive Network 本质是什么
