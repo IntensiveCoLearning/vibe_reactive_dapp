@@ -15,8 +15,164 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+# Reactive Network适合的应用场景
+
+最适合 6 类应用：
+
+### 1 DeFi 自动策略
+
+例如：
+
+-   自动清算
+    
+-   自动收益复投
+    
+-   自动再平衡
+    
+
+* * *
+
+### 2 交易触发器
+
+类似：
+
+```
+如果 BTC > 80000
+自动买入
+```
+
+类似：
+
+Web2 的 **stop loss / take profit**。
+
+* * *
+
+### 3 DAO 自动治理
+
+例如：
+
+```
+提案通过
+→ 自动执行 treasury 资金
+```
+
+无需人工操作。
+
+* * *
+
+### 4 NFT 动态逻辑
+
+例如：
+
+```
+游戏角色升级
+→ 自动更新 NFT metadata
+```
+
+* * *
+
+### 5 自动支付 / 订阅
+
+例如：
+
+```
+每月
+自动支付服务费
+```
+
+* * *
+
+### 6 跨链自动操作
+
+例如：
+
+```
+Solana上NFT卖出
+→ Ethereum自动分账
+```
+
+* * *
+
+# 三、为什么传统 EVM 做不到？
+
+传统 **Ethereum Virtual Machine** 是：
+
+**Transaction-driven**
+
+流程：
+
+```
+用户交易
+→ 执行合约
+→ 状态改变
+```
+
+Reactive Network：
+
+**Event-driven**
+
+流程：
+
+```
+链上事件
+→ Reactive layer监听
+→ 自动触发执行
+```
+
+这就是：
+
+**Reactive Smart Contracts**
+
+* * *
+
+# 四、一个非常直观的类比
+
+传统区块链：
+
+```
+按钮 → 才执行
+```
+
+Reactive Network：
+
+```
+条件满足 → 自动执行
+```
+
+类似：
+
+| Web2 | Web3 |
+| --- | --- |
+| Zapier | Reactive Network |
+| IFTTT | Reactive smart contracts |
+
+* * *
+
+# 五、总结
+
+**Reactive Network = Web3 的 “IFTTT 自动化层”**
+
+```
+If X happens on-chain
+Then execute contract Y下周的TODO：
+```
+
+# 六、下周TODO
+
+-   理解 Reactive Contract 的组成结构
+    
+-   理解 Subscribe / Trigger / Callback 模型
+    
+-   理解 ReactVM 执行逻辑
+    
+-   理解跨链和自动化机制
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 # 使用 AI 构建 Reactive Contracts (跨链智能合约)
 
 ## 一、 核心心法：AI 时代的开发者定位
@@ -78,6 +234,7 @@ _模型选择_：在规划阶段，使用最强大的模型（如 Claude 3.5 Son
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 # Reactive Staking Season 的结构
 
@@ -184,6 +341,7 @@ Reactive 初期 staking APY 曾达到 **约 15–35% 区间**
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
 
+
 # 一、Reactive Network 与传统 EVM 的根本区别
 
 ## 1️⃣ 传统 EVM：**请求驱动（Request-driven）**
@@ -279,6 +437,7 @@ Reactive Contract监听事件
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
