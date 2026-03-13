@@ -15,8 +15,16 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-13-1773413636398-image.png)
+
+试试Uniswap V2 Stop Order Demo，没做完明天继续
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 # ReactVM
 
 Reactive 合约同时存在两个环境：
@@ -382,6 +390,7 @@ Events → Reaction → Callback
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
+
 ![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-10-1773159556314-image.png)
 
 [https://lasna.reactscan.net/address/0x81a64a537e30eee5d8012886d036e6353013ac08/4](https://lasna.reactscan.net/address/0x81a64a537e30eee5d8012886d036e6353013ac08/4)
@@ -743,6 +752,7 @@ Callback Transaction
 
 
 
+
 ![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-10-1773157873570-image.png)
 
 -   最困难的居然是空钱包搞到Base sepolia ETH，试了挺多只有这个桥接的能用[https://superbridge.app/base-sepolia](https://superbridge.app/base-sepolia)
@@ -750,6 +760,7 @@ Callback Transaction
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
