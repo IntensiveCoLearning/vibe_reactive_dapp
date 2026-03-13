@@ -17,11 +17,284 @@ Let’s vibe Reactive dApp
 <!-- Content_START -->
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
-1
+# Oracles 学习笔记
+
+## 1\. Oracle 的作用
+
+**Oracle（预言机）** 是连接 **区块链（on-chain）** 和 **现实世界数据（off-chain）** 的桥梁。
+
+因为：
+
+-   智能合约运行在 **确定性环境（deterministic environment）**
+    
+-   无法直接访问外部数据（例如 API、天气、价格）
+    
+
+所以需要 **Oracle 将链下数据带到链上**。
+
+常见数据类型：
+
+-   价格数据（ETH/USD）
+    
+-   天气数据
+    
+-   体育比赛结果
+    
+-   IoT设备数据
+    
+-   政府或公共数据库
+    
+
+* * *
+
+# 2\. Oracle Problem（预言机问题）
+
+问题核心：
+
+> 如何在不破坏 **去中心化和信任最小化** 的情况下，把链下数据带到链上？
+
+挑战：
+
+-   数据来源是否可信
+    
+-   是否存在单点故障
+    
+-   是否可能被操纵
+    
+
+* * *
+
+# 3\. Oracle 的工作流程
+
+基本流程：
+
+1️⃣ Oracle 从 **外部数据源** 获取数据  
+例如：
+
+-   API
+    
+-   交易所
+    
+-   IoT设备
+    
+
+2️⃣ Oracle 对数据进行验证或聚合
+
+3️⃣ Oracle 使用 **私钥签名交易**
+
+4️⃣ 将数据提交到 **区块链智能合约**
+
+* * *
+
+# 4\. 提高安全性的方式
+
+为了防止数据被操控，Oracle网络通常采用：
+
+### ① 多数据源聚合
+
+从多个数据源获取数据，减少单点风险
+
+### ② 多节点网络
+
+多个 Oracle 节点提供数据
+
+### ③ Multisig（多重签名）
+
+需要多个节点签名才能提交数据
+
+优点：
+
+-   防止单个节点作恶
+    
+-   提高可信度
+    
+
+* * *
+
+# 5\. 常见 Oracle 项目
+
+| 项目 | 特点 |
+| --- | --- |
+| Chainlink | 最大的去中心化预言机网络 |
+| Band Protocol | 跨链 Oracle 网络 |
+
+* * *
+
+# 6\. Oracle 的应用场景
+
+### DeFi
+
+价格预言机
+
+用途：
+
+-   借贷利率
+    
+-   清算
+    
+-   资产兑换
+    
+
+例子：  
+ETH/USD price feed
+
+* * *
+
+### 保险
+
+触发自动赔付
+
+例子：
+
+-   台风
+    
+-   地震
+    
+-   航班延误
+    
+
+* * *
+
+### 体育竞猜
+
+Oracle提供比赛结果
+
+* * *
+
+# 7\. Chainlink 示例（价格预言机）
+
+智能合约获取 ETH/USD 价格：
+
+```
+function getLatestPrice() public view returns (int)
+```
+
+调用：
+
+```
+priceFeed.latestRoundData()
+```
+
+返回：
+
+-   price
+    
+-   roundID
+    
+-   timestamp 等信息
+    
+
+作用：  
+获取 **最新 ETH/USD 价格**
+
+* * *
+
+# 8\. Oracle 的限制
+
+智能合约 **不能主动运行**。
+
+必须由：
+
+**EOA（Externally Owned Account）**  
+发起交易。
+
+所以：
+
+-   Oracle数据更新
+    
+-   合约函数调用
+    
+
+都需要 **用户或外部交易触发**。
+
+这意味着：
+
+> 智能合约不能真正“实时响应”。
+
+* * *
+
+# 9\. Reactive Contracts（RC）
+
+Reactive Contracts 的特点：
+
+**监听事件 → 自动执行操作**
+
+例如：
+
+```
+监听 Oracle 价格更新
+→ 自动执行清算
+→ 自动执行交易
+```
+
+RC 可以：
+
+-   监听链上事件
+    
+-   跨链触发交易
+    
+-   自动执行逻辑
+    
+
+* * *
+
+# 10\. Oracle + Reactive Contracts
+
+结合后可以实现：
+
+```
+现实世界事件
+        ↓
+Oracle 上传数据
+        ↓
+Reactive Contract 监听事件
+        ↓
+自动执行链上操作
+```
+
+例子：
+
+| 事件 | 自动操作 |
+| --- | --- |
+| ETH价格暴跌 | 自动清算 |
+| 天气灾害 | 自动保险赔付 |
+| 比赛结束 | 自动结算竞猜 |
+
+* * *
+
+# 11\. 核心总结
+
+**Oracle**
+
+-   连接链上与链下数据
+    
+-   解决智能合约无法访问外部世界的问题
+    
+
+**Oracle Problem**
+
+-   如何保证数据可信
+    
+
+**解决方案**
+
+-   多节点
+    
+-   多数据源
+    
+-   Multisig
+    
+-   去中心化 Oracle 网络
+    
+
+**Oracle + Reactive Contracts**
+
+-   实现真正的 **实时自动化 Web3 应用**
 <!-- DAILY_CHECKIN_2026-03-13_END -->
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 # Subscriptions
 
@@ -398,6 +671,7 @@ Reactive Contracts 订阅机制核心：
 
 
 
+
 # Reactive Contracts (RCs) 架构与执行机制
 
 ## 一、 双重执行环境：一个合约，两个状态
@@ -511,6 +785,7 @@ Reactive Contracts 订阅机制核心：
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -784,6 +1059,7 @@ Reactive Network 会自动：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
