@@ -15,8 +15,343 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+# **L2.2 - 部署睿应式合约**
+
+我们设定一个场景：监控器盯着 Uniswap V2 的流动性池，一旦发现价格（储备金比例）跌破了你设定的标准，它就会自动“拍马赶到”，触发一个止损交易（Stop Order）。这里就使用到了睿应式合约。
+
+我们通过 `UniswapDemoStopOrderReactive` 这个合约案例为例子，这个合约追踪 `Sync` 事件以确定何时满足止损单的条件。当这些条件被触发时，它在以太坊区块链上执行回调交易以执行止损单。
+
+# 关键组件
+
+## 事件声明和数据常量
+
+```solidity
+// SPDX-License-Identifier: GPL-2.0-or-later  
+  
+pragma solidity >=0.8.0;  
+  
+import '../../../lib/reactive-lib/src/interfaces/IReactive.sol';  
+import '../../../lib/reactive-lib/src/abstract-base/AbstractReactive.sol';  
+  
+struct Reserves {  
+uint112 reserve0;  
+uint112 reserve1;  
+}  
+  
+contract UniswapDemoStopOrderReactive is IReactive, AbstractReactive {  
+// 当合约成功订阅了某个链上事件（如 Uniswap 的 Sync）时触发
+event Subscribed(  
+address indexed service_address,  
+address indexed _contract,  
+uint256 indexed topic_0  
+);  
+  
+event VM();  // 标识当前代码正在 ReactVM（响应式虚拟机）环境中运行
+
+// 当储备金比例达到触发条件时记录详细数据
+event AboveThreshold(  
+uint112 indexed reserve0,  
+uint112 indexed reserve1,  
+uint256 coefficient,  
+uint256 threshold  
+);  
+  
+event CallbackSent();  // 成功向以太坊 L1 发送回调指令时触发
+event Done();  // 整个止损流程彻底结束时触发
+```
+
+我们需要声明一些事件，以及一个 `reverse` 结构体，其必须和 Uniswap V2 的 `Sync` 事件导出的数据结构**完全一致**，这样合约才能用 `abi.decode` 直接解析出池子里的代币数量。
+
+同时我们需要定义一些核心常量：
+
+```solidity
+uint256 private constant SEPOLIA_CHAIN_ID = 11155111; // 目标链 ID（这里是 Sepolia 测试网）
+    
+    // Uniswap V2 Sync 事件的 Keccak-256 哈希值
+    // 它是合约在海量区块链数据中定位“同步事件”的唯一指纹
+    uint256 private constant UNISWAP_V2_SYNC_TOPIC_0 = 0x1c411e9a96e071241c2f21f7726b17ae89e3cab4c78be50e062b03a9fffbbad1;
+    
+    // 止损合约完成交易后抛出的事件指纹
+    uint256 private constant STOP_ORDER_STOP_TOPIC_0 = 0x9996f0dd09556ca972123b22cf9f75c3765bc699a1336a85286c7cb8b9889c6b;
+    
+    // 执行回调交易时预留的 Gas 上限
+    uint64 private constant CALLBACK_GAS_LIMIT = 1000000;
+```
+
+## 合约变量
+
+这些变量存储了每个特定止损单的具体配置。当 `Sync` 事件传来时，合约会对比这些变量来决定是否动手。
+
+```solidity
+bool private triggered;      // 标记：是否已经发出了止损指令（防止重复下单）
+    bool private done;           // 标记：整个止损单是否已完全执行并确认
+    address private pair;        // 监控对象：Uniswap V2 的交易对池地址（如 ETH/USDT）
+    address private stop_order;  // 执行对象：负责在 L1 执行具体卖出操作的合约地址
+    address private client;      // 受益人：谁的钱在止损，执行完后通知或转账给谁
+    bool private token0;         // 方向：是以 token0 为基准还是 token1
+    uint256 private coefficient; // 计算因子：用于处理精度或杠杆比例
+    uint256 private threshold;   // 阈值：触发止损的“红线”价格
+```
+
+通过 `topic_0` 常量，合约知道在成千上万的以太坊数据中哪一封信是 Uniswap 寄来的。通过 `threshold` 和 `pair` 变量，合约知道它是在为谁盯着哪个池子的价格。通过 `triggered` 和 `done` 布尔值，合约能够管理自己的生命周期，确保“只在对的时间做一次对的事”。
+
+# 合约逻辑
+
+# 构造函数
+
+构造函数通过存储对 Uniswap V2 交易对（ `_pair` ）、止盈止损合约（ `_stop_order` ）和客户端（ `_client` ）的引用来初始化合约。它还记录一个布尔标志（ `_token0` ），用于指示该合约是管理 `token0` 还是 `token1` ，并设置控制其行为的 `coefficient` 和 `threshold` 参数。
+
+```solidity
+    constructor(
+        address _pair,
+        address _stop_order,
+        address _client,
+        bool _token0,
+        uint256 _coefficient,
+        uint256 _threshold
+    ) payable {
+        triggered = false;
+        done = false;
+        pair = _pair;
+        stop_order = _stop_order;
+        client = _client;
+        token0 = _token0;
+        coefficient = _coefficient;
+        threshold = _threshold;
+
+        if (!vm) {
+            service.subscribe(
+                SEPOLIA_CHAIN_ID,
+                pair,
+                UNISWAP_V2_SYNC_TOPIC_0,
+                REACTIVE_IGNORE,
+                REACTIVE_IGNORE,
+                REACTIVE_IGNORE
+            );
+            service.subscribe(
+                SEPOLIA_CHAIN_ID,
+                stop_order,
+                STOP_ORDER_STOP_TOPIC_0,
+                REACTIVE_IGNORE,
+                REACTIVE_IGNORE,
+                REACTIVE_IGNORE
+            );
+        }
+    }
+```
+
+代码的前半部分是在给合约设置“人设”：
+
+```solidity
+triggered = false; // 初始化：止损还没触发
+        done = false;      // 初始化：任务还没结束
+        pair = _pair;      // 记下：我要盯着哪个交易对（比如 ETH/USDT）
+        stop_order = _stop_order; // 记下：出事了找哪个合约去卖币
+        client = _client;  // 记下：这是谁的订单
+        token0 = _token0;  // 记下：监控的是哪种代币的价格方向
+        coefficient = _coefficient; // 记下：计算系数
+        threshold = _threshold;     // 记下：触发止损的红线在哪里
+```
+
+之后是启动监听的部分：
+
+```solidity
+if (!vm) {
+            // 订阅 Uniswap 的价格变动（Sync 事件）
+            service.subscribe(
+                SEPOLIA_CHAIN_ID,
+                pair,
+                UNISWAP_V2_SYNC_TOPIC_0,
+                REACTIVE_IGNORE, REACTIVE_IGNORE, REACTIVE_IGNORE
+            );
+            // 订阅止损执行合约的状态（Stop 事件）
+            service.subscribe(
+                SEPOLIA_CHAIN_ID,
+                stop_order,
+                STOP_ORDER_STOP_TOPIC_0,
+                REACTIVE_IGNORE, REACTIVE_IGNORE, REACTIVE_IGNORE
+            );
+        }
+```
+
+# `react()` 函数
+
+`react()` 函数如下：
+
+```solidity
+    // Methods specific to ReactVM instance of the contract.
+    function react(LogRecord calldata log) external vmOnly {
+        assert(!done);
+
+        if (log._contract == stop_order) {
+            if (
+                triggered &&
+                log.topic_0 == STOP_ORDER_STOP_TOPIC_0 &&
+                log.topic_1 == uint256(uint160(pair)) &&
+                log.topic_2 == uint256(uint160(client))
+            ) {
+                done = true;
+                emit Done();
+            }
+        } else {
+            Reserves memory sync = abi.decode(log.data, ( Reserves ));
+            if (below_threshold(sync) && !triggered) {
+                emit CallbackSent();
+                bytes memory payload = abi.encodeWithSignature(
+                    "stop(address,address,address,bool,uint256,uint256)",
+                    address(0),
+                    pair,
+                    client,
+                    token0,
+                    coefficient,
+                    threshold
+                );
+                triggered = true;
+                emit Callback(log.chain_id, stop_order, CALLBACK_GAS_LIMIT, payload);
+            }
+        }
+    }
+```
+
+这个函数有两个分支逻辑：
+
+-   守卫语句：任务状态检查
+    
+
+在执行任何逻辑前，合约先检查 `done` 变量。如果止损已经完成并确认了，合约会直接报错并停止运行。这确保了合约在生命周期结束后不会浪费任何计算资源。
+
+-   分支一：处理“确认信号”（来自止损合约）
+    
+
+当传入的事件（`log`）来自 `stop_order` 地址时，合约处于**收尾模式**。
+
+**关键点**：这里使用了 `topic_1` 和 `topic_2` 进行校验。这就像是核对身份证号，确保这个“停止信号”真的是发给我负责的那个单子的，而不是别人的。
+
+-   分支二：处理“价格信号”（来自 Uniswap）
+    
+
+如果事件不是来自止损合约，那它就是来自 Uniswap 的 `Sync` 事件。此时合约处于**监控/触发模式**。
+
+-   A. 解码数据
+    
+
+Uniswap 把储备金数据（reserve0, reserve1）打包在事件的 `data` 部分。这行代码将其从原始的二进制格式还原成我们可以计算的结构体。
+
+-   B. 条件判断
+    
+
+这里进行双重检查：
+
+1.  `below_threshold(sync)`：调用数学逻辑判断当前价格是否跌破红线。
+    
+2.  `!triggered`：确保我们还没有发出过指令，防止在短时间内多次下单。
+    
+
+C. 打包与发送回调 (Callback)
+
+一旦满足条件，合约就开始“摇人”去干活：
+
+-   `abi.encodeWithSignature`：这非常重要。它就像是写一封加密信件，告诉 L1 上的止损合约：“请执行你的 `stop` 函数，并带上这些参数。”  
+    
+-   `emit Callback`：这是 Reactive Network 的核心指令。它不是简单的记录日志，而是**命令**系统在目标链（`log.chain_id`）上发起一笔真实的交易。
+    
+
+# `below_threshold()` 函数
+
+```solidity
+function below_threshold(Reserves memory sync) internal view returns (bool) {  
+if (token0) {  
+return (sync.reserve1 * coefficient) / sync.reserve0 <= threshold;  
+} else {  
+return (sync.reserve0 * coefficient) / sync.reserve1 <= threshold;  
+}  
+}
+```
+
+在 Uniswap V2 中，价格并不是由外部喂价机直接给出的，而是通过池子里两种代币（`token0` 和 `token1`）的**储备金比例**计算出来的。
+
+在 Uniswap V2 中，某种代币的价格通常可以表示为：
+
+价格 = \\frac{另一种代币的数量}{目标代币的数量}
+
+代码中的逻辑正是基于这个公式：
+
+-   **如果监控的是** `token0`：
+    
+    结果 = \\frac{reserve1 \\times coefficient}{reserve0}
+    
+-   **如果监控的是** `token1`：
+    
+    结果 = \\frac{reserve0 \\times coefficient}{reserve1}
+    
+
+最后，合约检查这个 **结果** 是否 **\\le 阈值（threshold）**。
+
+这里需要注意的是，Solidity 不支持浮点数（小数）。如果你直接算 `reserve1 / reserve0`，结果很可能是 `0`（如果分母大）。通过先乘以一个很大的 `coefficient`（例如 10^{18}），再进行除法，可以将价格放大到一个整数范围内进行比较。这个系数让你可以在不修改合约代码的情况下，通过调整部署参数来适配不同精度（Decimals）的代币对。
+
+# 总结
+
+当合约部署到 Reactive Network 时，`constructor` 被调用，执行以下技术动作：
+
+-   **状态存储**：将传入的参数（如交易对地址 `pair`、阈值 `threshold`、系数 `coefficient` 等）写入合约的持久化存储槽（Storage Slots）。  
+    
+-   **订阅注册**：调用 `service.subscribe` 接口。这会在响应式节点的索引器中注册两条规则：
+    
+    1.  **规则 A**：监控目标链上指定 `pair` 地址生成的 `UNISWAP_V2_SYNC_TOPIC_0` 事件。
+        
+    2.  **规则 B**：监控目标链上 `stop_order` 地址生成的 `STOP_ORDER_STOP_TOPIC_0` 事件。
+        
+-   **布尔值初始化**：`triggered` 和 `done` 显式设为 `false`，确保存储状态机处于初始态。
+    
+
+部署完成后，合约进入被动监听状态，由 **ReactiveVM** 驱动：
+
+-   **数据流输入**：每当目标链（如 Sepolia）产生匹配订阅规则的日志记录（Log Record）时，该记录会被封装进 `LogRecord` 结构体。  
+    
+-   **函数触发**：ReactiveVM 自动调用合约的 `react(LogRecord calldata log)` 函数，并将日志数据作为参数传入。  
+    
+-   **并发处理**：对于每一个匹配的事件，系统都会启动一个 `react` 调用实例。
+    
+
+当 `Sync` 事件触发了 `react()` 后，进入逻辑分支：
+
+-   **数据解码**：使用 `abi.decode(log.data, (Reserves))` 将日志中的字节流还原为 `reserve0` 和 `reserve1`。  
+    
+-   **布尔代数运算**：
+    
+    -   调用 `below_threshold` 进行不等式判定：
+        
+        \\text{Result} = \\frac{\\text{reserve}\_{other} \\times \\text{coefficient}}{\\text{reserve}\_{target}} \\le \\text{threshold}
+        
+    -   进行逻辑与（AND）运算：`if (判定结果 && !triggered)`。  
+        
+-   **指令编码**：若条件成立，使用 `abi.encodeWithSignature` 构建目标合约的函数调用指令（Calldata）。  
+    
+-   **跨链回调发射**：触发 `emit Callback(...)` 事件。响应式网络的 Relayer 会捕获此事件，并在目标链上发起一笔真实的以太坊交易，调用 `stop_order.stop()`。  
+    
+-   **状态翻转**：`triggered` 赋值为 `true`。
+    
+
+当callback完成后，由执行合约反馈的 `Stop` 事件触发以下逻辑分支：
+
+-   **身份验证**：`react` 函数识别出 `log._contract == stop_order`。  
+    
+-   **多重校验**：
+    
+    -   核对 `topic_0` 是否为预定义的事件哈希。  
+        
+    -   核对 `topic_1`（交易对地址）和 `topic_2`（客户地址）是否与存储变量匹配。  
+        
+-   **状态锁定**：将 `done` 变量设为 `true`。  
+    
+-   **终止逻辑**：由于函数起始位置存在 `assert(!done)`，一旦该变量为 `true`，该合约实例后续将拒绝处理任何新传入的事件，逻辑闭环完成。
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 # **L2.1 - Uniswap V2**
 
 # 流动性池
@@ -316,6 +651,7 @@ event Sync(uint112 reserve0, uint112 reserve1);
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
 
+
 # **L1.5 - 预言机**
 
 **blog:**[**https://beautifulremi.dpdns.org/**](https://beautifulremi.dpdns.org/)
@@ -495,6 +831,7 @@ contract ChainlinkPriceReactor is IReactive {
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -1228,6 +1565,7 @@ require(evm_id == owner, 'Wrong EVM ID');
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
