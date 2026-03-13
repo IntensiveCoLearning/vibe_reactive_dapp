@@ -15,8 +15,20 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-13
+<!-- DAILY_CHECKIN_2026-03-13_START -->
+# 学习Reactive 第三天
+
+-   今天理解了 Callback 的实际发射方式：在 Reactive Contract 中，先通过 abi 把目标链要调用的函数和参数编码成payload，再通过emit callback 指定目标链、目标合约、gas 限额和执行内容，从而触发目标链上的后续操作。
+    
+-   Reactive Network 不只是一个统一的大网络，它还会为每个部署者提供独立的 ReactVM 执行环境。每个 Reactive Contract 实际上会在 Reactive Network 和对应的 ReactVM 中各有一个实例，这样可以实现状态隔离、并行执行和更高性能。
+    
+-   Reactive Contract 如何识别自己的执行环境。代码通过detectVM函数检查一个固定系统地址上是否存在合约代码：如果存在，说明当前运行在 Reactive Network；如果不存在，说明当前处于 ReactVM。这个判断用于后续限制不同函数只能在对应环境中执行
+<!-- DAILY_CHECKIN_2026-03-13_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 # Reactive Dapp 学习第二天
 
 直播学习:
@@ -28,6 +40,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 # Reactive Dapp 学习第 1 天
 
