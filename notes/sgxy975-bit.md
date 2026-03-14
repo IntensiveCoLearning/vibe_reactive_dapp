@@ -15,13 +15,20 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-14
+<!-- DAILY_CHECKIN_2026-03-14_START -->
+1
+<!-- DAILY_CHECKIN_2026-03-14_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 电脑今日坏了 今天主要还是学语法
 <!-- DAILY_CHECKIN_2026-03-13_END -->
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 Solidity：storage 和 memory 赋值行为 + 应用场景
 
@@ -202,6 +209,7 @@ return user;
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 Solidity 语法基础
@@ -449,6 +457,7 @@ require做校验
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
