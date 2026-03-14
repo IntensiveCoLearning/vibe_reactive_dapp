@@ -15,8 +15,201 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-14
+<!-- DAILY_CHECKIN_2026-03-14_START -->
+## 一、CRON 和 HF 相关
+
+**CRON 什么时候有优势**
+
+```
+用户操作触发  → 用普通事件订阅（更实时）
+价格波动触发  → 用 CRON（价格变化不会产生事件）
+最佳方案      → 两者结合使用
+```
+
+**ReactVM 的限制**
+
+```
+❌ 无法直接读取链上状态
+❌ 无法调用 view 函数
+✅ 只能读取事件日志里的数据
+✅ 只能发出 Callback 指令
+```
+
+**怎么把 HF 传给 ReactVM**
+
+```
+方法一（最推荐）：借贷合约直接 emit 包含 HF 的事件
+方法二：ReactVM → Callback → L1查询HF → emit新事件 → ReactVM读取
+方法三：监听 Chainlink 价格更新事件，间接计算 HF
+```
+
+**可以同时监控多个用户吗**
+
+```
+可以！subscribe() 里不指定用户地址（填 REACTIVE_IGNORE）
+= 监听所有用户的事件
+react() 里逐一判断每个用户的 HF 是否 <= 1
+```
+
+* * *
+
+## 核心公式（最重要）
+
+```
+你的合约 = AbstractReactive（已整合一切）
+
+构造函数：
+  service.subscribe() → 告诉系统监听什么
+
+react() 里：
+  第一步：从 log 提取数据
+  第二步：业务判断（HF <= 1 ?）
+  第三步：abi.encodeWithSignature 构造 payload
+  第四步：emit Callback 发出跨链指令
+
+L1Callback：
+  实现对应的函数（liquidate 等）
+  加上 rvmIdOnly 修饰器保证安全
+```
+
+-   **HyperlaneOrigin.sol**：部署在 Base Mainnet 的 EVM 侧端点。  
+    **HyperlaneOrigin.sol** ：部署在 Base Mainnet 的 EVM 侧端点。
+    
+-   **HyperlaneReactive.sol**：部署在 Reactive Mainnet 的响应合约（继承 AbstractReactive 和 AbstractCallback）。  
+    **HyperlaneReactive.sol** ：部署在 Reactive Mainnet 的响应合约（继承 AbstractReactive 和 AbstractCallback ）。
+    
+-   [**README.md**](http://README.md)：完整部署指南、环境变量、测试命令（你学习部署时主要参考的就是这个文件）。
+    
+-   三、付款机制相关
+    
+    **pay() 和 coverDebt() 的区别**
+    
+    ```
+    pay()       → 系统合约主动来扣款（被动）
+    coverDebt() → 你自己查询并主动还清（主动）
+    两者最终都调用 _pay() 执行实际转账
+    ```
+    
+    **\_pay() 在哪里实现**
+    
+    ```
+    在 AbstractPayer.sol 里实现
+    是底层工具函数，pay() 和 coverDebt() 都复用它
+    前缀 _ 是约定俗成，表示内部函数
+    ```
+    
+    **vendor 是什么**
+    
+    ```
+    ReactiveContract 里：vendor = 系统合约（收订阅费）
+    L1Callback 里：      vendor = Callback Proxy（收回调费）
+    都是 0x0000...fffFfF，但在不同链上是不同合约
+    ```
+    
+
+### 两个核心合约的详细解析（附完整源码关键点）
+
+1\. HyperlaneOrigin.sol（Base 侧，简单 EVM 合约）
+
+solidity
+
+```
+// SPDX-License-Identifier: GPL-2.0-or-later
+pragma solidity >=0.8.0;
+
+contract HyperlaneOrigin {
+    event Trigger(bytes message);
+    event Received(uint32 indexed chain_id, address indexed sender, bytes message);
+
+    address public owner;
+    address public mailbox;
+
+    constructor(address _mailbox) { ... }
+    modifier onlyOwner() { ... }
+    modifier onlyMailbox() { ... }
+
+    function trigger(bytes calldata message) external onlyOwner { emit Trigger(message); }
+
+    function handle(uint32 chain_id, bytes32 sender, bytes calldata message) external payable onlyMailbox {
+        emit Received(chain_id, address(uint160(uint256(sender))), message);
+    }
+}
+```
+
+-   **作用**：
+    
+    -   trigger(bytes)：只有 owner 可以调用，发出 Trigger 事件（供 Reactive 订阅）。
+        
+    -   handle(...)：Hyperlane Mailbox 投递消息时调用，记录接收到的 payload。
+        
+-   **Hyperlane 集成**：依赖 Base 的官方 Mailbox 地址（0xeA87ae93Fa0019a82A727bfd3eBd1cFCa8f64f1D）。
+    
+
+2\. HyperlaneReactive.sol（Reactive 侧，核心自动化合约）
+
+solidity
+
+```
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity >=0.8.0;
+
+import '../../../lib/reactive-lib/src/abstract-base/AbstractReactive.sol';
+import '../../../lib/reactive-lib/src/abstract-base/AbstractCallback.sol';
+
+interface IMailbox { /* dispatch + quoteDispatch */ }
+
+contract HyperlaneReactive is AbstractReactive, AbstractCallback {
+    event Trigger(bytes message);
+
+    uint256 public constant TRIGGER_TOPIC_0 = 0x53a2e0b3...;  // Trigger 事件的 topic
+    uint64 public constant GAS_LIMIT = 1000000;
+
+    address public owner;
+    IMailbox public mailbox;
+    uint256 public chain_id;        // Base chainId = 8453
+    address public origin;          // HyperlaneOrigin 地址
+
+    constructor(IMailbox _mailbox, uint256 _chain_id, address _origin) 
+        AbstractCallback(address(SERVICE_ADDR)) payable { ... }
+
+    // 订阅 Base 的 Trigger 事件 + 本合约自己的 Trigger 事件
+    function react(LogRecord calldata log) external vmOnly { ... }  // 发出 Callback
+    function callback(...) external authorizedSenderOnly { _send(message); }
+    function send(bytes calldata message) external onlyOwner { _send(message); }
+    function trigger(bytes calldata message) external onlyOwner { emit Trigger(message); }
+
+    function _send(bytes memory message) internal {
+        uint256 fee = mailbox.quoteDispatch(...);
+        mailbox.dispatch{value: fee}(...);   // 使用 Hyperlane 跨链发送
+    }
+}
+```
+
+-   **关键机制**：
+    
+    -   构造函数中自动订阅 Base 的 origin 合约（TRIGGER\_TOPIC\_0）和本合约自身事件。
+        
+    -   当 Base 发出 Trigger → Reactive 的 RVM 捕获 log → 调用 react() → 发出 Callback → 执行 \_send() 通过 Hyperlane Mailbox 把消息发回 Base。
+        
+    -   反向也支持：直接调用 send() 或 trigger()（owner 手动触发）。
+        
+-   **Hyperlane 集成**：使用 Reactive Mainnet 的 Mailbox（0x3a464f746D23Ab22155710f44dB16dcA53e0775E），并通过 quoteDispatch + dispatch 支付 on-chain 费用（需要合约持有 REACT token）。
+    
+
+### 工作流程（双向消息传递）
+
+1.  **Base → Reactive**：Base owner 调用 trigger(payload) → 发出事件 → Reactive 订阅并自动 react → 通过 Hyperlane 发送回执（或处理逻辑）。
+    
+2.  **Reactive → Base**：Reactive owner 调用 send() 或 trigger() → 直接通过 Mailbox 跨链投递 → Base 的 handle 接收并 emit Received。  
+    **Reactive → Base** ：Reactive owner 调用 send() 或 trigger() → 直接通过 Mailbox 跨链投递→ Base 的 handle 接收并 emit Received 。
+    
+3.  **实时性**：完全 on-chain，无需 off-chain relayer，Reactive 的 log automation 保证低延迟。
+<!-- DAILY_CHECKIN_2026-03-14_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 ## 顺序安排思路
 
 ```
@@ -287,6 +480,7 @@ Reactive Contract 在运行时会产生费用，例如：
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 # Reactive Contract 三个模板完整总结
 
@@ -912,6 +1106,7 @@ Destination Chain 执行交易
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
 
+
 # 使用AI演示和分析了reactive contract的工作原理，图片和简单动画演示
 
 [Reactive\_Contract步骤分析](https://may-tonk.github.io/html_may_tonk_web/reactive_contract_image.html/second_reactiveframe.html)
@@ -1150,6 +1345,7 @@ Destination Chain 执行交易
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -1439,6 +1635,7 @@ L1Callback 开门之前要检查：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
