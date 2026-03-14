@@ -15,8 +15,18 @@ Reactive 探索者
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-14
+<!-- DAILY_CHECKIN_2026-03-14_START -->
+# **Lesson 5: How Oracles Work**
+
+**尝试使用漫画方式来理解**
+
+![Reactive_Oracle_Magic_page-0001.jpg](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-14-1773478063194-Reactive_Oracle_Magic_page-0001.jpg)![Reactive_Oracle_Magic_page-0002.jpg](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-14-1773478077675-Reactive_Oracle_Magic_page-0002.jpg)![Reactive_Oracle_Magic_page-0003.jpg](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-14-1773478115346-Reactive_Oracle_Magic_page-0003.jpg)![Reactive_Oracle_Magic_page-0004.jpg](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-14-1773478131288-Reactive_Oracle_Magic_page-0004.jpg)![Reactive_Oracle_Magic_page-0005.jpg](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-14-1773478141042-Reactive_Oracle_Magic_page-0005.jpg)![Reactive_Oracle_Magic_page-0006.jpg](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-14-1773478151883-Reactive_Oracle_Magic_page-0006.jpg)![Reactive_Oracle_Magic_page-0007.jpg](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-14-1773478162281-Reactive_Oracle_Magic_page-0007.jpg)![Reactive_Oracle_Magic_page-0008.jpg](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-14-1773478207133-Reactive_Oracle_Magic_page-0008.jpg)![Reactive_Oracle_Magic_page-0009.jpg](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-14-1773478218106-Reactive_Oracle_Magic_page-0009.jpg)![Reactive_Oracle_Magic_page-0010.jpg](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-14-1773478227876-Reactive_Oracle_Magic_page-0010.jpg)![Reactive_Oracle_Magic_page-0011.jpg](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-14-1773478237840-Reactive_Oracle_Magic_page-0011.jpg)![Reactive_Oracle_Magic_page-0012.jpg](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-14-1773478247370-Reactive_Oracle_Magic_page-0012.jpg)![Reactive_Oracle_Magic_page-0013.jpg](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-14-1773478258817-Reactive_Oracle_Magic_page-0013.jpg)
+<!-- DAILY_CHECKIN_2026-03-14_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 # **Lesson 4: How Subscriptions Work**
 
 -   静态和动态地配置和管理订阅。
@@ -142,6 +152,7 @@ Unsubscribing is an expensive operation due to the necessity of searching and re
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 # **Lesson 3: ReactVM and Reactive Network As a Dual-State Environment**
 
@@ -672,6 +683,7 @@ function react(LogRecord calldata log) external vmOnly {
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
 
+
 # **Lesson 2: How Events and Callbacks Work**
 
 本课重点讲解事件和回调在智能合约中的作用。通过学习如何发出、处理和监听事件，开发者可以创建能够实时响应区块链变化的动态去中心化应用（dApp）。我们还将探讨响应式合约如何使用 `react()` 方法处理事件，并通过回调发起跨链交易，从而增强响应式网络的功能。
@@ -759,6 +771,7 @@ For security and authorization purposes, the Reactive Network automatically repl
 
 
 
+
 # 学习计划
 
 1.  学习：[https://dev.reactive.network/education/module-1/reactive-contracts](https://dev.reactive.network/education/module-1/reactive-contracts)
@@ -824,6 +837,7 @@ RC 可以监控来自不同智能合约、兼容 EVM 的区块链的数据，它
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
