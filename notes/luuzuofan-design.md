@@ -15,8 +15,20 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-14
+<!-- DAILY_CHECKIN_2026-03-14_START -->
+# ReactiveDapp学习第四天
+
+-   ReactVM 这边就像“真正干活的机器人”：它一边盯价格，一边判断是否该止损；一旦该止损就立刻发 callback；等收到执行成功的回执后，再把订单状态标记为完成。
+    
+-   `pause()` 是一个运行在 Reactive Network 侧的管理函数，用于取消当前合约注册的事件订阅并将状态标记为已暂停，从而暂时停止该 Reactive Contract 继续监听外部事件。
+    
+-   `service.unsubscribe(...)` 用于取消一条已经注册的事件订阅。它需要提供与原订阅一致的链 ID、合约地址以及 topic 条件，Reactive Network 才能准确找到并删除对应的监听规则。按照“链 + 合约 + 事件类型 + 过滤条件”这整套规则，把这一条事件监听取消掉。
+<!-- DAILY_CHECKIN_2026-03-14_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 # 学习Reactive 第三天
 
 -   今天理解了 Callback 的实际发射方式：在 Reactive Contract 中，先通过 abi 把目标链要调用的函数和参数编码成payload，再通过emit callback 指定目标链、目标合约、gas 限额和执行内容，从而触发目标链上的后续操作。
@@ -29,6 +41,7 @@ Let’s vibe Reactive dApp
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
+
 # Reactive Dapp 学习第二天
 
 直播学习:
@@ -40,6 +53,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 # Reactive Dapp 学习第 1 天
