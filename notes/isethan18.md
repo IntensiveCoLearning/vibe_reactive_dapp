@@ -15,8 +15,30 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-14
+<!-- DAILY_CHECKIN_2026-03-14_START -->
+**代码拆解 —— 以 Uniswap V2 Stop Order 为例**
+
+**今日重点：** 结合 GitHub 源码，看技术理论如何变成逻辑代码。
+
+• **源码分析对象：**[**Stop Order Demo**](https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/demos/uniswap-v2-stop-order)
+
+• **核心逻辑拆解：**
+
+1\. **构造函数：** 设定要监控的 Pair 合约地址。
+
+2\. **onEvent 函数：** 这是核心。当监听到 Sync 事件（价格变动）时，计算当前价格。
+
+3\. **逻辑判断：** if (currentPrice <= stopPrice)。
+
+4\. **执行回调：** 调用 emitCallback，自动在 Uniswap 执行卖出操作。
+
+• **动手尝试：** 尝试在本地环境（或 Remix）中模拟这段代码的触发条件，理解 Reactive Library 提供的接口。
+<!-- DAILY_CHECKIN_2026-03-14_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 2026.03.13
 
 ## ReactVM 双状态模型与执行逻辑
@@ -47,6 +69,7 @@ Let’s vibe Reactive dApp
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
+
 ## Day 3：挑战任务实战（终极目标）
 
 **核心点：按照 Notion 指引完成跨链自动化**
@@ -69,6 +92,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 ## 2026.03.10
@@ -118,6 +142,7 @@ bytes calldata data
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
