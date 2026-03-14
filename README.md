@@ -367,7 +367,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [oiGho5t](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/oiGho5t.md) | ⭕️ | ✅ | ✅ | ⭕️ | ❌ | | | | | | | | | |
 | [surdress](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/surdress.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | | | | | | | | |
 | [JackCC703](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/JackCC703.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
-| [SeeMoon357](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/SeeMoon357.md) | ✅ | ✅ | ⭕️ | ✅ | ✅ |   | | | | | | | | |
+| [SeeMoon357](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/SeeMoon357.md) | ✅ | ✅ | ⭕️ | ✅ | ✅ | ✅ | | | | | | | | |
 | [potato89757](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/potato89757.md) | ✅ | ✅ | ✅ | ✅ | ⭕️ | ✅ | | | | | | | | |
 | [zhao-si-yi](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/zhao-si-yi.md) | ✅ | ⭕️ | ⭕️ | ✅ | ✅ |   | | | | | | | | |
 | [merlin-ecde](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/merlin-ecde.md) | ✅ | ⭕️ | ⭕️ | ✅ | ✅ |   | | | | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
