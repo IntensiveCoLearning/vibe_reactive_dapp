@@ -20,11 +20,26 @@ Let’s vibe Reactive dApp
 ![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-14-1773511860120-image.png)
 
 昨天的作业做的有点问题，修改一下  
+相关环境变量
+
+```dotenv
+UNISWAP_V2_PAIR_ADDR=0xD659534c8ce723e4D70Ff966C6D039219aB726f0
+TOKEN0_ADDR=0x3B0c20C1e9bf2f335b0fB91C46A0A78C455f2CE1
+TOKEN1_ADDR=0x8Db52449b7A0cf95d74C71e8fb2e29A02406066a
+CALLBACK_ADDR=0xE0753E200Be4B33BA988Cec110BDC1570811c96e
+DIRECTION_BOOLEAN=true
+EXCHANGE_RATE_DENOMINATOR=1000
+EXCHANGE_RATE_NUMERATOR=1200
+TOKEN_ADDR=0x3B0c20C1e9bf2f335b0fB91C46A0A78C455f2CE1
+```
+
+  
 [https://lasna.reactscan.net/address/0xe68f43aa36bddef60bbc5dea7610dd24ba22937f/contract/0x0e61fc76ec02f3231b2dfe9efa4ca0cbdb83d53a?screen=transactions](https://lasna.reactscan.net/address/0xe68f43aa36bddef60bbc5dea7610dd24ba22937f/contract/0x0e61fc76ec02f3231b2dfe9efa4ca0cbdb83d53a?screen=transactions)
 <!-- DAILY_CHECKIN_2026-03-15_END -->
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 ![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-14-1773501189541-image.png)![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-14-1773501219322-image.png)![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-14-1773501885993-image.png)![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-14-1773502403263-image.png)
@@ -38,6 +53,7 @@ Let’s vibe Reactive dApp
 
 
 
+
 ![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-13-1773413636398-image.png)
 
 试试Uniswap V2 Stop Order Demo，没做完明天继续
@@ -45,6 +61,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -420,6 +437,7 @@ Events → Reaction → Callback
 
 
 
+
 ![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-10-1773159556314-image.png)
 
 [https://lasna.reactscan.net/address/0x81a64a537e30eee5d8012886d036e6353013ac08/4](https://lasna.reactscan.net/address/0x81a64a537e30eee5d8012886d036e6353013ac08/4)
@@ -786,6 +804,7 @@ Callback Transaction
 
 
 
+
 ![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/lorstyang/images/2026-03-10-1773157873570-image.png)
 
 -   最困难的居然是空钱包搞到Base sepolia ETH，试了挺多只有这个桥接的能用[https://superbridge.app/base-sepolia](https://superbridge.app/base-sepolia)
@@ -793,6 +812,7 @@ Callback Transaction
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
