@@ -15,8 +15,375 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-14
+<!-- DAILY_CHECKIN_2026-03-14_START -->
+# Uniswap V2 学习笔记
+
+## 1\. Uniswap V2 概述
+
+Uniswap V2 是运行在 **Ethereum** 上的 **去中心化交易所（DEX）**，使用 **自动做市商（AMM）** 模型进行交易。
+
+核心组成：
+
+-   **Liquidity Pool（流动性池）**
+    
+-   **Smart Contracts（智能合约）**
+    
+-   **Constant Product Market Maker（恒定乘积公式）**
+    
+
+特点：
+
+-   无传统做市商
+    
+-   交易完全通过智能合约执行
+    
+-   所有交易记录公开，可在 **Etherscan** 查看
+    
+
+* * *
+
+# 2\. Liquidity Pools（流动性池）
+
+流动性池 = **两种 Token 的储备池**
+
+例如：
+
+```
+ETH / USDC pool
+```
+
+池子包含：
+
+```
+reserve0 → token0 数量
+reserve1 → token1 数量
+```
+
+作用：
+
+1️⃣ 用户可以 **swap token**  
+2️⃣ 用户可以 **提供流动性赚手续费**
+
+所有操作都通过 **智能合约执行**。
+
+* * *
+
+# 3\. 定价机制（Constant Product Formula）
+
+Uniswap V2 使用公式：
+
+x \\cdot y = k
+
+其中：
+
+-   **x** = token0 数量
+    
+-   **y** = token1 数量
+    
+-   **k** = 常数（池子总流动性）
+    
+
+### 公式含义
+
+池子交易前：
+
+```
+x * y = k
+```
+
+交易后仍然必须满足：
+
+```
+x' * y' ≥ k
+```
+
+价格变化来源：
+
+-   买入某个 token → 该 token reserve 减少
+    
+-   价格自动上涨
+    
+
+* * *
+
+# 4\. Swap 函数核心逻辑
+
+swap 函数主要流程：
+
+### 1️⃣ 检查输出是否合法
+
+```
+require(amount0Out > 0 || amount1Out > 0);
+```
+
+必须至少输出一个 token。
+
+* * *
+
+### 2️⃣ 获取当前储备
+
+```
+(uint112 reserve0, uint112 reserve1,) = getReserves();
+```
+
+获取 pool 当前 token 数量。
+
+* * *
+
+### 3️⃣ 检查流动性
+
+```
+require(amount0Out < reserve0 && amount1Out < reserve1);
+```
+
+不能把池子掏空。
+
+* * *
+
+### 4️⃣ 计算输入 token
+
+```
+amount0In
+amount1In
+```
+
+输入 =  
+池子原有储备 − 新储备
+
+* * *
+
+### 5️⃣ 收取 0.3% 手续费
+
+计算方式：
+
+```
+balanceAdjusted = balance * 1000 - amountIn * 3
+```
+
+解释：
+
+```
+fee = 0.3%
+1000 - 3 = 997
+```
+
+* * *
+
+### 6️⃣ 检查 k 是否成立
+
+```
+require(balanceAdjusted0 * balanceAdjusted1 >= reserve0 * reserve1 * 1000^2)
+```
+
+保证交易后：
+
+```
+x * y >= k
+```
+
+* * *
+
+### 7️⃣ 发送 token
+
+```
+_safeTransfer(token, to, amount)
+```
+
+把 swap 得到的 token 发给用户。
+
+* * *
+
+### 8️⃣ 更新储备
+
+```
+_update(balance0, balance1)
+```
+
+更新 pool 的 reserve。
+
+* * *
+
+### 9️⃣ Flash Swap 回调（可选）
+
+```
+uniswapV2Call()
+```
+
+支持 **flash swap / flash loan**。
+
+* * *
+
+# 5\. Uniswap V2 重要事件
+
+## 1️⃣ Swap Event
+
+每次交易都会触发。
+
+结构：
+
+```
+event Swap(
+ address sender,
+ uint amount0In,
+ uint amount1In,
+ uint amount0Out,
+ uint amount1Out,
+ address to
+);
+```
+
+字段含义：
+
+| 字段 | 含义 |
+| --- | --- |
+| sender | 发起 swap 的地址 |
+| amount0In | token0 输入 |
+| amount1In | token1 输入 |
+| amount0Out | token0 输出 |
+| amount1Out | token1 输出 |
+| to | 接收 token 的地址 |
+
+用途：
+
+-   监听交易
+    
+-   分析交易数据
+    
+-   监控 DeFi activity
+    
+
+* * *
+
+## 2️⃣ Sync Event
+
+每次 **reserve 更新**都会触发。
+
+结构：
+
+```
+event Sync(uint112 reserve0, uint112 reserve1);
+```
+
+含义：
+
+| 字段 | 说明 |
+| --- | --- |
+| reserve0 | token0 新储备 |
+| reserve1 | token1 新储备 |
+
+作用：
+
+-   更新池子状态
+    
+-   计算价格
+    
+-   计算 slippage
+    
+
+* * *
+
+# 6\. Swap + Sync 关系
+
+一次 swap 通常触发：
+
+```
+Swap event
+↓
+Sync event
+```
+
+流程：
+
+```
+用户交易
+↓
+Swap event 记录交易
+↓
+_update() 更新储备
+↓
+Sync event 记录新 reserve
+```
+
+* * *
+
+# 7\. 为什么监控 Swap / Sync
+
+在 DeFi 或 Reactive Contract 中：
+
+常监听：
+
+```
+Swap events
+```
+
+原因：
+
+-   包含每笔交易信息
+    
+-   适合实时监控市场
+    
+
+Sync 用于：
+
+-   获取最新 liquidity
+    
+-   计算价格
+    
+
+* * *
+
+# 8\. 核心总结
+
+Uniswap V2 的关键点：
+
+**1️⃣ Liquidity Pools**
+
+```
+token0 + token1
+```
+
+* * *
+
+**2️⃣ 定价公式**
+
+```
+x * y = k
+```
+
+* * *
+
+**3️⃣ 手续费**
+
+```
+0.3%
+```
+
+* * *
+
+**4️⃣ 两个关键事件**
+
+Swap  
+Sync
+
+* * *
+
+**5️⃣ Swap核心流程**
+
+```
+检查参数
+→ 计算输入
+→ 扣手续费
+→ 保证 x*y=k
+→ 发送token
+→ 更新reserve
+→ 触发事件
+```
+<!-- DAILY_CHECKIN_2026-03-14_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 # Oracles 学习笔记
 
 ## 1\. Oracle 的作用
@@ -294,6 +661,7 @@ Reactive Contract 监听事件
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 # Subscriptions
@@ -672,6 +1040,7 @@ Reactive Contracts 订阅机制核心：
 
 
 
+
 # Reactive Contracts (RCs) 架构与执行机制
 
 ## 一、 双重执行环境：一个合约，两个状态
@@ -785,6 +1154,7 @@ Reactive Contracts 订阅机制核心：
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -1059,6 +1429,7 @@ Reactive Network 会自动：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
