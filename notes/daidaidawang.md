@@ -15,8 +15,255 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-14
+<!-- DAILY_CHECKIN_2026-03-14_START -->
+# 反应式合约
+
+## **部署**
+
+反应式网络（RNK）EOA与合约互动公链，管理订阅
+
+ReactVM（RVM）私有执行环境，事件处理
+
+> 两者使用相同字节码，各自独立运行
+
+## **州分离**
+
+合约可以通过调用系统合约检测ReactVM内部执行，在ReactVM外部回退
+
+## **验证**
+
+通过Sourcify端点验证。Sourcify是去中心化验证服务，将字节码和源代码匹配，使合约可审计透明
+
+### **部署时验证**
+
+```
+forge create `
+--verifier sourcify `
+--verify `
+--chain-id $CHAIN_ID（反应式主网/Lasna Testnet 1597/5318007） `
+--private-key $PRIVATE_KEY（部署秘钥） `
+$PATH
+```
+
+### **部署后验证**
+
+```
+forge verify-contract `
+--verifier sourcify `
+--chain-id $CHAIN_ID（反应式主网/Lasna Testnet 1597/5318007） `
+$CONTRACT_ADDR $CONTRACT_NAME（合约名称）
+```
+
+## **事件处理**
+
+IReactive
+
+LogRecord结构
+
+| chain_id | 事件源链ID |
+| --- | --- |
+| _contract | 发布事件合约地址 |
+| topic_0到topic_3 | 索引主题 |
+| data | 非索引数据 |
+| block_number | 区块高度 |
+| tx_hash | 交易哈希 |
+| log_index | 日志索引 |
+
+### **Callback事件**
+
+-   跨链交易请求
+    
+
+```
+event Callback(
+  uint256 indexed chain_id,
+  address indexed _contract,
+  uint64 indexed gas_limit,
+  bytes payload
+);
+```
+
+### **react() 函数**
+
+-   事件处理入口
+    
+
+```
+function react(LogRecord calldata log) external;
+```
+
+## **跨链回调**
+
+回调触发流程
+
+```
+//编码目标链交易
+bytes memory payload = abi.encodeWithSignature(
+"functionName(param1,param2,...)",
+address(0),//ReactVM地址，合约部署者地址
+otherParams...
+);
+​
+​
+//发射Callback事件
+emit Callback(
+targetChainId,
+targetContract,
+gasLimit,
+payload
+);
+```
+
+## **环境检测**
+
+> 检查系统合约地址代码大小
+
+```
+address constant SYSTEM_CONTRACT = ;
+function detectVm() internal {
+uint256 size;
+assembly { size := extcodesize(SYSTEM_CONTRACT)}
+vm = size == 0;//true = ReactVM,反之反应式网络
+}
+```
+
+## **订阅**
+
+### **ISubscriptionService接口**
+
+> 事件订阅服务：根据特定标准订阅特定事件，在事件发生时接收通知
+
+```
+pragma solidity >=0.8.0;
+​
+import './IPayable.sol';
+​
+interface ISubscriptionService is IPayable {
+    function subscribe(
+        uint256 chain_id,
+        address _contract,
+        uint256 topic_0,
+        uint256 topic_1,
+        uint256 topic_2,
+        uint256 topic_3
+    ) external;
+    
+    function unsubscribe(
+        uint256 chain_id,
+        address _contract,
+        uint256 topic_0,
+        uint256 topic_1,
+        uint256 topic_2,
+        uint256 topic_3
+    ) external;
+}
+```
+
+> chain\_id A表示时间源链ID uint256 EIP155
+> 
+> \_contract 发送事件的起始链合约地址
+> 
+> topic\_0, , , 事件主题
+
+### **无效接口**
+
+IReactive接口
+
+### **标准**
+
+-   万用符用途：用于表示按任意合约地址筛选，表示任何链ID，以及主题按任意主题过滤。address(0) uint256(0) REACTIVE\_IGNORE
+    
+-   具体价值：至少有一个标准必须是具体的数值，以确保有意义的订阅。
+    
+
+# **ReactVM**
+
+## **状态变量**
+
+```
+bool private triggered;            //是否已触发
+bool private done;                 //是否已完成
+address private pair;              //Uniswap交易对地址
+address private stop_order;        //止损订单地址
+address private client;            //客户端地址
+bool private token0;               //监控token为0还是1
+uint256 private coefficient;       //计算系数
+uint256 private threshold;         //是否触发阙值
+```
+
+## **环境修饰符**
+
+> vmOnly 事件处理
+
+```
+modifier vmOnly() {
+require(vm,'VM only');
+_;
+}
+```
+
+## **双态环境**
+
+ReactVM状态 订阅事件发生时自动更新
+
+反应式网络状态 EOA调用合约函数时更新
+
+> 大多数自动化逻辑运行ReactVM内部
+
+## **ReactVM局限性**
+
+在内部，反应式合约不能直接访问外部系统。从反应式网络接受事件日志，向目的链发送回调，但无法从外部RPC断点或链外服务交互
+
+![image-20260314200217317](https://daidaidawang.oss-cn-beijing.aliyuncs.com/typora/image-20260314200217317.png)
+
+# **反应式网络**
+
+## **变量**
+
+继承AbstractReactive可用资源
+
+```
+service(ISubscriptionService)://管理事件订阅服务接口
+```
+
+```
+vm(bool)://执行环境标识符
+ true//在ReactVM内部执行
+ false//在反应式网络中执行
+```
+
+```
+service.subscribe(...)//订阅特定链上合约事件
+```
+
+## **环境修饰符**
+
+> rnOnly 订阅管理，配置更新
+
+```
+modifier rnOnly() {
+require(!vm,'Reactive Network only');
+_;
+}
+```
+
+## **环境检测**
+
+```
+if(!vm) {
+service.subscribe(...);
+}
+```
+
+部署阶段（!vm = true） 在反应是网络中注册事件订阅
+
+运行阶段（vm =true） 在ReactVM中接受事件并触发react()
+<!-- DAILY_CHECKIN_2026-03-14_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 花费了近一周的时间，今天完成了任务一。从学习部署合约，向地址转账，到最后回调成功。感觉收获很多，印象最深的是最后的回调一直在回滚问了AI了解到是`BasicDemoL1Callback` 构造函数接收了 `_callback_sender`。由于之前在Callback合约中开启了 `authorizedSenderOnly`，合约会执行： `require(msg.sender == _callback_sender)`
 
 如果之前传入的 `$env:DESTINATION_CALLBACK_PROXY_ADDR` **不等于** `0xc9f36411C9897e7F959D99ffca2a0Ba7ee0D7bDA`，那么合约就会 Revert，回调回滚
@@ -212,6 +459,7 @@ cast call $CALLBACK_PROXY_ADDR "reserves(address)" $CONTRACT_ADDR --rpc-url $DES
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
+
 这几天主要学习了如何部署reactive合约，包括设置地址，转账等一系列操作，也对reactive合约的实现流程有了个大致了解
 
 **\[源链（如Sepolia）\] -> \[Reactive Network\] -> \[目标链（如Sepolia）\]**
@@ -244,6 +492,7 @@ cast call $CALLBACK_PROXY_ADDR "reserves(address)" $CONTRACT_ADDR --rpc-url $DES
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 作为web3新手，第一次正式的跟着学习。今天的任务只完整了部署前两个阶段，卡在了第三个阶段，因为缺少kREACT还没有部署上。目前正在转换，明天继续部署。
