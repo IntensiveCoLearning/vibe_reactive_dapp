@@ -15,8 +15,63 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-14
+<!-- DAILY_CHECKIN_2026-03-14_START -->
+How Uniswap Works（Uniswap V2 池与合约理解）
+
+-   学习目标：
+    
+    -   掌握 Uniswap V2 核心机制：恒定乘积公式、流动性池、Swap/Sync 事件。
+        
+    -   理解关键函数与事件：swap()、mint()、burn()、sync()。
+        
+    -   为 Reactive 合约订阅 Uniswap 事件（如 Sync/Swap）做准备，实现止损/套利等自动化。
+        
+-   Uniswap V2 核心概念：
+    
+    -   恒定乘积公式：x \* y = k（储备量 x、y 不变乘积）。
+        
+    -   流动性提供：add liquidity → mint LP token；remove → burn LP。
+        
+    -   Swap 过程：输入 token → 计算输出（含 0.3% fee）→ 更新储备 → emit Sync。
+        
+    -   关键事件：
+        
+        -   Swap(address indexed sender, uint amount0In, uint amount1In, uint amount0Out, uint amount1Out, address indexed to)
+            
+        -   Sync(uint112 reserve0, uint112 reserve1)（储备更新，常用于价格监控）。
+            
+    -   Pair 合约：每个 token pair 一个池，地址通过 Factory 计算。
+        
+-   与 Reactive 集成要点：
+    
+    -   订阅 Uniswap Pair 的 Sync 事件（topic\_0 = keccak256("Sync(uint112,uint112)")）。
+        
+    -   在 react() 中：解码储备 → 计算当前价格（reserve1/reserve0）→ 比较阈值 → 若触发止损/套利 → emit Callback 执行 swap 或转移。
+        
+    -   示例场景（Stop Order demo）：监控 Sync → 价格跌破阈值 → 自动 swap token → 转出资金。
+        
+-   代码示例要点（Uniswap V2 Pair 接口简化）：
+    
+    solidity
+    
+    ```solidity
+    interface IUniswapV2Pair {
+        event Sync(uint112 reserve0, uint112 reserve1);
+        function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
+        function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external;
+    }
+    ```
+    
+    Reactive 订阅：topics\[0\] = keccak256("Sync(uint112,uint112)"); topics\[1/2\] 可忽略或指定。
+    
+
+一句话总结：Uniswap V2 通过恒定乘积 + Sync/Swap 事件提供价格与流动性基础，Reactive 合约订阅这些事件实现 DEX 自动化。
+<!-- DAILY_CHECKIN_2026-03-14_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 How Oracles Work
 
 -   学习目标：
@@ -79,6 +134,7 @@ How Oracles Work
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 How Subscriptions Work（订阅机制详解）
 
@@ -220,6 +276,7 @@ How Subscriptions Work（订阅机制详解）
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
 
+
 **ReactVM and Reactive Network As a Dual-State Environment**
 
 **1\. 学习目标（Lesson Objectives）**
@@ -314,6 +371,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 
 
+
 **Events and Callbacks 工作原理**
 
 **1\. 学习目标（Lesson Objectives**）
@@ -388,6 +446,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
