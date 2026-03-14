@@ -15,8 +15,14 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-14
+<!-- DAILY_CHECKIN_2026-03-14_START -->
+今天尝试进行第二关的 Uniswap 止损单的练习，在学习文档内容。
+<!-- DAILY_CHECKIN_2026-03-14_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 # 用 AI 构建睿应式合约
 
 1.  **AI 在开发中的角色**
@@ -65,6 +71,7 @@ Let’s vibe Reactive dApp
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
+
 ### **实时监控问题解答**
 
 **监控原理**：市场波动与Reactive实时监控无关，其监控每条链的每个区块，并对合约订阅的事件做出反应。
@@ -92,6 +99,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 1\. **Transaction Rollback and Reorg Handling**
@@ -153,6 +161,7 @@ Let’s vibe Reactive dApp
 
 
 
+
 # **Basic Reactive Demo：理解“监听-反应”闭环**
 
 这个 Demo 是 Reactive 的 "Hello World"。流程很简单：在 Sepolia 上转账 -> Reactive 监听到 -> 自动通知 Sepolia 上的回调合约。
@@ -203,6 +212,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
