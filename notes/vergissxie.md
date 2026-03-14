@@ -15,8 +15,144 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-14
+<!-- DAILY_CHECKIN_2026-03-14_START -->
+这是一份为你系统性整理的 **Reactive Network 全栈开发与核心机制** 的 Obsidian 学习笔记。
+
+这份笔记将你提供的官方文档、GitHub 代码库以及我们之前的讨论进行了深度整合，完美覆盖了你的四大核心学习目标。你可以直接将其复制到你的 Obsidian 知识库中。
+
+* * *
+
+## 🎯 目标一：理解 Reactive Contract 的组成结构
+
+传统的智能合约是“被动”的（依赖用户发交易），而响应式合约（Reactive Contract, RC）是“主动”的（由事件驱动）。RC 的代码结构天然反映了这种“控制反转（Inversion of Control）”。
+
+### 核心组成部分
+
+1.  **基础依赖**：必须引入并继承官方的 `IReactive` 接口和 `AbstractReactive` 抽象类。
+    
+2.  `constructor` **(初始化区)**：用于在部署时设定基础参数，并向系统**注册订阅规则**。
+    
+3.  `react()` **(逻辑响应区)**：RC 的灵魂。当订阅的事件发生时，底层系统会自动调用这个函数，传入详尽的事件快照 `LogRecord`。
+    
+4.  **环境修饰符**：利用 `rnOnly` 和 `vmOnly` 严格隔离代码的执行环境。
+    
+
+Solidity
+
+```
+import '../../../lib/reactive-lib/src/interfaces/IReactive.sol';
+import '../../../lib/reactive-lib/src/abstract-base/AbstractReactive.sol';
+
+contract MyReactiveContract is IReactive, AbstractReactive {
+    // 1. RN 变量区 (面向主网管理)
+    // 2. RVM 变量区 (面向逻辑处理与状态标记)
+
+    constructor(...) {
+        if (!vm) {
+            // 在 RN 主网执行：向系统注册订阅
+        }
+    }
+
+    function react(LogRecord calldata log) external override vmOnly {
+        // 在 RVM 沙盒执行：事件处理逻辑与跨链回调
+    }
+}
+```
+
+* * *
+
+## 🔄 目标二：理解 Subscribe / Trigger / Callback 模型
+
+这是 Reactive Network 运转的底层逻辑飞轮，也是跨链自动化的核心生命周期。
+
+1.  **Subscribe (订阅)**
+    
+    -   **作用**：告诉网络“我关心哪些链上的哪些事件”。
+        
+    -   **实现**：通过系统合约的 `service.subscribe(...)`，支持多维度过滤（Chain ID, Contract Address, Topic 0-3）。
+        
+    -   **规则**：允许设置通配符（如 `address(0)` 或 `REACTIVE_IGNORE`），但越精准越省计算资源。
+        
+2.  **Trigger (触发)**
+    
+    -   **作用**：去中心化节点集群扫描各条源链。当发现匹配的 `Event` 日志时，生成 `LogRecord` 结构体。
+        
+    -   **机制**：协议层在内存中瞬间拉起一个 ReactVM 实例，并将 `LogRecord` 注入，强制触发 `react()` 函数。
+        
+3.  **Callback (回调)**
+    
+    -   **作用**：RVM 在沙盒中计算出结果后，必须通过 `emit Callback(...)` 向外部世界发送执行指令。
+        
+    -   **安全机制**：在发往目标链之前，Payload 的第一个参数会被**强制替换为合约部署者的 RVM ID**，确保指令不可伪造。
+        
+
+* * *
+
+## 🧠 目标三：理解 ReactVM 执行逻辑 (双状态模型)
+
+> \[!abstract\] **Dual-State Model (双状态模型)**
+> 
+> 为什么响应式网络不拥堵？因为它把“行政管理”和“具体干活”分开了。同一份代码，存在于两个平行时空。
+
+| 维度 | Reactive Network (RN) 状态 | ReactVM (RVM) 状态 |
+| 定位 | 全局主网账本 (公共环境) | 私有执行沙盒 (隔离环境) |
+| 功能 | 记录订阅关系、扣除 Gas 费 | 并发执行 react() 业务逻辑 |
+| 识别机制 | detectVm() 检测到系统合约存在 | detectVm() 检测到系统合约不存在 |
+| 状态持久化 | 永久记录，多方共识 | 实例私有，阅后即焚（不回传主网） |
+| 修饰符控制 | rnOnly | vmOnly |
+
+**⚠️ 避坑点**：永远不要试图在 `react()` (RVM环境) 中直接调用 `subscribe`，因为沙盒里没有系统合约。动态修改订阅必须通过 Callback“自己调自己”回主网执行。
+
+* * *
+
+## 🌐 目标四：理解跨链、自动化与经济机制 (Economy)
+
+RC 使得智能合约不仅能感知外部世界，还能跨越链与链的边界。
+
+### 1\. 跨链自动化机制
+
+-   **源链 (Origin Chain)**：发生原始业务（如 Ethereum 上的 Uniswap 交易），抛出日志。
+    
+-   **中继 (Reactive Network)**：捕获日志，拉起 RVM 计算判断，打包跨链指令（Payload）。
+    
+-   **目标链 (Destination Chain)**：由官方的 `Callback Proxy` 代理合约发起真正的交易，执行用户的目标逻辑（如在 Polygon 上空投）。
+    
+
+### 2\. 经济模型 (Economy): 谁来付 Gas？
+
+既然跨链回调是后台全自动执行的，没有用户来签名付 Gas 怎么办？
+
+> \[!info\] `IPayer` **与预充值机制**
+> 
+> -   开发者需要在 Reactive Network 上为自己的合约\*\*预充值（Top-up）\*\*原生代币。
+>     
+> -   当 RVM 发出 Callback，底层的 Relayers (中继者) 帮你在目标链垫付 Gas 费把交易打上链。
+>     
+> -   随后，系统会根据目标链消耗的实际成本，从你在 RN 的预充值余额中自动扣款。如果余额耗尽，回调将停止发送。
+>     
+
+* * *
+
+## 🛠️ 实战解析：Uniswap V2 止损脚手架 (Stop Order Demo)
+
+参照 [GitHub 官方示例](https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/demos/uniswap-v2-stop-order)，我们可以将理论落地：
+
+1.  **监控阶段**：构造函数在 RN 主网 (`!vm`) 订阅目标 Uniswap 池子的 `Sync` 事件和目标链执行合约的 `Stop` 成功事件。
+    
+2.  **运算阶段**：在 RVM 中，解析 `Sync` 事件带出的 `reserve0` 和 `reserve1`，利用交叉相乘法计算当前价格是否低于止损线 (`threshold`)。
+    
+3.  **防重机制 (Idempotency)**：使用 `triggered` 布尔变量。只要触发过一次 Callback，立刻将 `triggered` 设为 true，防止因价格连续波动导致向目标链狂发数百笔重复指令。
+    
+4.  **终结阶段**：收到目标链返回的 `Stop` 事件，将 `done` 设为 true，机器人完美下班。
+    
+
+* * *
+<!-- DAILY_CHECKIN_2026-03-14_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 # Uniswap V2 核心机制与响应式止损单 (Stop-Order)
 
 ## 🌟 核心理念 (Overview)
@@ -183,6 +319,7 @@ function below_threshold(Reserves memory sync) internal view returns (bool) {
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
+
 ## 🌟 核心理念 (Overview)
 
 虽然响应式合约 (RC) 非常擅长监听**链上 (On-chain)** 事件，但区块链本身是一个封闭的、确定性的系统，它无法直接知道今天的以太坊价格或是明天的天气。 **预言机 (Oracles)** 就是解决这个问题的特殊类别：它们负责将**链下数据 (Off-chain data)** 搬运到区块链上。当 RC 结合了预言机抛出的事件时，智能合约就真正拥有了感知并响应“现实世界”的能力。
@@ -317,6 +454,7 @@ contract PriceConsumerV3 {
 
 
 
+
 ## 1\. ReactVM：响应式合约的“私人大脑”
 
 在响应式网络中，**ReactVM** 是专门为执行响应式合约（RC）设计的 EVM 环境。它与传统以太坊环境最大的区别在于其\*\*双状态（Dual-State）\*\*特性：
@@ -375,6 +513,7 @@ contract PriceConsumerV3 {
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
