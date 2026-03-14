@@ -15,8 +15,20 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-14
+<!-- DAILY_CHECKIN_2026-03-14_START -->
+今日完成：
+
+今天本地搭建foundry环境，将basic demo跑了一遍；第一次是哟个foundry，还是比hardhat感觉精简一些；
+
+今日感想：
+
+ai是个好老师，好的大模型就是超级好老师，教程实在是太简略了，还是得问gpt才行；
+<!-- DAILY_CHECKIN_2026-03-14_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 今日完成：
 
 1、今天重新读了一遍官方文档，并且重新把之前布置过的basic demo对照着文档理解重新看了一遍，尝试梳理一下Reactive的最小必要MVP：
@@ -39,6 +51,7 @@ emit Callback(destinationChainId, callback, GAS\_LIMIT, payload);
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
 
+
 今日完成：
 
 1、Dev 文档核心模块学习；  
@@ -51,6 +64,7 @@ emit Callback(destinationChainId, callback, GAS\_LIMIT, payload);
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -75,6 +89,7 @@ emit Callback(destinationChainId, callback, GAS\_LIMIT, payload);
 
 
 
+
 今日完成：
 
 1、睿应层（Reactive Network）官网 Overview学习完成；
@@ -88,6 +103,7 @@ emit Callback(destinationChainId, callback, GAS\_LIMIT, payload);
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
