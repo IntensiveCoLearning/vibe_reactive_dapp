@@ -15,8 +15,40 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-14
+<!-- DAILY_CHECKIN_2026-03-14_START -->
+Lesson 6  
+Uniswap V2 is a decentralized exchange protocol on Ethereum that uses **liquidity pools** to enable automated token swaps without traditional order books or market makers. Each pool holds reserves of two tokens (a trading pair), managed by smart contracts following the **Constant Product Market Maker (CPMM)** model.
+
+The core pricing mechanism is the **constant product formula**: **x × y = k**, where x and y are the reserves of the two tokens, and k remains constant (adjusted for fees). This invariant ensures that as one token is bought (reducing its reserve), its price rises relative to the other, balancing supply and demand dynamically.
+
+Swaps occur via the pool's swap function, which:
+
+-   Specifies desired output amounts (amount0Out/amount1Out).
+    
+-   Verifies sufficient liquidity and positive inputs.
+    
+-   Calculates input amounts from actual token balances received.
+    
+-   Applies a **0.3% fee** by checking an adjusted product (multiplying balances by 1000 and subtracting 3×input) to ensure **k** is preserved or increased.
+    
+-   Updates reserves via \_update.
+    
+-   Transfers output tokens.
+    
+-   Emits a **Swap** event and supports flash swaps via callbacks.
+    
+
+Key events for monitoring:
+
+-   **Swap**: Logs sender, input amounts (amount0In/amount1In), output amounts (amount0Out/amount1Out), and recipient (to). Essential for tracking trades.
+    
+-   **Sync**: Emits updated reserves (reserve0/reserve1) after swaps, liquidity changes, or direct transfers, keeping pool state transparent.
+<!-- DAILY_CHECKIN_2026-03-14_END -->
+
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 Lesson 5:  
 Oracles act as essential bridges between blockchains and the real world, enabling smart contracts to access off-chain data—such as price feeds, weather reports, or event outcomes—while maintaining decentralization and trustlessness. This solves the **oracle problem**: reliably importing external information onto the blockchain without creating single points of failure or excessive trust requirements.
 
@@ -40,6 +72,7 @@ The article provides a Chainlink code example for fetching ETH/USD prices, but h
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
+
 # Reactive Contracts: Dual-State Architecture and Subscriptions
 
 **Dual-State Environment:** Each RC exists in two instances—one on the Reactive Network (a blockchain with system contracts) and one in a ReactVM (an isolated virtual machine). The Reactive Network handles user-initiated transactions and event subscriptions, while the ReactVM executes business logic when triggered by events. Detection of the execution context uses a `detectVm()` function checking for system contract code at a specific address. Modifiers (`rnOnly` and `vmOnly`) enforce which functions execute in each environment.
@@ -61,6 +94,7 @@ The article provides a Chainlink code example for fetching ETH/USD prices, but h
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 # Summary of Reactive Contracts Lessons 1-2
@@ -97,6 +131,7 @@ By shifting from centralized bots to decentralized automation, RCs provide faste
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
