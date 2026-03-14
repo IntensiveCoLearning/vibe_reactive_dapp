@@ -15,8 +15,92 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-14
+<!-- DAILY_CHECKIN_2026-03-14_START -->
+# 订阅机制（Subscriptions）
+
+### 1\. 订阅的核心维度
+
+RC 通过系统合约（System Contract）告诉网络它对哪些数据感兴趣。订阅需要指定：
+
+-   **源链 ID (Chain ID)**：数据从哪条链来。
+    
+-   **合约地址 (Contract Address)**：谁发出的事件。
+    
+-   **事件主题 (Topics)**：具体是什么事件（最多 4 个主题）。
+    
+
+### 2\. 两种订阅方式
+
+-   **静态订阅（构造函数）**：在合约部署时就定死。
+    
+    -   _注意：_ 必须判断 `if (!vm)`。因为订阅功能只存在于主网环境，不存在于执行逻辑的 ReactVM 中。
+        
+-   **动态订阅（运行时）**：根据收到的事件，动态决定增加或取消订阅（通过 `Callback` 实现）。
+    
+
+### 3\. 通配符与过滤规则
+
+-   REACTIVE\_IGNORE：万能匹配（通配符）。
+    
+-   限制：只支持“等于”匹配。不支持 `>`、`<` 或范围查询。
+    
+-   零值规则：`chain_id = 0` 表示任意链，`address(0)` 表示任意合约。但不能全部设为通配符（必须有一个确定值）。
+    
+
+* * *
+
+# 执行与授权
+
+### 1\. 事件处理函数：`react()`
+
+这是合约的“大脑入口”。
+
+-   输入参数 `LogRecord`：这是一个结构体，里面打包了捕获到的事件的所有细节（交易哈希、区块号、具体的 Data 等）。
+    
+-   隔离环境：代码运行在 ReactVM 中。
+    
+    -   _安全性：_ 它是隔离的，你只能调动你自己部署的合约，不能随便碰别人的东西。
+        
+
+### 2\. 回调函数：`Callback`
+
+这是 RC 影响外部世界的唯一手段。
+
+-   原理：RC 发出一个 `Callback` 事件，Reactive Network 看到后，会在目标链上发起一笔真实的交易。
+    
+-   参数包含：目标链 ID、目标合约地址、Gas 限制、执行载荷 (Payload)。
+    
+
+### 3\. 授权关键点：RVM ID 自动替换
+
+-   自动填充：Reactive Network 会强制把 `payload` 的前 160 位（第一个参数位置）替换为 ReactVM ID（部署者地址）。
+    
+-   目的：接收端合约可以通过这个地址校验“是谁发起的请求”，防止伪造。
+    
+
+* * *
+
+# **常用代码**
+
+```
+constructor(address _service, uint256 _originChainId, address _contract, uint256 _topic_0) {
+    service = ISystemContract(payable(_service));
+    // 只有在非 VM 环境下才执行订阅
+    if (!vm) {
+        service.subscribe(_originChainId, _contract, _topic_0, REACTIVE_IGNORE, REACTIVE_IGNORE, REACTIVE_IGNORE);
+    }
+}
+```
+
+### 动态订阅/取消订阅逻辑流
+
+1.  ReactVM 收到事件 A -> 2. `react()` 判断需要新订阅 -> 3. 发出 `Callback` 指向 系统合约 -> 4. 主网 执行订阅操作
+<!-- DAILY_CHECKIN_2026-03-14_END -->
+
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 学习内容
 
 # **Lesson 2: How Events and Callbacks Work**
@@ -135,6 +219,7 @@ function _executeCallback(uint256 chain_id) internal {
 <!-- DAILY_CHECKIN_2026-03-10_START -->
 
 
+
 # **Reactive Contracts**
 
 ## 背景
@@ -223,6 +308,7 @@ AI给我的回答是
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
