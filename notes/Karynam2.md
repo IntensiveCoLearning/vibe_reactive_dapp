@@ -17,11 +17,146 @@ Let’s vibe Reactive dApp
 <!-- Content_START -->
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
-3.14继续打卡ing
+# 3.14
+
+# challenge1
+
+* * *
+
+# Reactive Network Demo 概述
+
+Reactive Network Demo 展示了 Reactive Network 的两个核心功能：
+
+-   **低延迟监控**：监听源链上合约发出的日志事件。
+    
+-   **跨链调用执行**：通过 Reactive Network 向目标链上的合约发起调用。
+    
+
+这个示例可以应用于多种场景，比如简单的止损单，或者完全去中心化的算法交易。
+
+* * *
+
+# 合约介绍
+
+1.  **Origin Contract（BasicDemoL1Contract）**  
+    这是事件源合约，接收以太币并返还给发送者，同时发出 `Received` 事件，包含交易详情。
+    
+2.  **Reactive Contract（BasicDemoReactiveContract）**  
+    这是一个示范性的 Reactive 合约，采用订阅模型，监听指定合约的日志事件。  
+    它订阅源链上指定合约的事件日志，当检测到 `topic_3` 至少为 0.01 以太时，会发出 `Callback` 事件，携带调用目标链回调函数的负载。
+    
+3.  **Destination Contract（BasicDemoL1Callback）**  
+    这是目标链上的回调合约，处理 Reactive Network 触发的跨链回调。  
+    它会记录关键交易信息，并确保只有授权的发送者可以调用回调。执行时会发出 `CallbackReceived` 事件，包含来源、发送者和 Reactive 发送者地址等元数据。
+    
+
+* * *
+
+# 进一步说明
+
+这个 Demo 只是 Reactive Network 功能的一部分，未来可以扩展：
+
+-   监控更多事件源，包括回调日志
+    
+-   动态调整订阅，实现实时响应
+    
+-   状态持久化，支持更复杂的上下文感知
+    
+-   多样化回调，支持自定义交易负载，提高灵活性
+    
+
+* * *
+
+# 部署与测试步骤
+
+### 环境变量配置
+
+-   `ORIGIN_RPC`：源链 RPC 地址
+    
+-   `ORIGIN_CHAIN_ID`：源链链 ID
+    
+-   `ORIGIN_PRIVATE_KEY`：源链私钥
+    
+-   `DESTINATION_RPC`：目标链 RPC 地址
+    
+-   `DESTINATION_CHAIN_ID`：目标链链 ID
+    
+-   `DESTINATION_PRIVATE_KEY`：目标链私钥
+    
+-   `REACTIVE_RPC`：Reactive Network RPC 地址
+    
+-   `REACTIVE_PRIVATE_KEY`：Reactive Network 私钥
+    
+-   `SYSTEM_CONTRACT_ADDR`：Reactive Network 服务合约地址
+    
+-   `DESTINATION_CALLBACK_PROXY_ADDR`：目标链回调代理地址
+    
+
+* * *
+
+### 领取测试代币（Sepolia 测试网）
+
+向 Sepolia 测试网的 Reactive 水龙头合约（地址：`0x9b9BB25f1A81078C544C829c5EB7822d747Cf434`）发送 SepETH，比例是 1 SepETH 换 100 REACT，单次最多发送 5 SepETH。
+
+* * *
+
+### 部署步骤示例命令
+
+1.  **部署 Origin Contract**
+    
+
+```bash
+forge create --broadcast --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY src/demos/basic/BasicDemoL1Contract.sol:BasicDemoL1Contract
+```
+
+部署成功后，将合约地址赋值给环境变量 `ORIGIN_ADDR`。
+
+2.  **部署 Destination Contract**
+    
+
+```bash
+forge create --broadcast --rpc-url $DESTINATION_RPC --private-key $DESTINATION_PRIVATE_KEY src/demos/basic/BasicDemoL1Callback.sol:BasicDemoL1Callback --value 0.02ether --constructor-args $DESTINATION_CALLBACK_PROXY_ADDR
+```
+
+部署成功后，将合约地址赋值给环境变量 `CALLBACK_ADDR`。
+
+3.  **部署 Reactive Contract**
+    
+
+```bash
+forge create --broadcast --rpc-url $REACTIVE_RPC --private-key $REACTIVE_PRIVATE_KEY src/demos/basic/BasicDemoReactiveContract.sol:BasicDemoReactiveContract --value 0.1ether --constructor-args $SYSTEM_CONTRACT_ADDR $ORIGIN_CHAIN_ID $DESTINATION_CHAIN_ID $ORIGIN_ADDR 0x8cabf31d2b1b11ba52dbb302817a3c9c83e4b2a5194d35121ab1354d69f6a4cb $CALLBACK_ADDR
+```
+
+这里 `0x8cabf31d2b1b11ba52dbb302817a3c9c83e4b2a5194d35121ab1354d69f6a4cb` 是 Origin Contract `Received` 事件的 topic\_0。
+
+4.  **测试回调**
+    
+
+向 Origin Contract 地址发送至少 0.001 以太：
+
+```bash
+cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY --value 0.001ether
+```
+
+满足条件后，Reactive Network 会自动触发跨链回调，调用 Destination Contract。
+
+* * *
+
+### 注意事项
+
+-   如果出现 `--broadcast` 参数不支持的错误，去掉 `--broadcast` 重新执行。
+    
+-   确保环境变量配置正确，RPC 地址和私钥有效。
+    
+-   监控交易和事件日志，确认跨链事件和回调成功。
+    
+
+* * *
 <!-- DAILY_CHECKIN_2026-03-14_END -->
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 # 3月13号  
 目标🎯跑完链路
@@ -37,6 +172,7 @@ Let’s vibe Reactive dApp
 
 
 
+
 # 3.12植树节
 
 1.再来把Reactive contracts弄懂
@@ -44,6 +180,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -365,6 +502,7 @@ Krystal 姐，你担心的“看错”确实是开发者最容易踩的坑，但
 
 
 
+
 # 3.9—3.10两场会议总结
 
 1.  🧘集中精力看着自己脚下的路走，不要分心左顾右盼（不是让你闭门造车/与世隔绝的意思，重点是强调集中精力在解决问题是，精力是一种有限且珍贵的资源，每天是定量供应的，不要浪费它）保持对外界的信息的觉知度，看事情尽量抓本质（是什么东西What，什么原因Why, 具体有什么用Value，怎么样我能用上How，碰上具体什么问题？然后厚着脸皮去问，不管问题是否能完满解决，至少训练了自己的脸皮（褒义））
@@ -379,6 +517,7 @@ Krystal 姐，你担心的“看错”确实是开发者最容易踩的坑，但
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
