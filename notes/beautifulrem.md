@@ -15,8 +15,169 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-14
+<!-- DAILY_CHECKIN_2026-03-14_START -->
+# **R1 - Reactive Basic(WIP)**
+
+# Origins & Destinations
+
+## Callback Proxy Address
+
+在去中心化世界里，“谁在调用我”至关重要。假设你有一个目标链合约，功能是“发放奖励”。如果这个合约谁都能调用，那黑客分分钟就把钱领光了。
+
+我们介绍 Callback Proxy ，它是目标链上一个固定的、受信任的地址。其是由 Reactive Network 官方在各个支持的目标链上预先部署好的基础设施合约。
+
+由于 Reactive Network 是一个独立于以太坊或其他 Layer 2 的网络，当它需要向目标链（如 Arbitrum 或 Base）发送指令时，目标链上的业务合约需要一个“受信任的来源”来验证这些指令。
+
+-   **统一性：** 官方在每条链上部署一个统一的 Proxy 地址，开发者不需要自己去写复杂的跨链验证逻辑。  
+    
+-   **权威性：** 官方负责维护这个代理合约的安全，确保只有经过 Reactive Network 共识验证的消息才能通过这个代理发出来。
+    
+
+Reactive Network 并不直接去敲你合约的门，而是先把指令传给这个 Proxy，再由 Proxy 转发给你。为了确保安全，你的目标合约在收到指令时，**必须**执行以下逻辑：
+
+1.  **验证发送方 (The Sender Check)：**
+    
+    -   检查 `msg.sender`。它必须等于该链对应的 **Callback Proxy 地址**。  
+        
+    -   _意义：_ 确保这条指令不是路人甲发的，而是通过 Reactive 官方渠道送达的。  
+        
+2.  **验证 RVM ID (The RVM ID Match)：**
+    
+    -   Reactive 虚拟机会为每个 Reactive Contract (RC) 生成一个唯一的 ID（RVM ID）。  
+        
+    -   _意义：_ 即使指令来自官方 Proxy，你也得确认这个指令是**你的**那个 RC 发出的。防止别人写的 RC 合约恶意调用你的目标合约。
+        
+
+在编写目标链的智能合约时，你的代码通常会包含这样一个修饰器或判断逻辑：
+
+```solidity
+// 伪代码示例
+address constant CALLBACK_PROXY = 0x9299...; // 从官方列表查到的对应链地址
+bytes32 constant MY_RC_ID = 0xabc123...;    // 你部署的 RC 合约 ID
+
+function onReactiveCall(bytes32 rvmId, bytes calldata data) external {
+    // 1. 身份检查：必须来自代理合约
+    require(msg.sender == CALLBACK_PROXY, "Only Proxy allowed");
+    
+    // 2. 归属检查：必须是我的 RC 发出的逻辑
+    require(rvmId == MY_RC_ID, "Unauthorized RVM ID");
+
+    // 3. 执行真正的逻辑...
+}
+```
+
+### Hyperlane
+
+我们介绍 Hyperlane，他在这里扮演的是 **Transport Layer（传输层）**。
+
+-   **原生模式 (Native)：** 如果目标链（如 Arbitrum, BSC）已经部署了 Reactive 的 Callback Proxy，那么 Reactive Network 会通过自己的节点网络直接把数据同步过去。  
+    
+-   **Hyperlane 模式：** 某些新链或尚未完全集成的链，Reactive 的原生通信还没打通。这时，Reactive 会把加密后的回调指令“打包”交给 Hyperlane。
+    
+    -   Hyperlane 负责把包裹从 A 链搬到 B 链。  
+        
+    -   到达 B 链后，再解包交给当地的代理合约。
+        
+
+如果 Reactive 是顺丰快递，Hyperlane 就是它在没有直达网点时外包的“跨国货运”。对于开发者来说，这保证了**全链的覆盖能力**。
+
+* * *
+
+## 主网链和测试网链
+
+在这里需要注意，主网链和测试网链的环境是**严格隔离**的。如果你的源事件发生在以太坊主网，你的回调动作也必须落在另一个主网（如 Arbitrum 或 BSC）。如果你在 Sepolia 测试网测试，回调也只能发往测试网。
+
+这主要是为了防止开发测试时的“垃圾指令”意外触发真实主网的资产变动，同时也因为主网和测试网的 Gas 费结算逻辑完全不同。
+
+### 主网链
+
+| Chain  链 | Origin  源链 | Destination  目的地 | Chain ID | Callback Proxy | RPC |
+| --- | --- | --- | --- | --- | --- |
+| Abstract | ✅ | ✅ | 2741 | 0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4 | Chainlist |
+| Arbitrum | ✅ | ✅ | 42161 | 0x4730c58FDA9d78f60c987039aEaB7d261aAd942E | Chainlist |
+| Avalanche | ✅ | ✅ | 43114 | 0x934Ea75496562D4e83E80865c33dbA600644fCDa | Chainlist |
+| Base | ✅ | ✅ | 8453 | 0x0D3E76De6bC44309083cAAFdB49A088B8a250947 | Chainlist |
+| BSC | ✅ | ✅ | 56 | 0xdb81A196A0dF9Ef974C9430495a09B6d535fAc48 | Chainlist |
+| Ethereum | ✅ | ✅ | 1 | 0x1D5267C1bb7D8bA68964dDF3990601BDB7902D76 | Chainlist |
+| HyperEVM | ✅ | ✅ | 999 | 0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4 | Chainlist |
+| Linea | ✅ | ✅ | 59144 | 0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4 | Chainlist |
+| Plasma | ✅ | ✅ | 9745 | 0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4 | Chainlist |
+| Reactive | ✅ | ✅ | 1597 | 0x0000000000000000000000000000000000fffFfF | https://mainnet-rpc.rnk.dev/ |
+| Sonic | ✅ | ✅ | 146 | 0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4 | Chainlist |
+| Unichain | ✅ | ✅ | 130 | 0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4 | Chainlist |
+
+-   **✅ Origin：** 表示 Reactive Network 能够实时监控（监听）这条链上的事件。  
+    
+-   **✅ Destination：** 表示这条链已经部署了官方的 **Callback Proxy**，可以直接接收来自 Reactive Network 的指令。
+    
+
+在这个主网列表中，所有列出的链（如 Ethereum, Arbitrum, Base, BSC 等）都是双向 ✅，意味着它们是 **“Reactive 全功能支持区”**。
+
+像 **Abstract, HyperEVM, Linea, Plasma, Sonic, Unichain** 的 callback proxy 用的都是同一个地址：`0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4`。
+
+同时，**Reactive** 也是一条链。
+
+-   这意味着 Reactive Contract 也可以监听 Reactive 链本身的事件。  
+    
+-   它的 Proxy 地址是一个特殊的 `0x...ffffFfF`。  
+    
+-   这通常用于更高阶的“元操作”，比如一个 Reactive 合约根据另一个 Reactive 合约的状态来做决定。
+    
+
+### 测试网链
+
+| Chain | Origin | Destination | Chain ID | Callback Proxy | RPC |
+| --- | --- | --- | --- | --- | --- |
+| Avalanche Fuji | ✅ | ➖ | 43113 | ➖ | Chainlist |
+| Base Sepolia | ✅ | ✅ | 84532 | 0xa6eA49Ed671B8a4dfCDd34E36b7a75Ac79B8A5a6 | Chainlist |
+| BSC Testnet | ✅ | ➖ | 97 | ➖ | Chainlist |
+| Ethereum Sepolia | ✅ | ✅ | 11155111 | 0xc9f36411C9897e7F959D99ffca2a0Ba7ee0D7bDA | Chainlist |
+| Reactive Lasna | ✅ | ✅ | 5318007 | 0x0000000000000000000000000000000000fffFfF | https://lasna-rpc.rnk.dev/ |
+| Polygon Amoy | ✅ | ➖ | 80002 | ➖ | Chainlist |
+| Unichain Sepolia | ✅ | ✅ | 1301 | 0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4 | Chainlist |
+
+Avalanche Fuji、BSC Testnet 和 Polygon Amoy 是只有 Origin，没有 Destination的**半透明链**。这意味着可以**监听**这些链上的事件（比如监听 Fuji 上的存款）。但 Reactive Network **不能直接**通过官方 Callback Proxy 回调这些链。如果非要往这些链发回调，就需要用到前面提到的 **Hyperlane** 作为传输层。
+
+Reactive的测试网是**Reactive Lasna**，它自己也有 Callback Proxy，意味着你可以在 Reactive 链内部实现逻辑闭环，或者作为逻辑的中转站。
+
+# Hyperlane
+
+通常情况下，Reactive 会通过自己的节点直接把指令发给目标链上的 `Callback Proxy`。但引入 Hyperlane 有三个核心理由：
+
+-   **填补空白：** 某些链（比如你之前看到的测试网 Fuji 或 Amoy）没有官方 Proxy，但它们支持 Hyperlane。这时 Hyperlane 就是唯一的跨链桥梁。  
+    
+-   **路由灵活性：** Hyperlane 允许你自定义消息的传输路径或安全模型。  
+    
+-   **系统集成：** 如果你的项目本身就是基于 Hyperlane 构建的（比如你已经用了它的收件箱机制），那么直接用 Hyperlane 传输回调会更自然。
+    
+
+在 Hyperlane 的体系里，最重要的合约是 **Mailbox**。
+
+-   **作用：** 它是跨链消息的“进出口”。所有的消息必须先扔进源链的 Mailbox，然后由 Hyperlane 的验证者搬运，最后从目标链的 Mailbox 吐出来。  
+    
+-   **对比：**
+    
+    -   **Native 模式：** Reactive -> Callback Proxy -> 合约。
+        
+        -   **Hyperlane 模式：** Reactive -> Hyperlane Mailbox -> 跨链传输 -> 目标链 Mailbox -> 合约。
+            
+
+| Chain  链 | Chain ID  链 ID | Hyperlane Mailbox  Hyperlane 信箱 | RPC |
+| --- | --- | --- | --- |
+| Ethereum | 1 | 0xc005dc82818d67AF737725bD4bf75435d065D239 | Chainlist |
+| BSC | 56 | 0x2971b9Aec44bE4eb673DF1B88cDB57b96eefe8a4 | Chainlist |
+| Avalanche | 43114 | 0xFf06aFcaABaDDd1fb08371f9ccA15D73D51FeBD6 | Chainlist |
+| Base | 8453 | 0xeA87ae93Fa0019a82A727bfd3eBd1cFCa8f64f1D | Chainlist |
+| Sonic | 146 | 0x3a464f746D23Ab22155710f44dB16dcA53e0775E | Chainlist |
+| Reactive | 1597 | 0x3a464f746D23Ab22155710f44dB16dcA53e0775E | https://mainnet-rpc.rnk.dev/ |
+
+在使用Hyperlane的时候，Reactive Contract (RC) 依然在 **ReactVM** 里运行，它依然通过 `subscribe` 监听事件，依然通过逻辑判断触发动作。但是回调函数不再调用 `emit_callback`（发送给 Proxy），而是通过特定的 Hyperlane 指令发送给目标链的 **Mailbox**。
+<!-- DAILY_CHECKIN_2026-03-14_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 # **L2.2 - 部署睿应式合约**
 
 我们设定一个场景：监控器盯着 Uniswap V2 的流动性池，一旦发现价格（储备金比例）跌破了你设定的标准，它就会自动“拍马赶到”，触发一个止损交易（Stop Order）。这里就使用到了睿应式合约。
@@ -352,6 +513,7 @@ return (sync.reserve0 * coefficient) / sync.reserve1 <= threshold;
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
+
 # **L2.1 - Uniswap V2**
 
 # 流动性池
@@ -652,6 +814,7 @@ event Sync(uint112 reserve0, uint112 reserve1);
 
 
 
+
 # **L1.5 - 预言机**
 
 **blog:**[**https://beautifulremi.dpdns.org/**](https://beautifulremi.dpdns.org/)
@@ -831,6 +994,7 @@ contract ChainlinkPriceReactor is IReactive {
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -1565,6 +1729,7 @@ require(evm_id == owner, 'Wrong EVM ID');
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
