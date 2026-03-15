@@ -15,8 +15,46 @@ shadowdoge，web3新人
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+## Cron Demo — 给智能合约装上时钟
+
+这个 Demo 解决了一个根本性问题：EVM 合约本身没有时钟，只能被动等人调用。Reactive Network 的 system contract 会以固定区块间隔 emit cron 事件，RC 订阅这些事件，就能实现定时执行——完全链上，不需要任何链下 keeper。
+
+典型应用：每日费率更新、每周奖励分发、定期检查 DeFi 仓位健康度。
+
+## Hyperlane Demo — 与外部消息协议集成
+
+前面几个 Demo 的 callback 都走 Reactive 自己的 callback proxy。这个 Demo 展示了另一种路径：用 **Hyperlane** 做跨链消息传递，完全绕开 Reactive 默认的回调代理，实现双向消息流。`HyperlaneOrigin`（Base 主网）和 `HyperlaneReactive`（Reactive 主网）互相传消息，可以自动响应也可以手动触发。
+
+这证明了 Reactive 的模块化能力——它不锁定你的消息层，可以插入任意消息协议。
+
+## Uniswap V2 Stop Order — 止损单（单向）
+
+RC 订阅 Uniswap V2 Pair 的 `Sync` 事件（每次 swap 都会触发），从 `reserve0 / reserve1` 推算当前价格，一旦跌破用户设定的止损价，就 emit Callback 让目标链合约执行 swap。这是挑战作业里的主线 Demo。
+
+## Uniswap V2 Stop-Loss & Take-Profit — 止损 + 止盈（双向，每人独立部署）
+
+这是 Demo 4 的升级版，两个关键改进：
+
+第一，**同时支持止损（price 跌破下界）和止盈（price 突破上界）**，用同一套 RC 逻辑处理两个方向。第二，**每个用户部署自己专属的 RC**，订单管理完全隔离，不会有不同用户之间的状态污染。适合实际产品化的场景。
+
+## Aave 清算保护 — 基于 Cron 的仓位守护
+
+这个 Demo 把 Cron 机制用在了 DeFi 最紧迫的场景上：**防止 Aave 头寸被清算**。
+
+RC 定期订阅 cron 事件，每次触发时检查用户的健康因子（Health Factor）。当 HF 低于阈值，callback 合约会自动执行补救操作：补充抵押物、偿还部分债务，或两者兼顾。整个过程没有链下 bot，不怕宕机，不怕网络延迟。
+
+## Approval Magic — 自动化多步 DeFi 工作流
+
+这个 Demo 展示了一个更"产品化"的思路：用户向 `ApprovalService` 注册，`ApprovalListener`（RC）监听链上的 ERC-20 `Approval` 事件。一旦检测到授权，系统自动代替用户发起代币 swap——原本需要用户手动点两三次按钮的流程，变成了"授权即触发"的单步操作。
+
+这是 **无需修改原合约** 来增加功能的最典型示范：ERC-20 标准完全没动，只是在旁边加了一个监听层。
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 Uniswap 是以太坊上最重要的去中心化交易所（DEX）协议之一，彻底改变了加密资产的交换方式。下面我来分几个核心概念为你讲清楚。
 
 ## 核心思想：自动做市商（AMM）
@@ -45,6 +83,7 @@ Uniswap 是以太坊上最重要的去中心化交易所（DEX）协议之一，
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 终于通过第一
 
@@ -213,6 +252,7 @@ cast send <ORIGIN\_CONTRACT\_ADDR> \\
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
 
+
 遇到了一个坑
 
 # 坑 1：`--broadcast` 被当成 constructor 参数
@@ -273,6 +313,7 @@ forge create (dry run)
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -337,6 +378,7 @@ execution reverted
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
