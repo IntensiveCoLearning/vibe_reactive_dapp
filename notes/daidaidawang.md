@@ -119,19 +119,19 @@ pause() 取消所有可暂停订阅 仅持有者
 
 resume() 恢复所有暂停的订阅 仅持有者
 
-实现逻辑：
+### 实现逻辑
 
 · pause(): 遍历getPausableSubscriptions()并取消订阅
 
 · resume(): 遍历相同列表并重新订阅
 
-\-–
+## AbstractPayer
 
-3\. AbstractPayer
+### 作用
 
-作用：提供支付和债务和解功能
+提供支付和债务和解功能
 
-修饰符
+### 修饰符
 
 ```
 modifier authorizedSenderOnly() {
@@ -527,6 +527,7 @@ AbstractPausableReactive
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
 
+
 # 反应式合约
 
 ## **部署**
@@ -775,6 +776,7 @@ service.subscribe(...);
 <!-- DAILY_CHECKIN_2026-03-13_START -->
 
 
+
 花费了近一周的时间，今天完成了任务一。从学习部署合约，向地址转账，到最后回调成功。感觉收获很多，印象最深的是最后的回调一直在回滚问了AI了解到是`BasicDemoL1Callback` 构造函数接收了 `_callback_sender`。由于之前在Callback合约中开启了 `authorizedSenderOnly`，合约会执行： `require(msg.sender == _callback_sender)`
 
 如果之前传入的 `$env:DESTINATION_CALLBACK_PROXY_ADDR` **不等于** `0xc9f36411C9897e7F959D99ffca2a0Ba7ee0D7bDA`，那么合约就会 Revert，回调回滚
@@ -972,6 +974,7 @@ cast call $CALLBACK_PROXY_ADDR "reserves(address)" $CONTRACT_ADDR --rpc-url $DES
 
 
 
+
 这几天主要学习了如何部署reactive合约，包括设置地址，转账等一系列操作，也对reactive合约的实现流程有了个大致了解
 
 **\[源链（如Sepolia）\] -> \[Reactive Network\] -> \[目标链（如Sepolia）\]**
@@ -1004,6 +1007,7 @@ cast call $CALLBACK_PROXY_ADDR "reserves(address)" $CONTRACT_ADDR --rpc-url $DES
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
