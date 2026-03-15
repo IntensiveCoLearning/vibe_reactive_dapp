@@ -15,8 +15,78 @@ timezone: UTC+8
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+````markdown
+## basic
+
+### 源链合约
+
+```
+forge create --broadcast --rpc-url $ORIGIN_RPC --private-key src/demos/basic/BasicDemoL1Contract.sol:BasicDemoL1Contract
+```
+
+合约部署地址：0x21F0472653212B3eb6804377d084E55bA113b84b
+
+### 目的链合约
+
+```
+forge create --broadcast   --rpc-url $DESTINATION_RPC   --private-key    src/demos/basic/BasicDemoL1Callback.sol:BasicDemoL1Callback   --value 0.00001ether   --constructor-args $DESTINATION_CALLBACK_PROXY_ADDR
+```
+
+合约部署地址：0x6764CE8ddFE82C92e248960e16238480009B1098
+
+DESTINATION_CALLBACK_PROXY_ADDR 是目的链上的回调代理合约地址，它是 Reactive Network 官方部署的服务合约，负责安全地把跨链回调请求转发到自己的 BasicDemoL1Callback 合约。
+
+--value 0.00001ether是存入余额供回调交易费用
+
+### 响应式合约
+
+```
+ forge create --broadcast   --rpc-url $REACTIVE_RPC   --private-key  src/demos/basic/BasicDemoReactiveContract.sol:BasicDemoReactiveContract   --value 0.001ether   --constructor-args $SYSTEM_CONTRACT_ADDR $ORIGIN_CHAIN_ID $DESTINATION_CHAIN_ID 0x21F0472653212B3eb6804377d084E55bA113b84b //源链合约地址0x8cabf31d2b1b11ba52dbb302817a3c9c83e4b2a5194d35121ab1354d69f6a4cb  //源链要监听的事件签名0x6764CE8ddFE82C92e248960e16238480009B1098  //目的链地址
+```
+
+--value 0.001ether是余额，供reactive network支付执行费用
+
+0x8cabf31d2b1b11ba52dbb302817a3c9c83e4b2a5194d35121ab1354d69f6a4cb是源链的Receive哈希事件签名，计算方法：keccak256("Received(address,address,uint256)")
+
+### 测试
+
+向源链合约转钱测试
+
+```
+ cast send 0x21F0472653212B3eb6804377d084E55bA113b84b --rpc-url $ORIGIN_RPC --private-key  --value 0.001ether
+```
+
+## Aave
+
+要在Aave V3 Sepolia测试网上做实验，必须先有Aave支持的测试代币（比如USDC、DAI、WETH等），以下是Aave V3 Sepolia测试网支持的资产
+
+![](image.png)
+
+要“存入”或“借出”某种代币，合约必须知道是哪种资产，所以要用合约地址来区分。在Aave存USDC，Aave合约就和USDC的合约地址交互；存DAI就和DAI的合约地址交互。
+
+此处查看持有token的合约地址，每种Token（比如USDC、DAI、MyFirstNFT）都是一个独立的智能合约，有自己独立的地址，部署在以太坊网络上。这个合约地址是唯一的，就像每个网站都有自己的URL一样。
+
+![](image-1.png)
+
+[aave 看supply、borrow](https://app.aave.com/)
+
+![](image-2.png)
+
+[aave的协议部署合约信息](https://aave.com/docs/resources/addresses)
+
+![](image-3.png)
+
+[aave v3错误码](https://github.com/aave/aave-v3-core/blob/master/contracts/protocol/libraries/helpers/Errors.sol)
+
+![](image-4.png)
+````
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 要“存入”或“借出”某种代币，合约必须知道是哪种资产，所以要用合约地址来区分。在Aave存USDC，Aave合约就和USDC的合约地址交互；存DAI就和DAI的合约地址交互。
 
 此处查看持有token的合约地址，每种Token（比如USDC、DAI、MyFirstNFT）都是一个独立的智能合约，有自己独立的地址，部署在以太坊网络上。这个合约地址是唯一的，就像每个网站都有自己的URL一样。
@@ -26,6 +96,7 @@ timezone: UTC+8
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 ````markdown
 ## basic
@@ -80,6 +151,7 @@ DESTINATION_CALLBACK_PROXY_ADDR 是目的链上的回调代理合约地址，它
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -215,6 +287,7 @@ subscribe(
 
 
 
+
 ## Reactive Basics
 
 1.  源链和目标链、回调代理地址
@@ -297,11 +370,13 @@ Reactive Network 的执行环境
 
 
 
+
 用remix跑了basic的三个合约
 <!-- DAILY_CHECKIN_2026-03-10_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
