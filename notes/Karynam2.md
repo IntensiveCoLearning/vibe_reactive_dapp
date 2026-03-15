@@ -19,11 +19,84 @@ Let’s vibe Reactive dApp
 <!-- DAILY_CHECKIN_2026-03-15_START -->
 3.15继续打卡，部署跨链合约
 
+简单来说，传统的智能合约像是一个“声控灯”，你不拍手（发送交易），它永远不会亮；而 RCs 就像是一个“光感灯”，它会时刻盯着外界环境（区块链事件），一旦天黑了（满足条件），它自己就亮了。  
+  
+1\. 什么是反应式合约 (RCs)？
+
+**原文精要：** The main distinction lies in reactivity. Traditional contracts are passive; RCs are reactive, continuously monitoring for events.
+
+-   **解释：** 传统合约是**被动**的，必须由人（EOA 钱包）或机器人发起交易。RCs 是**主动**的，它在 Reactive Network 上运行，像一个 24 小时待命的哨兵，盯着各个链上的日志（Events）。
+    
+
+### 2\. 控制反转 (Inversion of Control, IoC) —— 核心灵魂
+
+**原文精要：** RCs invert this control by autonomously deciding when to execute based on the occurrence of predefined events.
+
+-   **解释：** 这是最关键的概念。
+    
+    -   **传统模式：** 你 -> 机器人/后端 -> 触发合约。
+        
+    -   **IoC 模式（RCs）：** 区块链事件 -> 触发 RCs -> 执行动作。
+        
+    -   **意义：** 你不再需要自己租服务器跑机器人、不用担心机器人的私钥安全，也不用怕后端宕机。一切都在去中心化的网络中自动发生。
+        
+
 ![Inversion of Control](https://dev.reactive.network/assets/images/inversion-of-control-bd989f15146969ab899cd365bddb309d.jpg)
+
+这张图通过对比**左侧（传统模式）和右侧（反应式模式）**，解释了区块链交互逻辑的根本性变化：
+
+### 1\. 左侧：传统 EVM 工作流 (Usual EVM Workflow)
+
+-   **主体：** 必须由一个 **EoA 地址**（人持有的钱包或中心化的脚本机器人）发起。
+    
+-   **动作：** 钱包对交易进行签名，去调用智能合约的 `transfer()` 方法。
+    
+-   **本质：** 合约是**被动**的，没有外力推它一把，它永远不会执行。
+    
+
+### 2\. 右侧：反应式网络工作流 (Reactive Network Workflow)
+
+这就是文档中提到的“控制反转”，流程变为了：
+
+1.  **事件抛出：** Uniswap 池子产生了一个 `Swap()` 事件（比如有人在里面卖了币导致价格变动）。
+    
+2.  **自动触发：** 反应式智能合约 (Reactive SC) 捕捉到了这个事件。
+    
+3.  **自主反应：** 反应式合约内部运行 `react()` 逻辑。
+    
+4.  **下达指令：** 如果满足条件，它**自动**去调用目标合约（如 ERC-20 代币合约）的 `transfer()`。
+    
+
+* * *
+
+## 💡 这张图到底在讲什么？
+
+它讲的是\*\*“谁在按快门”\*\*的问题：
+
+-   **以前：** 你得自己盯着屏幕（或者租服务器跑机器人盯着），看价格合适了，**你**去按快门。
+    
+-   **现在：** 你写好一个“全自动感应快门”（RCs），只要捕捉到特定的光线（事件），**它自己**就把快门按了。
+    
+
+### 它解决了什么痛点？
+
+图片中间那条分界线其实代表了\*\*“去中心化自动化”\*\*。在左侧模式下，如果你想做自动化，必须依赖一个链外的机器人（私钥在服务器里，容易被黑或停机）。在右侧模式下，所有的监听和执行都在 **Reactive Network** 上完成，完全去中心化，更安全、更可靠。  
+  
+  
+3\. 反应式合约内部是如何运作的？
+
+1.  **订阅（Subscription）：** 你告诉 RC 要盯着哪条链、哪个合约、哪个事件（Topic 0）。
+    
+2.  **监测（Monitoring）：** 网络自动捕捉这些事件（如：转账、大额借贷、砸盘）。
+    
+3.  **逻辑处理（Stateful Logic）：** RC 是有状态的。它可以记得“上一次价格是多少”，然后结合“这次新事件”做计算。
+    
+4.  **执行（Action）：** 条件满足后，RC 自动在 EVM 链上发起新交易。
 <!-- DAILY_CHECKIN_2026-03-15_END -->
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 # 3.14
@@ -169,6 +242,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 
 
+
 # 3月13号  
 目标🎯跑完链路
 
@@ -186,6 +260,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 
 
+
 # 3.12植树节
 
 1.再来把Reactive contracts弄懂
@@ -193,6 +268,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -520,6 +596,7 @@ Krystal 姐，你担心的“看错”确实是开发者最容易踩的坑，但
 
 
 
+
 # 3.9—3.10两场会议总结
 
 1.  🧘集中精力看着自己脚下的路走，不要分心左顾右盼（不是让你闭门造车/与世隔绝的意思，重点是强调集中精力在解决问题是，精力是一种有限且珍贵的资源，每天是定量供应的，不要浪费它）保持对外界的信息的觉知度，看事情尽量抓本质（是什么东西What，什么原因Why, 具体有什么用Value，怎么样我能用上How，碰上具体什么问题？然后厚着脸皮去问，不管问题是否能完满解决，至少训练了自己的脸皮（褒义））
@@ -534,6 +611,7 @@ Krystal 姐，你担心的“看错”确实是开发者最容易踩的坑，但
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
