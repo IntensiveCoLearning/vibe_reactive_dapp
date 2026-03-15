@@ -15,8 +15,42 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+Lesson 7 introduces Reactive Contracts (RCs) designed for Uniswap V2, demonstrating how they function similarly to Ethereum smart contracts while automating stop orders based on predefined conditions.
+
+## Key Concepts
+
+**Contract Purpose**: The UniswapDemoStopOrderReactive contract monitors Uniswap V2 liquidity pools by tracking Sync events to detect when stop-order conditions are met, then executes callback transactions on the Ethereum blockchain.
+
+**Core Components**:
+
+-   **Event Declarations**: Events like Subscribed, AboveThreshold, CallbackSent, and Done log contract operations for transparency
+    
+-   **Contract Variables**: Constants define Uniswap's Sync event topic and stop-order contract topic, while state variables store configuration (pair address, client, token selection, coefficient, threshold)
+    
+-   **Constructor**: Initializes the contract with Uniswap pair details, stop-order contract reference, and client information, then subscribes to relevant events
+    
+
+## Execution Logic
+
+The **react() function** handles two event types:
+
+1.  **Stop-Order Events**: Verifies execution and marks operations as complete
+    
+2.  **Sync Events**: Decodes reserve data and checks if conditions trigger the stop order via the below\_threshold() function
+    
+
+The **below\_threshold() function** calculates whether the reserve ratio falls below the defined threshold by comparing reserve ratios (reserve1/reserve0 or reserve0/reserve1, depending on token selection) multiplied by a coefficient.
+
+## Workflow
+
+The contract follows a four-step lifecycle: subscribing to events, monitoring pool reserves, triggering stop orders when price thresholds are hit, and capturing completion events. This demonstrates how RCs provide an accessible way to automate trading strategies on Uniswap V2 using familiar smart contract concepts.
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 Lesson 6  
 Uniswap V2 is a decentralized exchange protocol on Ethereum that uses **liquidity pools** to enable automated token swaps without traditional order books or market makers. Each pool holds reserves of two tokens (a trading pair), managed by smart contracts following the **Constant Product Market Maker (CPMM)** model.
 
@@ -49,6 +83,7 @@ Key events for monitoring:
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
+
 Lesson 5:  
 Oracles act as essential bridges between blockchains and the real world, enabling smart contracts to access off-chain data—such as price feeds, weather reports, or event outcomes—while maintaining decentralization and trustlessness. This solves the **oracle problem**: reliably importing external information onto the blockchain without creating single points of failure or excessive trust requirements.
 
@@ -73,6 +108,7 @@ The article provides a Chainlink code example for fetching ETH/USD prices, but h
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
 
+
 # Reactive Contracts: Dual-State Architecture and Subscriptions
 
 **Dual-State Environment:** Each RC exists in two instances—one on the Reactive Network (a blockchain with system contracts) and one in a ReactVM (an isolated virtual machine). The Reactive Network handles user-initiated transactions and event subscriptions, while the ReactVM executes business logic when triggered by events. Detection of the execution context uses a `detectVm()` function checking for system contract code at a specific address. Modifiers (`rnOnly` and `vmOnly`) enforce which functions execute in each environment.
@@ -94,6 +130,7 @@ The article provides a Chainlink code example for fetching ETH/USD prices, but h
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -131,6 +168,7 @@ By shifting from centralized bots to decentralized automation, RCs provide faste
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
