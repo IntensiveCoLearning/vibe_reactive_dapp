@@ -15,8 +15,124 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+# Reactive Network (RNK)
+
+## 1\. 核心交易查询 (Transactions)
+
+用于追踪 RVM 内部发生的交易及其与源链（Origin Chain）的关系。
+
+### `rnk_getTransactionByHash` / `ByNumber`
+
+-   **用途：** 获取 RVM 内部交易的详细信息。
+    
+-   **关键字段解析：**
+    
+    -   `refChainId`: 触发此交易的源链 ID。
+        
+    -   `refTx`: 源链上触发此响应的交易哈希。
+        
+    -   `status`: 1 为成功，0 为失败。
+        
+
+### `rnk_getTransactionLogs`
+
+-   **用途：** 获取特定 RVM 交易产生的日志（Event Logs）。
+    
+-   **结构：** 包含 `topics`（索引参数）和 `data`（非索引数据）。
+    
+
+### `rnk_getTransactions`
+
+-   **用途：** 批量获取交易，支持设置 `from`（起始编号）和 `limit`（数量）。
+    
+
+* * *
+
+## 2\. RVM 状态查询 (RVM Status)
+
+用于检查特定的 ReactVM 运行情况。
+
+### `rnk_getHeadNumber`
+
+-   **用途：** 查询某个 RVM 当前最新的交易序列号（hex 格式）。
+    
+
+### `rnk_getVm` / `rnk_getVms`
+
+-   **用途：**
+    
+    -   `getVm`: 查看特定 RVM 的信息。
+        
+    -   `getVms`: 列出网络中所有已知的活跃 RVM。
+        
+-   **返回：** `rvmId`、`lastTxNumber`（最新交易号）、`contracts`（该 RVM 下的合约总数）。
+    
+
+### `rnk_getRnkAddressMapping`
+
+-   **用途：** **（非常实用）** 输入一个 Reactive Network 的合约地址，返回它所属的 `rvmId`。
+    
+
+* * *
+
+## 3\. 订阅与过滤器 (Subscriptions & Filters)
+
+用于查看合约“正在听”哪些链的哪些事件。
+
+### `rnk_getSubscribers`
+
+-   **用途：** 查询特定 RVM 关联的所有订阅信息。
+    
+-   **字段：** `chainId` (被订阅的链)、`contract` (被订阅的地址)、`topics` (订阅的过滤条件)。
+    
+
+### `rnk_getFilters`
+
+-   **用途：** 列出全网当前所有活跃的日志过滤器。
+    
+
+* * *
+
+## 4\. 合约交互与调试 (EVM Interaction)
+
+用于在不产生交易的情况下读取数据或代码。
+
+### `rnk_getCode`
+
+-   **用途：** 获取合约在特定状态（或区块）下的 Bytecode。
+    
+
+### `rnk_getStorageAt`
+
+-   **用途：** 读取 RVM 内部合约特定存储插槽（Storage Slot）的值。
+    
+
+### `rnk_call`
+
+-   **用途：** **只读调用（Read-only call）**。在 ReactVM 中模拟执行合约方法，常用于查询合约状态。
+    
+
+* * *
+
+## 5\. 全局统计 (Statistics)
+
+### `rnk_getStat`
+
+-   **用途：** 查看各条源链（如 Sepolia, Polygon 等）在 RNK 上处理的资产/事件统计。
+    
+-   **返回：** 每条链的 `txCount` 和 `eventCount`。
+    
+
+### `rnk_getBlockRvms`
+
+-   **用途：** 查看特定的 Reactive Block 中，有哪些 RVM 产生了活动。
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 # 订阅机制（Subscriptions）
 
 ### 1\. 订阅的核心维度
@@ -100,6 +216,7 @@ constructor(address _service, uint256 _originChainId, address _contract, uint256
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 学习内容
@@ -222,6 +339,7 @@ function _executeCallback(uint256 chain_id) internal {
 
 
 
+
 # **Reactive Contracts**
 
 ## 背景
@@ -310,6 +428,7 @@ AI给我的回答是
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
