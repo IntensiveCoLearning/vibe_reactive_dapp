@@ -15,8 +15,14 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+今天有事，明天补
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 ## 整体架构：三合约模型
 
 Reactive Network 的跨链系统需要三个合约，分工明确：
@@ -47,6 +53,7 @@ Reactive Network 的跨链系统需要三个合约，分工明确：
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
 
+
 ### 1\. 核心概念：控制反转 (Inversion of Control, IoC)
 
 这是 Reactive 合约与传统合约（如 Ethereum 上的合约）最本质的区别：
@@ -71,6 +78,7 @@ Reactive 合约的运行遵循“订阅 - 监测 - 反应”的循环：
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 ## 1\. Reactive Contract 的组成结构
@@ -143,6 +151,7 @@ ReactVM（Reactive Virtual Machine）与 EVM 的最大区别在于**并行处理
 
 
 
+
 ## 1\. 根本区别：被动调用 vs 主动反应
 
 在传统的 **EVM** 架构中，智能合约是“死的”。除非用户（或外部脚本）发送一笔交易来调用它，否则它永远不会主动执行任务。
@@ -202,6 +211,7 @@ ReactVM 是一种专门为**处理事件流**而优化的环境。
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
