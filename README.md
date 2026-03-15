@@ -356,7 +356,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [FSDSCCEVVS](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/FSDSCCEVVS.md) | ✅ | ✅ | ✅ | ⭕️ | ⭕️ | ❌ | | | | | | | | |
 | [XiaoHai67890](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/XiaoHai67890.md) | ✅ | ✅ | ⭕️ | ⭕️ | ❌ | | | | | | | | | |
 | [3200459199](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/3200459199.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
-| [huahuahua1223](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/huahuahua1223.md) | ✅ | ✅ | ⭕️ | ✅ | ⭕️ | ✅ |   | | | | | | | |
+| [huahuahua1223](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/huahuahua1223.md) | ✅ | ✅ | ⭕️ | ✅ | ⭕️ | ✅ | ✅ | | | | | | | |
 | [tf171398413-lgtm](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/tf171398413-lgtm.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [mayuxaing](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/mayuxaing.md) | ✅ | ✅ | ⭕️ | ⭕️ | ❌ | | | | | | | | | |
 | [PaulCoinmanlabs](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/PaulCoinmanlabs.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | | | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
