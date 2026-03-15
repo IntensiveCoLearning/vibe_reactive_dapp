@@ -15,13 +15,118 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+## **🦄 Uniswap V2 Stop Order Demo：去中心化自动止损**
+
+这个 Demo 更具实战意义。它监听 Uniswap 价格，当价格跌破阈值时，自动卖出代币止损。
+
+**部署流程速览**
+
+1.  **部署代币**: 发行 Token A 和 Token B。
+    
+2.  **组建 LP**: 创建交易对并添加流动性（例如 10:10）。
+    
+3.  **Destination**: 部署回调合约（负责执行卖出操作）。
+    
+4.  **Reactive**: 部署监听合约（设定价格阈值，例如 0.8）。
+    
+5.  **授权**: approve 回调合约支配代币。
+    
+6.  **砸盘触发**: 最关键的测试步骤。
+    
+
+**具体执行命令**
+
+**Step 1**：部署代币 (Token A & B) 这里遇到了第一个坑：**Foundry 的 Dry Run**。
+
+> **错误**: Warning: Dry run enabled, not broadcasting transaction **解决**: 必须加上 --broadcast 参数。
+
+```
+# 部署 Token A
+forge create --broadcast --rpc-url $SEPOLIA_RPC --private-key $PRIVATE_KEY src/demos/uniswap-v2-stop-order/UniswapDemoToken.sol:UniswapDemoToken --constructor-args "Token A" "TA"
+# Deployed: 0x27a8Be4f66BB3248bDB9087c459C41c0FE2491fe (Token0)
+
+# 部署 Token B
+forge create --broadcast --rpc-url $SEPOLIA_RPC --private-key $PRIVATE_KEY src/demos/uniswap-v2-stop-order/UniswapDemoToken.sol:UniswapDemoToken --constructor-args "Token B" "TB"
+# Deployed: 0x7BF7C09C9933Fe6C36ad7d1E1fDC8Fd7A276A23b (Token1)
+```
+
+**注意**: Uniswap 根据地址数值排序。0x27a8... < 0x7bf7...，所以 TA 是 Token0，TB 是 Token1。
+
+**Step 2**：创建流动性池 (Pair)
+
+```bash
+cast send $UNISWAP_V2_FACTORY 'createPair(address,address)' --rpc-url $SEPOLIA_RPC --private-key $PRIVATE_KEY $TOKEN0_ADDR $TOKEN1_ADDR
+```
+
+**Pair Address:** **0x6504800f88AEf82f76D73247f76Bd2F9619c679A**
+
+**Step 3**：添加流动性 按 10:10 比例添加，初始价格 = 1。
+
+```bash
+# Transfer 10 TA & 10 TB, then mint
+cast send $TOKEN0_ADDR 'transfer(address,uint256)' --rpc-url $SEPOLIA_RPC --private-key $PRIVATE_KEY $PAIR_ADDR 10000000000000000000
+
+cast send $TOKEN1_ADDR 'transfer(address,uint256)' --rpc-url $SEPOLIA_RPC --private-key $PRIVATE_KEY $PAIR_ADDR 10000000000000000000
+
+cast send $PAIR_ADDR 'mint(address)' --rpc-url $SEPOLIA_RPC --private-key $PRIVATE_KEY $CLIENT_WALLET
+```
+
+**Step 4**：部署回调与监听合约
+
+```bash
+forge create --broadcast --rpc-url $SEPOLIA_RPC --private-key $PRIVATE_KEY src/demos/uniswap-v2-stop-order/UniswapDemoStopOrderCallback.sol:UniswapDemoStopOrderCallback --value 0.002ether --constructor-args $DESTINATION_CALLBACK_PROXY_ADDR $UNISWAP_V2_ROUTER
+```
+
+**Callback Contract:** **0xdadFC7F820394a90acD49C36008cec7f646a417C**
+
+设定阈值 800 (即 0.8)。
+
+```bash
+forge create --broadcast --rpc-url $REACTIVE_RPC --private-key $REACTIVE_PRIVATE_KEY src/demos/uniswap-v2-stop-order/UniswapDemoStopOrderReactive.sol:UniswapDemoStopOrderReactive --value 0.1ether --constructor-args $PAIR_ADDR $CALLBACK_ADDR $CLIENT_WALLET true 1000 800
+```
+
+**Reactive Contract:** **0xaf68074454Ba705fa1dc7622f79467A6E09a640f**
+
+**Approve:** 授权 Callback 合约支配 Token A。
+
+```bash
+cast send $TOKEN0_ADDR 'approve(address,uint256)' --rpc-url $SEPOLIA_RPC --private-key $PRIVATE_KEY $CALLBACK_ADDR 1000000000000000000
+```
+
+**Step 5**：砸盘触发 (The Dump) 这是最有趣也最容易报错的一步。为了触发止损，需要大幅压低 Token A 的价格（转入大量 Token A，换出少量 Token B）。 **转入**: 5 个 Token A。
+
+```bash
+cast send $TOKEN0_ADDR 'transfer(address,uint256)' --rpc-url $SEPOLIA_RPC --private-key $PRIVATE_KEY $PAIR_ADDR 5000000000000000000
+```
+
+**Swap**: 取出 3 个 Token B。
+
+```bash
+cast send $PAIR_ADDR 'swap(uint,uint,address,bytes calldata)' --rpc-url $SEPOLIA_RPC --private-key $PRIVATE_KEY 0 3000000000000000000 $CLIENT_WALLET "0x"
+```
+
+**结果分析**:
+
+-   池子变动: 10 TA : 10 TB -> **15 TA : 7 TB**。
+    
+-   新价格: 7 / 15 ≈ 0.46。
+    
+-   **0.46 < 0.8**，成功触发止损！
+    
+-   **Trigger Tx Hash:** _0x19ed3b618ae2d2bdade052488de30b6190f9c80f37a4a56fbebd80cc2e81a660_
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 今天尝试进行第二关的 Uniswap 止损单的练习，在学习文档内容。
 <!-- DAILY_CHECKIN_2026-03-14_END -->
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 # 用 AI 构建睿应式合约
 
@@ -72,6 +177,7 @@ Let’s vibe Reactive dApp
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
 
+
 ### **实时监控问题解答**
 
 **监控原理**：市场波动与Reactive实时监控无关，其监控每条链的每个区块，并对合约订阅的事件做出反应。
@@ -99,6 +205,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -162,6 +269,7 @@ Let’s vibe Reactive dApp
 
 
 
+
 # **Basic Reactive Demo：理解“监听-反应”闭环**
 
 这个 Demo 是 Reactive 的 "Hello World"。流程很简单：在 Sepolia 上转账 -> Reactive 监听到 -> 自动通知 Sepolia 上的回调合约。
@@ -212,6 +320,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
