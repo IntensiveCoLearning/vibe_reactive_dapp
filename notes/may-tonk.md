@@ -15,8 +15,185 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+## 今天学习的内容
+
+### 一、跨链架构理解
+
+```
+Demo架构（回环）：
+[Base链] → [Lasna] → [Base链]
+发出事件   监听转发   接收执行
+
+你的架构（跨链）：
+[BSC Testnet] → [Lasna] → [BSC Testnet]
+发出事件        监听转发    接收执行
+```
+
+* * *
+
+### 二、为什么需要Reactive Network
+
+```
+没有Reactive：
+事件发生 → 需要人工发现 → 手动触发跨链
+
+有了Reactive：
+事件发生 → 自动监听 → 自动触发跨链
+           全程无人值守！
+```
+
+* * *
+
+### 三、Hyperlane的作用
+
+```
+Callback Proxy → 只支持有限的链
+Hyperlane      → 支持50+条链
+
+BSC Testnet没有Callback Proxy
+所以必须用Hyperlane作为跨链传输层
+```
+
+* * *
+
+### 四、整个跨链流程
+
+```
+① 你调用 trigger(abi.encode(sender,receiver,amount))
+        ↓
+② emit Trigger事件写入BSC链上日志
+        ↓
+③ Reactive合约监听到 → react()被触发
+        ↓
+④ emit Callback → 系统调用callback()
+        ↓
+⑤ callback() → _send()
+        ↓
+⑥ mailbox.dispatch() 发出跨链消息
+        ↓
+⑦ Hyperlane Relayer搬运消息到BSC Testnet
+        ↓
+⑧ BSC Testnet的Mailbox调用handle()
+        ↓
+⑨ handle()解码数据，存储交易记录
+```
+
+* * *
+
+### 五、两个合约的分工
+
+```
+CrossChainOrigin（BSC Testnet）：
+  → trigger()：只需要emit事件，不需要dispatch()
+  → handle()：接收消息，两层decode，存储交易记录
+  → mailbox：只用address类型，只做安全验证
+
+CrossChainReactive（Lasna）：
+  → 和Demo完全一样，只改部署参数
+  → mailbox：用IMailbox类型，需要调用dispatch()
+  → react()：收到事件后发出Callback指令
+  → _send()：真正调用Hyperlane发消息的地方
+```
+
+* * *
+
+### 六、关键概念掌握
+
+```
+✅ msg.sender是动态的，每次调用都不同
+✅ onlyOwner → 验证调用者是你的钱包
+✅ onlyMailbox → 验证调用者是Hyperlane Mailbox
+✅ handle()的调用者是Mailbox，不是owner
+✅ bytes32→address的转换：address(uint160(uint256(sender)))
+✅ IMailbox接口的作用：让合约能调用dispatch()
+✅ address类型 vs 接口类型的区别
+✅ abi.encode打包 / abi.decode解包
+✅ react()在ReactVM里，不能直接调用外部合约
+✅ callback()是react()和_send()之间的桥梁
+✅ 两层encode → 需要两层decode
+```
+
+* * *
+
+## 今天感到困惑的地方
+
+### 困惑一：msg.sender的理解
+
+```
+困惑：以为msg.sender是固定的一个值
+解答：msg.sender是动态的，取决于谁发起这次调用
+     trigger() → msg.sender = 你的钱包
+     handle()  → msg.sender = Hyperlane Mailbox
+```
+
+### 困惑二：handle()是怎么被调用的
+
+```
+困惑：不理解handle()是怎么和Mailbox联系起来的
+解答：handle()是被动调用的，不需要你主动触发
+     Hyperlane Mailbox在收到消息后自动调用它
+     就像快递员送货上门，不需要你去取
+```
+
+### 困惑三：为什么需要callback()这个桥梁
+
+```
+困惑：为什么不在react()里直接调用mailbox.dispatch()
+解答：react()运行在ReactVM里，是轻量级虚拟机
+     无法直接调用外部合约
+     需要通过emit Callback → 系统调用callback()
+     → callback()在普通网络里运行，可以调用Mailbox
+```
+
+### 困惑四：Origin合约需不需要IMailbox接口
+
+```
+困惑：以为Origin合约也需要IMailbox接口
+解答：Origin合约不需要调用dispatch()
+     只需要emit事件，Reactive自动监听
+     mailbox只用来做安全验证，address类型就够了
+```
+
+### 困惑五：为什么需要两层decode
+
+```
+困惑：不理解为什么需要decode两次
+解答：trigger()传入bytes类型的数据
+     事件触发时以太坊对bytes再做一次ABI编码
+     所以log.data = 外层编码(内层编码(三个字段))
+     需要两层decode才能取出原始数据
+```
+
+### 困惑六：rvm\_id是什么地址
+
+```
+困惑：以为rvm_id是0x0000...fffFfF
+解答：rvm_id是发出回调的Reactive合约地址
+     传address(0)表示不做严格限制，任何来源都接受
+```
+
+* * *
+
+## 今天的成果
+
+```
+✅ 编译通过：Compiled 3 Solidity files successfully
+✅ 完成了CrossChainOrigin合约
+✅ 完成了CrossChainReactive合约
+✅ 理解了完整的跨链消息传递流程
+✅ 下一步：部署到BSC Testnet和Lasna
+```
+
+* * *
+
+今天学习得非常扎实！虽然过程中遇到了很多困惑，但每个问题都搞清楚了。明天可以直接开始部署和测试！
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 ## 一、CRON 和 HF 相关
 
 **CRON 什么时候有优势**
@@ -209,6 +386,7 @@ contract HyperlaneReactive is AbstractReactive, AbstractCallback {
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 ## 顺序安排思路
 
@@ -480,6 +658,7 @@ Reactive Contract 在运行时会产生费用，例如：
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 # Reactive Contract 三个模板完整总结
@@ -1107,6 +1286,7 @@ Destination Chain 执行交易
 
 
 
+
 # 使用AI演示和分析了reactive contract的工作原理，图片和简单动画演示
 
 [Reactive\_Contract步骤分析](https://may-tonk.github.io/html_may_tonk_web/reactive_contract_image.html/second_reactiveframe.html)
@@ -1345,6 +1525,7 @@ Destination Chain 执行交易
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -1635,6 +1816,7 @@ L1Callback 开门之前要检查：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
