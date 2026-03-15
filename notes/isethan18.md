@@ -15,8 +15,30 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+**挑战任务与经济模型复盘**
+
+**今日重点：** 完成 Notion 挑战，并理解“谁来付钱”。
+
+• **挑战任务执行：**
+
+• 按照 [挑战指引](https://ethpanda.notion.site/311bbd63be87809f9410c6fe8f8daff5?pvs=73) 完成特定的合约部署或逻辑改写。
+
+• **建议：** 尝试修改 Stop Order 的逻辑，比如改成一个“价格上涨 10% 自动加仓”的 Trend Following 策略。
+
+• **经济模型 (Economy)：**
+
+• 理解 **Gas 消耗**：Reactive Network 的计算需要 Gas，目标链的回调也需要 Gas。
+
+• 理解 **RVM Token** 的角色（如果有）：它是如何激励节点进行持续监听和执行的。
+
+• **资料补充：**[**经济模型文档**](https://dev.reactive.network/economy)
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 **代码拆解 —— 以 Uniswap V2 Stop Order 为例**
 
 **今日重点：** 结合 GitHub 源码，看技术理论如何变成逻辑代码。
@@ -38,6 +60,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 2026.03.13
 
@@ -70,6 +93,7 @@ Let’s vibe Reactive dApp
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
 
+
 ## Day 3：挑战任务实战（终极目标）
 
 **核心点：按照 Notion 指引完成跨链自动化**
@@ -92,6 +116,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -142,6 +167,7 @@ bytes calldata data
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
