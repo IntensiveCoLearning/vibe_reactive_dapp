@@ -15,8 +15,36 @@ Reactive 探索者
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+# **Lesson 6: How Uniswap Works / Understanding Uniswap V2 Pools and Smart Contracts**
+
+X \* y = k
+
+# **Lesson 7: Implementing Basic Reactive Functions**
+
+## **Key Components 关键组成部分**
+
+### **Event Declarations 事件声明**
+
+事件声明：诸如 `Subscribed` 、 `VM` 、 `AboveThreshold` 、 `CallbackSent` 和 `Done` 之类的事件用于记录和跟踪合约在区块链上的操作。
+
+### **Contract Variables 合同变量**
+
+`UNISWAP_V2_SYNC_TOPIC_0` 和 `STOP_ORDER_STOP_TOPIC_0` 分别是代表 Uniswap `Sync` 事件和合约 `Stop` `done` `triggered` `pair` 、 `stop_order` 、 `client` 、 `token0` 、 `coefficient` 和 `threshold` 等变量存储停止订单 `CALLBACK_GAS_LIMIT` 状态和配置。
+
+-   **初始化** ：部署后，合约会订阅来自 Uniswap V2 交易对和止损单回调合约的必要事件。
+    
+-   **事件监控** ：合约监听来自 Uniswap 交易对的同步事件，以监控资金池的储备金变化；监听来自止损单合约的 `Stop` 事件，以跟踪订单的执行情况。
+    
+-   **止损单激活** ：当 `Sync` 事件指示资金池价格达到阈值时，合约通过回调函数发起止损单，在 Uniswap V2 上执行交易。
+    
+-   **完成** ：停止指令执行后，合约会捕获停止指令合约中的停止事件，并将该过程标记为已完成。
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 # **Lesson 5: How Oracles Work**
 
 **尝试使用漫画方式来理解**
@@ -26,6 +54,7 @@ Reactive 探索者
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 # **Lesson 4: How Subscriptions Work**
 
@@ -152,6 +181,7 @@ Unsubscribing is an expensive operation due to the necessity of searching and re
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 # **Lesson 3: ReactVM and Reactive Network As a Dual-State Environment**
@@ -684,6 +714,7 @@ function react(LogRecord calldata log) external vmOnly {
 
 
 
+
 # **Lesson 2: How Events and Callbacks Work**
 
 本课重点讲解事件和回调在智能合约中的作用。通过学习如何发出、处理和监听事件，开发者可以创建能够实时响应区块链变化的动态去中心化应用（dApp）。我们还将探讨响应式合约如何使用 `react()` 方法处理事件，并通过回调发起跨链交易，从而增强响应式网络的功能。
@@ -772,6 +803,7 @@ For security and authorization purposes, the Reactive Network automatically repl
 
 
 
+
 # 学习计划
 
 1.  学习：[https://dev.reactive.network/education/module-1/reactive-contracts](https://dev.reactive.network/education/module-1/reactive-contracts)
@@ -837,6 +869,7 @@ RC 可以监控来自不同智能合约、兼容 EVM 的区块链的数据，它
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
