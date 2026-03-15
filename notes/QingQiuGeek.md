@@ -87,6 +87,7 @@ DESTINATION_CALLBACK_PROXY_ADDR 是目的链上的回调代理合约地址，它
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
 
+
 要“存入”或“借出”某种代币，合约必须知道是哪种资产，所以要用合约地址来区分。在Aave存USDC，Aave合约就和USDC的合约地址交互；存DAI就和DAI的合约地址交互。
 
 此处查看持有token的合约地址，每种Token（比如USDC、DAI、MyFirstNFT）都是一个独立的智能合约，有自己独立的地址，部署在以太坊网络上。这个合约地址是唯一的，就像每个网站都有自己的URL一样。
@@ -96,6 +97,7 @@ DESTINATION_CALLBACK_PROXY_ADDR 是目的链上的回调代理合约地址，它
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 ````markdown
@@ -151,6 +153,7 @@ DESTINATION_CALLBACK_PROXY_ADDR 是目的链上的回调代理合约地址，它
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -288,6 +291,7 @@ subscribe(
 
 
 
+
 ## Reactive Basics
 
 1.  源链和目标链、回调代理地址
@@ -371,11 +375,13 @@ Reactive Network 的执行环境
 
 
 
+
 用remix跑了basic的三个合约
 <!-- DAILY_CHECKIN_2026-03-10_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
