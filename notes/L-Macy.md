@@ -15,8 +15,52 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+Uniswap V2 池与合约理解
+
+-   学习目标：
+    
+    -   掌握 Uniswap V2 流动性池结构、交换机制与事件。
+        
+    -   理解恒定乘积公式及价格计算。
+        
+    -   为 Reactive 合约订阅 Uniswap 事件（如 Sync/Swap）奠基，实现 DeFi 自动化（止损、套利、再平衡）。
+        
+-   Uniswap V2 核心机制：
+    
+    -   流动性池：每个 token pair 一个 Pair 合约，储备 token0/token1。
+        
+    -   恒定乘积公式：x × y = k（k 不变，忽略 fee 简化）；实际含 0.3% fee → k 略增。
+        
+    -   Swap 执行：
+        
+        -   输入 amountIn → 计算 amountOut = (reserveOut × amountIn × 997) / (reserveIn × 1000 + amountIn × 997)。
+            
+        -   更新储备 → emit Sync(reserve0, reserve1)。
+            
+    -   关键事件：
+        
+        -   Sync(uint112 reserve0, uint112 reserve1)：储备更新，常用于价格监控。
+            
+        -   Swap(...)：记录输入/输出金额。
+            
+    -   其他函数：getReserves()、mint()（加流动性）、burn()（移除）。
+        
+-   Reactive 集成要点：
+    
+    -   订阅 Pair 的 Sync 事件：topics\[0\] = keccak256("Sync(uint112,uint112)")。
+        
+    -   在 react(LogRecord) 中：解码 reserves → 计算价格（reserve1 / reserve0 或反之）→ 阈值比较 → 条件满足 emit Callback 执行 swap/转移。
+        
+    -   示例：Sync 触发 → 价格 < 止损阈值 → Callback 调用 swap + 转出资金。
+        
+-   一句话总结：Uniswap V2 以恒定乘积 + Sync 事件为核心，提供实时价格/流动性数据；Reactive 通过订阅 Sync 实现 DEX 自动化逻辑。
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 How Uniswap Works（Uniswap V2 池与合约理解）
 
 -   学习目标：
@@ -71,6 +115,7 @@ How Uniswap Works（Uniswap V2 池与合约理解）
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 How Oracles Work
 
@@ -134,6 +179,7 @@ How Oracles Work
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 How Subscriptions Work（订阅机制详解）
@@ -277,6 +323,7 @@ How Subscriptions Work（订阅机制详解）
 
 
 
+
 **ReactVM and Reactive Network As a Dual-State Environment**
 
 **1\. 学习目标（Lesson Objectives）**
@@ -372,6 +419,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 
 
+
 **Events and Callbacks 工作原理**
 
 **1\. 学习目标（Lesson Objectives**）
@@ -446,6 +494,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
