@@ -15,19 +15,399 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+\# Reactive 官方 Module 1 逐行注释代码笔记
+
+我直接给你\*\*官方教程原文代码 + 逐行中文注释 + 极简解释\*\*，完全对应你看的页面：
+
+[https://dev.reactive.network/education/module-1/reactive-smart-contracts](https://dev.reactive.network/education/module-1/reactive-smart-contracts)
+
+1\. 核心接口：IReactive（所有反应式合约必须实现）
+
+\`\`\`solidity
+
+// SPDX-License-Identifier: UNLICENSED
+
+pragma solidity ^0.8.24;
+
+// 👇 Reactive 网络的核心接口
+
+// 所有反应式智能合约都必须实现这个接口
+
+interface IReactive {
+
+// 👇 核心函数：当监听到链上事件时，Reactive 网络会自动调用这个函数
+
+// @param chainId 事件来自哪条链（如以太坊 1，Sepolia 11155111）
+
+// @param contractAddr 触发事件的合约地址（如 Uniswap/ERC20）
+
+// @param eventData 事件的原始数据（需要 abi.decode 解析）
+
+function react(
+
+uint256 chainId,
+
+address contractAddr,
+
+bytes calldata eventData
+
+) external payable;
+
+}
+
+\`\`\`
+
+\---
+
+2\. 官方最简单示例：SimpleReactive（逐行注释）
+
+\`\`\`solidity
+
+// SPDX-License-Identifier: UNLICENSED
+
+pragma solidity ^0.8.24;
+
+// 引入核心接口
+
+import "./IReactive.sol";
+
+// 👇 最简单的反应式合约
+
+// 继承 IReactive 接口
+
+contract SimpleReactive is IReactive {
+
+// 👇 必须重写（override）react 函数
+
+function react(
+
+uint256 chainId,
+
+address contractAddr,
+
+bytes calldata eventData
+
+) external payable override {
+
+// ==============================================
+
+// ✅ 这里写你要自动执行的逻辑
+
+// 事件触发 → Reactive 网络自动调用这里
+
+// ==============================================
+
+}
+
+}
+
+\`\`\`
+
+\---
+
+3\. 官方示例：事件解码（解码 ERC20 Transfer）
+
+\`\`\`solidity
+
+// SPDX-License-Identifier: UNLICENSED
+
+pragma solidity ^0.8.24;
+
+import "./IReactive.sol";
+
+// 👇 监听 ERC20 Transfer 事件的反应式合约
+
+contract TransferWatcher is IReactive {
+
+// 👇 先定义要监听的事件结构（和原合约一致）
+
+event Transfer(address indexed from, address indexed to, uint256 value);
+
+// 👇 核心自动执行函数
+
+function react(
+
+uint256 chainId,
+
+address contractAddr,
+
+bytes calldata eventData
+
+) external payable override {
+
+// ==============================================
+
+// ✅ 解码事件数据：把原始 bytes 转成可读变量
+
+// ==============================================
+
+(address from, address to, uint256 value) = abi.decode(
+
+eventData,
+
+(address, address, uint256)
+
+);
+
+// ==============================================
+
+// ✅ 拿到数据后，你可以写任意逻辑
+
+// ==============================================
+
+}
+
+}
+
+\`\`\`
+
+\---
+
+\# 4. 官方示例：过滤指定链 + 指定合约（只监听目标事件）
+
+\`\`\`solidity
+
+// SPDX-License-Identifier: UNLICENSED
+
+pragma solidity ^0.8.24;
+
+import "./IReactive.sol";
+
+contract FilteredReactive is IReactive {
+
+// 👇 常量：只监听 Sepolia 测试网
+
+uint256 constant SEPOLIA\_CHAIN\_ID = 11155111;
+
+// 👇 常量：只监听某个固定合约（例如某个 ERC20）
+
+address constant TARGET\_CONTRACT = 0x1234567890123456789012345678901234567890;
+
+function react(
+
+uint256 chainId,
+
+address contractAddr,
+
+bytes calldata eventData
+
+) external payable override {
+
+// ==============================================
+
+// ✅ 过滤：不是 Sepolia → 直接退出
+
+// ==============================================
+
+if (chainId != SEPOLIA\_CHAIN\_ID) return;
+
+// ==============================================
+
+// ✅ 过滤：不是目标合约 → 直接退出
+
+// ==============================================
+
+if (contractAddr != TARGET\_CONTRACT) return;
+
+// ==============================================
+
+// ✅ 只有满足条件的事件才会走到这里
+
+// ==============================================
+
+}
+
+}
+
+\`\`\`
+
+\---
+
+\# 5. 官方示例：带状态存储（累计金额）
+
+\`\`\`solidity
+
+// SPDX-License-Identifier: UNLICENSED
+
+pragma solidity ^0.8.24;
+
+import "./IReactive.sol";
+
+// 👇 记录每个地址转账总额的反应式合约
+
+contract StatefulReactive is IReactive {
+
+// 👇 状态存储：记录每个地址的总转账金额
+
+mapping(address => uint256) public totalTransferred;
+
+function react(
+
+uint256 chainId,
+
+address contractAddr,
+
+bytes calldata eventData
+
+) external payable override {
+
+// 解码事件
+
+(address from, , uint256 value) = abi.decode(
+
+eventData,
+
+(address, address, uint256)
+
+);
+
+// ==============================================
+
+// ✅ 更新状态：累计金额
+
+// 反应式合约是有状态的，可以存数据
+
+// ==============================================
+
+totalTransferred\[from\] += value;
+
+}
+
+}
+
+\`\`\`
+
+\---
+
+\# 6. 官方完整示例：大额转账监控（完整版逐行注释）
+
+\`\`\`solidity
+
+// SPDX-License-Identifier: UNLICENSED
+
+pragma solidity ^0.8.24;
+
+import "./IReactive.sol";
+
+// 👇 官方完整示例：监听大额转账并触发事件
+
+contract BigTransferWatcher is IReactive {
+
+// 定义触发事件
+
+event Transfer(address indexed from, address indexed to, uint256 value);
+
+// 定义大额通知事件
+
+event BigTransferDetected(
+
+address indexed from,
+
+address indexed to,
+
+uint256 value
+
+);
+
+// 👇 阈值：超过这个金额算大额
+
+uint256 public constant BIG\_THRESHOLD = 1000 ether;
+
+// 👇 自动执行函数
+
+function react(
+
+uint256 chainId,
+
+address contractAddr,
+
+bytes calldata eventData
+
+) external payable override {
+
+// 解码事件
+
+(address from, address to, uint256 value) = abi.decode(
+
+eventData,
+
+(address, address, uint256)
+
+);
+
+// ==============================================
+
+// ✅ 判断是否超过阈值
+
+// ==============================================
+
+if (value >= BIG\_THRESHOLD) {
+
+// ==============================================
+
+// ✅ 触发通知事件
+
+// ==============================================
+
+emit BigTransferDetected(from, to, value);
+
+}
+
+}
+
+}
+
+\`\`\`
+
+\---
+
+\# 🔥 官方教程核心代码总结（最关键 5 行）
+
+\`\`\`solidity
+
+// 1. 继承 IReactive
+
+contract YourContract is IReactive {
+
+// 2. 实现 react()
+
+function react(uint256 chainId, address contractAddr, bytes calldata eventData) external override {
+
+// 3. 解码事件数据
+
+(from, to, value) = abi.decode(eventData, (address, address, uint256));
+
+// 4. 写过滤/条件逻辑
+
+if (value > 1000 ether) { ... }
+
+// 5. 执行自动动作
+
+emit Event / call other contract
+
+}}
+
+\`\`\`
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 1
 <!-- DAILY_CHECKIN_2026-03-14_END -->
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
 
+
 电脑今日坏了 今天主要还是学语法
 <!-- DAILY_CHECKIN_2026-03-13_END -->
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 Solidity：storage 和 memory 赋值行为 + 应用场景
@@ -209,6 +589,7 @@ return user;
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -457,6 +838,7 @@ require做校验
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
