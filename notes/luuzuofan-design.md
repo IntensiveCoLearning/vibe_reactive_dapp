@@ -15,8 +15,25 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+# Reactive DApp学习第5天
+
+-   什么是幂等性：同样的事情就算被触发多次，结果也不能乱。
+    
+-   `subscribe` 和 `unsubscribe` 都通过链 ID、源合约地址以及 topic 条件来精确管理事件监听，其中 `topic_0` 通常用于标识事件类型，`topic_1~3` 用于更细的筛选。取消订阅比订阅更贵，因为系统需要搜索并移除已有记录。重复或重叠订阅是允许的，因此客户端需要自行保证幂等性。`IReactive` 则定义了反应式合约的标准接口，规定了事件输入结构 `LogRecord`、回调事件 `Callback` 以及核心处理函数 `react()`。
+    
+-   完整的结构：1.构造函数订阅：a.service=订阅服务/合约接口； b.if（vm)确认是放在reactiveVM里面还是reactive network里面，订阅只能在network里；c.service subscribe(注册监听规则）；d.callback
+    
+
+## Subscription Criteria：订阅标准到底是什么
+
+在 Reactive 合约中，订阅通常在构造函数中通过 `service.subscribe()` 完成初始化。订阅条件由链 ID、源合约地址以及 topics 组成，其中至少一个条件必须是具体值，不能全部使用通配符。系统只支持严格相等匹配，不支持大小比较、范围条件或复杂 OR 组合。若需要监听多个来源或多种事件，应多次调用 `subscribe()`。此外，Reactive 合约也支持动态订阅：ReactVM 可根据接收到的事件决定新增或取消订阅，但真正的订阅管理仍需通过 Reactive Network 侧完成。动态订阅示例中，会先在初始化阶段声明链 ID、事件 topic、callback gas limit、owner 和业务服务实例等常量与状态变量。
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 # ReactiveDapp学习第四天
 
 -   ReactVM 这边就像“真正干活的机器人”：它一边盯价格，一边判断是否该止损；一旦该止损就立刻发 callback；等收到执行成功的回执后，再把订单状态标记为完成。
@@ -28,6 +45,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 # 学习Reactive 第三天
 
@@ -42,6 +60,7 @@ Let’s vibe Reactive dApp
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
 
+
 # Reactive Dapp 学习第二天
 
 直播学习:
@@ -53,6 +72,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
