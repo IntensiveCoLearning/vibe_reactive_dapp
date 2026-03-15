@@ -15,8 +15,518 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+# 抽象合约
+
+## AbstractCallback
+
+### 作用
+
+为反应式合约提供回呼授权功能
+
+### 关键变量
+
+· rvm\_id - 授权的 ReactVM 标识符
+
+· vendor - 回调代理地址
+
+### 修饰符
+
+```
+modifier rvmIdOnly(address _rvm_id) {
+```
+
+```
+    require(rvm_id == address(0) || rvm_id == _rvm_id, 'Authorized RVM ID only');
+```
+
+```
+    _;
+```
+
+```
+}
+```
+
+### 构造函数
+
+```
+constructor(address _callback_sender) {
+```
+
+```
+rvm_id = msg.sender; // 部署者设为授权发送方
+```
+
+```
+vendor = IPayable(payable(_callback_sender)); // 注册回调代理
+```
+
+```
+addAuthorizedSender(_callback_sender); // 添加为授权发送者
+```
+
+```
+}
+```
+
+## AbstractPausableReactive
+
+### 作用
+
+提供可暂停的事件订阅功能
+
+### 核心结构
+
+```
+struct Subscription {
+```
+
+```
+uint256 chain_id; // 链ID
+```
+
+```
+address _contract; // 合约地址
+```
+
+```
+uint256 topic_0; // 事件主题0
+```
+
+```
+uint256 topic_1; // 事件主题1
+```
+
+```
+uint256 topic_2; // 事件主题2
+```
+
+```
+uint256 topic_3; // 事件主题3
+```
+
+```
+}
+```
+
+### 主要函数
+
+函数 功能 权限
+
+pause() 取消所有可暂停订阅 仅持有者
+
+resume() 恢复所有暂停的订阅 仅持有者
+
+实现逻辑：
+
+· pause(): 遍历getPausableSubscriptions()并取消订阅
+
+· resume(): 遍历相同列表并重新订阅
+
+\-–
+
+3\. AbstractPayer
+
+作用：提供支付和债务和解功能
+
+修饰符
+
+```
+modifier authorizedSenderOnly() {
+```
+
+```
+require(senders[msg.sender], ‘Authorized sender only’);
+```
+
+```
+_;
+```
+
+```
+}
+```
+
+### 核心函数
+
+函数 描述
+
+pay(uint256 amount) 向授权发送方转账
+
+coverDebt() 清偿供应商债务
+
+addAuthorizedSender(address) 添加授权发送者
+
+removeAuthorizedSender(address) 移除授权发送者
+
+receive() 接受直接转账
+
+### 内部支付逻辑
+
+```
+function _pay(address payable recipient, uint256 amount) internal {
+```
+
+```
+require(address(this).balance >= amount, ‘Insufficient funds’);
+```
+
+```
+if (amount > 0) {
+```
+
+```
+(bool success,) = payable(recipient).call{value: amount}(new bytes(0));
+```
+
+```
+require(success, ‘Transfer failed’);
+```
+
+```
+}
+```
+
+```
+}
+```
+
+## AbstractReactive
+
+### 作用
+
+所有反应式合约的基础合约
+
+### 执行模式
+
+· vmOnly - ReactVM 执行环境
+
+· rnOnly - 反应式网络执行环境
+
+### 关键常量
+
+· SERVICE\_ADDR - 系统服务合约地址
+
+### 构造函数
+
+```
+constructor() {
+```
+
+```
+vendor = service = SERVICE_ADDR; // 初始化系统合约
+```
+
+```
+addAuthorizedSender(address(SERVICE_ADDR)); // 授权支付
+```
+
+```
+detectVm(); // 检测执行模式
+```
+
+```
+}
+```
+
+### 模式检测
+
+```
+function detectVm() internal {
+```
+
+```
+uint256 size;
+```
+
+```
+assembly { size := extcodesize(0x0000000000000000000000000000000000fffFfF) }
+```
+
+```
+vm = size == 0; // 无代码则为VM模式
+```
+
+```
+}
+```
+
+# 接口定义
+
+## IPayable
+
+```
+interface IPayable {
+```
+
+```
+receive() external payable; // 接受付款
+```
+
+```
+function debt(address _contract) external view returns (uint256); // 查询债务
+```
+
+```
+}
+```
+
+## IPayer
+
+```
+interface IPayer {
+```
+
+```
+function pay(uint256 amount) external; // 发起支付
+```
+
+```
+receive() external payable; // 接受转账
+```
+
+```
+}
+```
+
+## IReactive
+
+### 核心事件
+
+```
+event Callback(
+```
+
+```
+uint256 indexed chain_id,
+```
+
+```
+address indexed _contract,
+```
+
+```
+uint64 indexed gas_limit,
+```
+
+```
+bytes payload
+```
+
+```
+);
+```
+
+## 日志结构
+
+```
+struct LogRecord {
+```
+
+```
+uint256 chain_id; // 链ID
+```
+
+```
+address _contract; // 合约地址
+```
+
+```
+uint256 topic_0; // 主题0
+```
+
+```
+uint256 topic_1; // 主题1
+```
+
+```
+uint256 topic_2; // 主题2
+```
+
+```
+uint256 topic_3; // 主题3
+```
+
+```
+bytes data; // 事件数据
+```
+
+```
+uint256 block_number; // 区块号
+```
+
+```
+uint256 op_code; // 操作码
+```
+
+```
+uint256 block_hash; // 区块哈希
+```
+
+```
+uint256 tx_hash; // 交易哈希
+```
+
+```
+uint256 log_index; // 日志索引
+```
+
+```
+}
+```
+
+## 核心函数
+
+```
+function react(LogRecord calldata log) external; // 处理事件通知
+```
+
+## ISubscriptionService
+
+```
+interface ISubscriptionService {
+```
+
+```
+function subscribe( // 订阅事件
+```
+
+```
+uint256 chain_id, address _contract,
+```
+
+```
+uint256 topic_0, uint256 topic_1,
+```
+
+```
+uint256 topic_2, uint256 topic_3
+```
+
+```
+) external;
+```
+
+```
+function unsubscribe( // 取消订阅
+```
+
+```
+uint256 chain_id, address _contract,
+```
+
+```
+uint256 topic_0, uint256 topic_1,
+```
+
+```
+uint256 topic_2, uint256 topic_3
+```
+
+```
+) external;
+```
+
+```
+}
+```
+
+## ISystemContract
+
+组合 IPayable + ISubscriptionService，代表系统合约接口。
+
+# 系统合约
+
+## SystemContract
+
+### 职责
+
+· 处理反应式合约付款
+
+· 管理合约访问控制（白名单/黑名单）
+
+· 周期性触发克隆事件
+
+## CallbackProxy
+
+### 职责
+
+· 传递回调交易到目标合约
+
+· 管理存款、准备金和债务
+
+· 限制回调仅限授权合约
+
+· 计算gas成本和回扣
+
+## AbstractSubscriptionService
+
+### 职责
+
+· 管理活动订阅
+
+· 支持链、合约、主题过滤
+
+· 支持通配符 REACTIVE\_IGNORE
+
+· 发布订阅更新事件
+
+# CRON 功能
+
+SystemContract提供基于时间的自动化机制：
+
+间隔 区块数 近似时间 topic\_0
+
+-   Cron1 1 ~7秒 0xf02d6ea5c22a71cffe930a4523fcb4f129be6c804db50e4202fb4e0b07ccb514
+    
+-   Cron10 10 ~1分钟 0x04463f7c1651e6b9774d7f85c85bb94654e3c46ca79b0c16fb16d4183307b687
+    
+-   Cron100 100 ~12分钟 0xb49937fb8970e19fd46d48f7e3fb00d659deac0347f79cd7cb542f0fc1503c70
+    
+-   Cron1000 1000 ~2小时 0xe20b31294d84c3661ddc8f423abb9c70310d0cf172aa2714ead78029b325e3f4
+    
+-   Cron10000 10,000 ~28小时 0xd214e1d84db704ed42d37f538ea9bf71e44ba28bc1cc088b2f5deca654677a56
+    
+
+## 特点
+
+· 无需轮询或外部自动化
+
+· 基于区块号整除性触发
+
+· 每个事件包含当前区块号参数
+
+# 继承关系
+
+AbstractPayer
+
+↑
+
+AbstractReactive ( implements IReactive )
+
+↑
+
+AbstractCallback
+
+↑
+
+AbstractPausableReactive
+
+# 权限修饰符
+
+| 修饰符 | 作用 |
+| --- | --- |
+| rvmIdOnly | 仅限授权RVM |
+| authorizedSenderOnly | 仅限授权发送者 |
+| rnOnly | 仅限反应式网络 |
+| onlyOwner | 仅限合约持有者 |
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 # 反应式合约
 
 ## **部署**
@@ -264,6 +774,7 @@ service.subscribe(...);
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
 
+
 花费了近一周的时间，今天完成了任务一。从学习部署合约，向地址转账，到最后回调成功。感觉收获很多，印象最深的是最后的回调一直在回滚问了AI了解到是`BasicDemoL1Callback` 构造函数接收了 `_callback_sender`。由于之前在Callback合约中开启了 `authorizedSenderOnly`，合约会执行： `require(msg.sender == _callback_sender)`
 
 如果之前传入的 `$env:DESTINATION_CALLBACK_PROXY_ADDR` **不等于** `0xc9f36411C9897e7F959D99ffca2a0Ba7ee0D7bDA`，那么合约就会 Revert，回调回滚
@@ -460,6 +971,7 @@ cast call $CALLBACK_PROXY_ADDR "reserves(address)" $CONTRACT_ADDR --rpc-url $DES
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
 
+
 这几天主要学习了如何部署reactive合约，包括设置地址，转账等一系列操作，也对reactive合约的实现流程有了个大致了解
 
 **\[源链（如Sepolia）\] -> \[Reactive Network\] -> \[目标链（如Sepolia）\]**
@@ -492,6 +1004,7 @@ cast call $CALLBACK_PROXY_ADDR "reserves(address)" $CONTRACT_ADDR --rpc-url $DES
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
