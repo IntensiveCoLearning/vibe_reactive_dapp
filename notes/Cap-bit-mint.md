@@ -15,8 +15,20 @@ timezone: UTC+8
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+Day-6
+
+今日完成了“构建一个跨链事件与回调合约”挑战
+
+交易哈希：0x73d0f768ef271d7546d85916677bc389b6d52d0177e4138e8b0d742c669eb4ce
+
+![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Cap-bit-mint/images/2026-03-15-1773590294837-image.png)
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 Day-5
 
 今天在做“构建一个跨链事件与回调合约”的挑战。
@@ -42,6 +54,7 @@ Day-5
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
+
 Day-4
 
 今天出差请假一天
@@ -49,6 +62,7 @@ Day-4
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 Day-3
@@ -74,6 +88,7 @@ Day-3
 
 
 
+
 Day-2  
   
 基于今天的学习，我想用生活例子来理解 Reactive 与传统 EVM 的区别：
@@ -87,6 +102,7 @@ Day-2
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
