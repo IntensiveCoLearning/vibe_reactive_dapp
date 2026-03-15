@@ -15,8 +15,296 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+# Implementing Basic Reactive Functions 学习笔记
+
+## 一、Reactive Contract (RC) 概念
+
+-   **Reactive Contract** 类似 **Ethereum Smart Contract**，但它是\*\*事件驱动（event-driven）\*\*的。
+    
+-   主要作用：  
+    **监听区块链事件 → 判断条件 → 自动执行交易回调。**
+    
+-   本案例：  
+    用于 **Uniswap V2 的 Stop Order（止损单）自动执行**。
+    
+
+* * *
+
+# 二、核心功能
+
+该合约 **监听 Uniswap V2 liquidity pool 的 Sync 事件**，当价格达到预设阈值时：
+
+1.  触发 stop order
+    
+2.  发送 callback 交易
+    
+3.  执行止损交易
+    
+
+* * *
+
+# 三、合约主要结构
+
+## 1 Event（事件）
+
+用于记录合约执行过程。
+
+主要事件：
+
+| Event | 作用 |
+| --- | --- |
+| Subscribed | 订阅事件 |
+| VM | VM执行标记 |
+| AboveThreshold | 超过阈值 |
+| CallbackSent | 已发送回调 |
+| Done | 执行完成 |
+
+* * *
+
+# 2 关键变量
+
+### 常量
+
+| 常量 | 作用 |
+| --- | --- |
+| SEPOLIA_CHAIN_ID | Sepolia测试网 |
+| UNISWAP_V2_SYNC_TOPIC_0 | Uniswap Sync事件 |
+| STOP_ORDER_STOP_TOPIC_0 | Stop事件 |
+| CALLBACK_GAS_LIMIT | callback gas限制 |
+
+* * *
+
+### 状态变量
+
+| 变量 | 含义 |
+| --- | --- |
+| triggered | 是否已触发止损 |
+| done | 是否执行完成 |
+| pair | Uniswap交易对地址 |
+| stop_order | stop order合约 |
+| client | 用户地址 |
+| token0 | 选择token0或token1 |
+| coefficient | 价格系数 |
+| threshold | 触发阈值 |
+
+* * *
+
+# 四、核心函数
+
+* * *
+
+# 1 Constructor（初始化）
+
+初始化参数并**订阅事件**。
+
+订阅两个事件：
+
+### 1️⃣ Uniswap Pair
+
+监听：
+
+```
+Sync event
+```
+
+用于检测流动池储备变化。
+
+### 2️⃣ Stop Order Contract
+
+监听：
+
+```
+Stop event
+```
+
+用于确认交易完成。
+
+* * *
+
+# 2 react() 函数（核心逻辑）
+
+react() 用于 **处理区块链事件**。
+
+流程：
+
+### 情况1：Stop Order事件
+
+如果事件来自 stop\_order：
+
+检查：
+
+-   triggered == true
+    
+-   topic匹配
+    
+-   pair地址匹配
+    
+-   client地址匹配
+    
+
+满足条件：
+
+```
+done = true
+emit Done()
+```
+
+表示 **止损交易完成**。
+
+* * *
+
+### 情况2：Uniswap Sync事件
+
+获取流动池储备：
+
+```
+reserve0
+reserve1
+```
+
+调用：
+
+```
+below_threshold()
+```
+
+判断是否达到止损条件。
+
+如果满足：
+
+1️⃣ 发送 CallbackSent 事件  
+2️⃣ 构造 callback payload
+
+```
+stop(address,address,address,bool,uint256,uint256)
+```
+
+3️⃣ 设置
+
+```
+triggered = true
+```
+
+4️⃣ 执行 callback
+
+```
+emit Callback(...)
+```
+
+* * *
+
+# 3 below\_threshold() 函数
+
+作用：
+
+**判断价格是否低于阈值**
+
+计算方式：
+
+如果交易 token0：
+
+```
+(reserve1 * coefficient) / reserve0 <= threshold
+```
+
+如果交易 token1：
+
+```
+(reserve0 * coefficient) / reserve1 <= threshold
+```
+
+本质：
+
+```
+token price <= threshold
+```
+
+* * *
+
+# 五、执行流程（Execution Flow）
+
+### 1 部署合约
+
+初始化参数  
+订阅事件
+
+* * *
+
+### 2 监听事件
+
+监听：
+
+-   Uniswap Sync
+    
+-   Stop Order Stop
+    
+
+* * *
+
+### 3 价格触发
+
+当 pool reserves 满足：
+
+```
+price <= threshold
+```
+
+执行：
+
+```
+callback(stop order)
+```
+
+* * *
+
+### 4 执行交易
+
+Stop Order Contract 执行交易。
+
+* * *
+
+### 5 完成
+
+捕获 Stop Event：
+
+```
+done = true
+```
+
+任务结束。
+
+* * *
+
+# 六、核心机制总结
+
+Reactive Contract运行逻辑：
+
+```
+监听事件
+      ↓
+解析数据
+      ↓
+判断条件
+      ↓
+发送callback
+      ↓
+执行交易
+      ↓
+确认完成
+```
+
+* * *
+
+# 七、一句话总结
+
+该 Reactive Contract 通过**监听 Uniswap V2 的 Sync 事件**，当流动池价格达到设定阈值时，自动触发 **Stop Order 回调交易**，实现链上的**自动止损交易机制**。
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 # Uniswap V2 学习笔记
 
 ## 1\. Uniswap V2 概述
@@ -385,6 +673,7 @@ Sync
 <!-- DAILY_CHECKIN_2026-03-13_START -->
 
 
+
 # Oracles 学习笔记
 
 ## 1\. Oracle 的作用
@@ -662,6 +951,7 @@ Reactive Contract 监听事件
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -1044,6 +1334,7 @@ Reactive Contracts 订阅机制核心：
 
 
 
+
 # Reactive Contracts (RCs) 架构与执行机制
 
 ## 一、 双重执行环境：一个合约，两个状态
@@ -1157,6 +1448,7 @@ Reactive Contracts 订阅机制核心：
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -1433,6 +1725,7 @@ Reactive Network 会自动：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
