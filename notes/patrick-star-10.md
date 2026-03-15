@@ -15,8 +15,16 @@ learning
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+# **_今天完成了第二个挑战：_**
+
+[**https://github.com/patrick-star-10/reactive-network-Hackathon/tree/main/uniswap-v2-stop-order-sepolia-demo**](https://github.com/patrick-star-10/reactive-network-Hackathon/tree/main/uniswap-v2-stop-order-sepolia-demo)
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 # **今日学习笔记**
 
 ## **主题：理解跨链和自动化机制**
@@ -187,6 +195,7 @@ emit Deposited(user, amount)
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 # **今日学习总结：ReactVM 执行逻辑理解**
 
@@ -379,6 +388,7 @@ ReactVM 本质上就是：
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 # **今日学习笔记**
@@ -765,6 +775,7 @@ Callback  = 执行动作
 
 
 
+
 # **今日学习笔记｜Reactive Contract 结构理解**
 
 今天主要学习 **Reactive Contract 的组成结构与执行流程**。
@@ -1121,6 +1132,7 @@ Reactive Network 的本质是一个：
 
 
 
+
 # **今天完成了第一个挑战任务**
 
 [https://github.com/patrick-star-10/reactive-network-day1](https://github.com/patrick-star-10/reactive-network-day1)
@@ -1128,6 +1140,7 @@ Reactive Network 的本质是一个：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
