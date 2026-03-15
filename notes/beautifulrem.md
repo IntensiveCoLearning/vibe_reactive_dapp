@@ -15,8 +15,635 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-15
+<!-- DAILY_CHECKIN_2026-03-15_START -->
+# **R1 - Reactive Basic**
+
+# Origins & Destinations
+
+## Callback Proxy Address
+
+在去中心化世界里，“谁在调用我”至关重要。假设你有一个目标链合约，功能是“发放奖励”。如果这个合约谁都能调用，那黑客分分钟就把钱领光了。
+
+我们介绍 Callback Proxy ，它是目标链上一个固定的、受信任的地址。其是由 Reactive Network 官方在各个支持的目标链上预先部署好的基础设施合约。
+
+由于 Reactive Network 是一个独立于以太坊或其他 Layer 2 的网络，当它需要向目标链（如 Arbitrum 或 Base）发送指令时，目标链上的业务合约需要一个“受信任的来源”来验证这些指令。
+
+-   **统一性：** 官方在每条链上部署一个统一的 Proxy 地址，开发者不需要自己去写复杂的跨链验证逻辑。  
+    
+-   **权威性：** 官方负责维护这个代理合约的安全，确保只有经过 Reactive Network 共识验证的消息才能通过这个代理发出来。
+    
+
+Reactive Network 并不直接去敲你合约的门，而是先把指令传给这个 Proxy，再由 Proxy 转发给你。为了确保安全，你的目标合约在收到指令时，**必须**执行以下逻辑：
+
+1.  **验证发送方 (The Sender Check)：**
+    
+    -   检查 `msg.sender`。它必须等于该链对应的 **Callback Proxy 地址**。  
+        
+    -   _意义：_ 确保这条指令不是路人甲发的，而是通过 Reactive 官方渠道送达的。  
+        
+2.  **验证 RVM ID (The RVM ID Match)：**
+    
+    -   Reactive 虚拟机会为每个 Reactive Contract (RC) 生成一个唯一的 ID（RVM ID）。  
+        
+    -   _意义：_ 即使指令来自官方 Proxy，你也得确认这个指令是**你的**那个 RC 发出的。防止别人写的 RC 合约恶意调用你的目标合约。
+        
+
+在编写目标链的智能合约时，你的代码通常会包含这样一个修饰器或判断逻辑：
+
+```solidity
+// 伪代码示例
+address constant CALLBACK_PROXY = 0x9299...; // 从官方列表查到的对应链地址
+bytes32 constant MY_RC_ID = 0xabc123...;    // 你部署的 RC 合约 ID
+
+function onReactiveCall(bytes32 rvmId, bytes calldata data) external {
+    // 1. 身份检查：必须来自代理合约
+    require(msg.sender == CALLBACK_PROXY, "Only Proxy allowed");
+    
+    // 2. 归属检查：必须是我的 RC 发出的逻辑
+    require(rvmId == MY_RC_ID, "Unauthorized RVM ID");
+
+    // 3. 执行真正的逻辑...
+}
+```
+
+### Hyperlane
+
+我们介绍 Hyperlane，他在这里扮演的是 **Transport Layer（传输层）**。
+
+-   **原生模式 (Native)：** 如果目标链（如 Arbitrum, BSC）已经部署了 Reactive 的 Callback Proxy，那么 Reactive Network 会通过自己的节点网络直接把数据同步过去。  
+    
+-   **Hyperlane 模式：** 某些新链或尚未完全集成的链，Reactive 的原生通信还没打通。这时，Reactive 会把加密后的回调指令“打包”交给 Hyperlane。
+    
+    -   Hyperlane 负责把包裹从 A 链搬到 B 链。  
+        
+    -   到达 B 链后，再解包交给当地的代理合约。
+        
+
+如果 Reactive 是顺丰快递，Hyperlane 就是它在没有直达网点时外包的“跨国货运”。对于开发者来说，这保证了**全链的覆盖能力**。
+
+* * *
+
+## 主网链和测试网链
+
+在这里需要注意，主网链和测试网链的环境是**严格隔离**的。如果你的源事件发生在以太坊主网，你的回调动作也必须落在另一个主网（如 Arbitrum 或 BSC）。如果你在 Sepolia 测试网测试，回调也只能发往测试网。
+
+这主要是为了防止开发测试时的“垃圾指令”意外触发真实主网的资产变动，同时也因为主网和测试网的 Gas 费结算逻辑完全不同。
+
+### 主网链
+
+| Chain  链 | Origin  源链 | Destination  目的地 | Chain ID | Callback Proxy | RPC |
+| --- | --- | --- | --- | --- | --- |
+| Abstract | ✅ | ✅ | 2741 | 0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4 | Chainlist |
+| Arbitrum | ✅ | ✅ | 42161 | 0x4730c58FDA9d78f60c987039aEaB7d261aAd942E | Chainlist |
+| Avalanche | ✅ | ✅ | 43114 | 0x934Ea75496562D4e83E80865c33dbA600644fCDa | Chainlist |
+| Base | ✅ | ✅ | 8453 | 0x0D3E76De6bC44309083cAAFdB49A088B8a250947 | Chainlist |
+| BSC | ✅ | ✅ | 56 | 0xdb81A196A0dF9Ef974C9430495a09B6d535fAc48 | Chainlist |
+| Ethereum | ✅ | ✅ | 1 | 0x1D5267C1bb7D8bA68964dDF3990601BDB7902D76 | Chainlist |
+| HyperEVM | ✅ | ✅ | 999 | 0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4 | Chainlist |
+| Linea | ✅ | ✅ | 59144 | 0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4 | Chainlist |
+| Plasma | ✅ | ✅ | 9745 | 0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4 | Chainlist |
+| Reactive | ✅ | ✅ | 1597 | 0x0000000000000000000000000000000000fffFfF | https://mainnet-rpc.rnk.dev/ |
+| Sonic | ✅ | ✅ | 146 | 0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4 | Chainlist |
+| Unichain | ✅ | ✅ | 130 | 0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4 | Chainlist |
+
+-   **✅ Origin：** 表示 Reactive Network 能够实时监控（监听）这条链上的事件。  
+    
+-   **✅ Destination：** 表示这条链已经部署了官方的 **Callback Proxy**，可以直接接收来自 Reactive Network 的指令。
+    
+
+在这个主网列表中，所有列出的链（如 Ethereum, Arbitrum, Base, BSC 等）都是双向 ✅，意味着它们是 **“Reactive 全功能支持区”**。
+
+像 **Abstract, HyperEVM, Linea, Plasma, Sonic, Unichain** 的 callback proxy 用的都是同一个地址：`0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4`。
+
+同时，**Reactive** 也是一条链。
+
+-   这意味着 Reactive Contract 也可以监听 Reactive 链本身的事件。  
+    
+-   它的 Proxy 地址是一个特殊的 `0x...ffffFfF`。  
+    
+-   这通常用于更高阶的“元操作”，比如一个 Reactive 合约根据另一个 Reactive 合约的状态来做决定。
+    
+
+### 测试网链
+
+| Chain | Origin | Destination | Chain ID | Callback Proxy | RPC |
+| --- | --- | --- | --- | --- | --- |
+| Avalanche Fuji | ✅ | ➖ | 43113 | ➖ | Chainlist |
+| Base Sepolia | ✅ | ✅ | 84532 | 0xa6eA49Ed671B8a4dfCDd34E36b7a75Ac79B8A5a6 | Chainlist |
+| BSC Testnet | ✅ | ➖ | 97 | ➖ | Chainlist |
+| Ethereum Sepolia | ✅ | ✅ | 11155111 | 0xc9f36411C9897e7F959D99ffca2a0Ba7ee0D7bDA | Chainlist |
+| Reactive Lasna | ✅ | ✅ | 5318007 | 0x0000000000000000000000000000000000fffFfF | https://lasna-rpc.rnk.dev/ |
+| Polygon Amoy | ✅ | ➖ | 80002 | ➖ | Chainlist |
+| Unichain Sepolia | ✅ | ✅ | 1301 | 0x9299472A6399Fd1027ebF067571Eb3e3D7837FC4 | Chainlist |
+
+Avalanche Fuji、BSC Testnet 和 Polygon Amoy 是只有 Origin，没有 Destination的**半透明链**。这意味着可以**监听**这些链上的事件（比如监听 Fuji 上的存款）。但 Reactive Network **不能直接**通过官方 Callback Proxy 回调这些链。如果非要往这些链发回调，就需要用到前面提到的 **Hyperlane** 作为传输层。
+
+Reactive的测试网是**Reactive Lasna**，它自己也有 Callback Proxy，意味着你可以在 Reactive 链内部实现逻辑闭环，或者作为逻辑的中转站。
+
+# Hyperlane
+
+通常情况下，Reactive 会通过自己的节点直接把指令发给目标链上的 `Callback Proxy`。但引入 Hyperlane 有三个核心理由：
+
+-   **填补空白：** 某些链（比如你之前看到的测试网 Fuji 或 Amoy）没有官方 Proxy，但它们支持 Hyperlane。这时 Hyperlane 就是唯一的跨链桥梁。  
+    
+-   **路由灵活性：** Hyperlane 允许你自定义消息的传输路径或安全模型。  
+    
+-   **系统集成：** 如果你的项目本身就是基于 Hyperlane 构建的（比如你已经用了它的收件箱机制），那么直接用 Hyperlane 传输回调会更自然。
+    
+
+在 Hyperlane 的体系里，最重要的合约是 **Mailbox**。
+
+-   **作用：** 它是跨链消息的“进出口”。所有的消息必须先扔进源链的 Mailbox，然后由 Hyperlane 的验证者搬运，最后从目标链的 Mailbox 吐出来。  
+    
+-   **对比：**
+    
+    -   **Native 模式：** Reactive -> Callback Proxy -> 合约。
+        
+        -   **Hyperlane 模式：** Reactive -> Hyperlane Mailbox -> 跨链传输 -> 目标链 Mailbox -> 合约。
+            
+
+| Chain  链 | Chain ID  链 ID | Hyperlane Mailbox  Hyperlane 信箱 | RPC |
+| --- | --- | --- | --- |
+| Ethereum | 1 | 0xc005dc82818d67AF737725bD4bf75435d065D239 | Chainlist |
+| BSC | 56 | 0x2971b9Aec44bE4eb673DF1B88cDB57b96eefe8a4 | Chainlist |
+| Avalanche | 43114 | 0xFf06aFcaABaDDd1fb08371f9ccA15D73D51FeBD6 | Chainlist |
+| Base | 8453 | 0xeA87ae93Fa0019a82A727bfd3eBd1cFCa8f64f1D | Chainlist |
+| Sonic | 146 | 0x3a464f746D23Ab22155710f44dB16dcA53e0775E | Chainlist |
+| Reactive | 1597 | 0x3a464f746D23Ab22155710f44dB16dcA53e0775E | https://mainnet-rpc.rnk.dev/ |
+
+在使用Hyperlane的时候，Reactive Contract (RC) 依然在 **ReactVM** 里运行，它依然通过 `subscribe` 监听事件，依然通过逻辑判断触发动作。但是回调函数不再调用 `emit_callback`（发送给 Proxy），而是通过特定的 Hyperlane 指令发送给目标链的 **Mailbox**。
+
+# Reactive Contract
+
+## 双重环境
+
+当执行部署命令后，同样的字节码会同时出现在两个地方：
+
+**Reactive Network (RN)**
+
+-   **性质：** 这是一个**公共的、可交互的**区块链（类似于以太坊）。  
+    
+-   **谁在使用：** 你（EOA 钱包）、其他用户、或者前端网页。  
+    
+-   **它的作用：**
+    
+    -   充值：给合约充入 REACT 代币作为后续运行的 Gas。
+        
+        -   **配置：** 调用合约函数来设置“我要监听哪条链”、“监听哪个地址”。  
+            
+        -   **状态查询：** 存储一些非自动化的元数据。
+            
+
+**ReactVM (RM)**
+
+-   **性质：** 这是一个**私有的、隔离的**执行环境。  
+    
+-   **谁在使用：** 只有 Reactive 的底层节点。  
+    
+-   **它的作用：**
+    
+    -   **监听：** 它像一个雷达，不间断地扫描你订阅的那些链（如以太坊、Base）的日志。
+        
+        -   **执行逻辑：** 一旦扫到匹配的日志，它立刻在内部运行你的 Solidity 逻辑。  
+            
+        -   **下达指令：** 根据逻辑结果，决定是否发送跨链回调。
+            
+
+## 状态隔离
+
+虽然在两个环境中共用一套代码长得一样，但变量的状态不共享。因为 RVM 的运行速度极快，如果它每次处理事件都要去 RNK 链上同步一下最新的状态，那跨链自动化的延迟就会变得不可接受。
+
+因此使用运行时检查的 `vm()` 函数让代码确定自己存在的环境，配合函数标志，做到在不同环境运行的效果。
+
+## 验证
+
+Etherscan 是目前大多数人最熟悉的验证方式。它是一个由私有公司（Etherscan 团队）运营的中心化服务。
+
+-   **工作模式：** 你把代码上传到 Etherscan 的服务器，他们在自己的后端进行编译，如果编译出来的字节码和链上的一样，就给声明验证了合约。  
+    
+-   **优点：** 普及率极高，用户体验好。大多数区块链浏览器（如 Polygonscan, Basescan）都集成了这套系统。  
+    
+-   **缺点：**
+    
+    -   **中心化：** 如果 Etherscan 哪天倒闭了或服务器宕机，这些验证过的源代码可能会丢失。
+        
+        -   **验证门槛：** 它对“元数据”的要求没那么严，只要逻辑对得上，即便编译器的小设置有点出入，通常也能通过。
+            
+
+Reactive使用的是Sourcify 验证，其是一项更极客、更去中心化的开源服务。它不仅仅关注“代码长得像”，它追求的是“完全匹配”。即源代码、编译器版本、设置、甚至连代码里的注释和空格都必须和部署时一模一样。
+
+-   **工作模式：** 它不仅验证代码，还强制要求验证 **Metadata (JSON 文件)**。验证后的源码和元数据会被存储在 **IPFS**（去中心化存储网络）上。  
+    
+-   **优点：**
+    
+    -   **永不丢失：** 数据在 IPFS 上，谁也删不掉。
+        
+        -   **高确定性：** 它是目前最严谨的验证标准。
+            
+
+这种选择的原因是Reactive 的合约运行在 **ReactVM (RM)** 这种全自动引擎里。这种环境下，“逻辑的微小差异”可能导致自动化脚本产生不可预知的后果。
+
+1.  **自动化审计：** RVM 的节点需要确切知道每一行代码是如何工作的。Sourcify 提供的 IPFS 存储让节点可以随时调取源码进行校验。
+    
+2.  **透明度：** 因为 RVM 是“幕后”运行的，只有通过 Sourcify 这种“连空格都不能错”的验证方式，才能给社区提供最高级别的信任。
+    
+3.  **开发者友好：** 现在的开发工具（如 Foundry）已经深度集成了 Sourcify，一行命令就能搞定，比去网页上粘贴代码要专业得多。
+    
+
+### 部署后手动验证
+
+当已经成功部署了合约（拿到了地址），但忘记在部署时验证，或者由于网络抖动导致自动验证失败时，使用此命令。
+
+```bash
+forge verify-contract \
+--verifier sourcify \
+--chain-id $CHAIN_ID \
+$CONTRACT_ADDR $CONTRACT_NAME
+```
+
+`--verifier sourcify`：**必须明确指定**。默认情况下 Foundry 可能会尝试寻找 Etherscan，但在 Reactive 上我们需要 Sourcify。
+
+需要替换的是：
+
+-   `$CHAIN_ID` → `1597` （Reactive 主网）或 `5318007` （Lasna 测试网）
+    
+-   `$CONTRACT_ADDR` → 已部署的合约地址
+    
+-   `$CONTRACT_NAME` → 合约名称（例如 `MyContract` ），格式通常是 `src/FileName.sol:ClassName`。
+    
+
+### 部署时自动验证
+
+```bash
+forge create \
+  --rpc-url $REACTIVE_RPC_URL \
+  --private-key $REACTIVE_PRIVATE_KEY \
+  --value 0.01ether \   # 关键点：给合约“打钱”
+  --verify \
+  --verifier sourcify \
+  src/MyContract.sol:MyContract \
+  --constructor-args $ARG_1 $ARG_2
+```
+
+-   `--value 0.01ether`**：** 在 Reactive 开发中，这步非常重要。Reactive 合约（RC）是自动运行的，它需要消耗 REACT 代币来支付订阅费和跨链回调费。部署时预存一点钱，能保证合约部署后立即就能“转起来”。  
+    
+-   `--constructor-args`**：** 如果你的构造函数需要参数（比如指定监听哪个地址），这些参数要依次排在后面。
+    
+
+验证后可以在 Reactscan 进行网页验证。
+
+# ReactVM
+
+## My ReactVM
+
+在 Reactive Network 中，ReactVM 并不是每部署一个合约就生成一个全新的，它的划分逻辑是**基于部署者（Deployer）的钱包地址（EOA）**。
+
+如果你用地址 `0x123...` 部署了合约 A 和合约 B，这两个合约会运行在**同一个 ReactVM 实例**中。因为它们在同一个 RVM 房间里，合约 A 可以像调用普通以太坊合约一样，直接读取合约 B 的公共变量，或者直接通过内部调用（Internal Call）交互。这种共享意味着如果你不小心，合约 A 的逻辑可能会意外修改合约 B 在 RVM 里的状态。
+
+虽然支持共享，但官方文档建议**跨 ReactVM 分离合约**（即使用不同的 EOA 部署）。
+
+1.  **性能解耦：** 如果多个合约在同一个 RVM，它们必须竞争同一个执行序列。分开部署可以让它们在物理上实现真正的并行处理。
+    
+2.  **安全隔离：** 防止一个合约的漏洞或逻辑错误影响到同账户下的其他自动化逻辑。
+    
+
+### Calling `subscribe()`
+
+ReactVM 是一个**执行层**（数据消费者），它只负责处理已经送上门的日志。RVM 环境被设计为只读外部数据并输出结果。因此我们假设一个场景，想在代码中实现：“如果监听到 A 事件，就自动订阅 B 链的事件”。
+
+这里需要注意的是在 ReactVM 内部，`subscribe()` 和 `unsubscribe()` 是无效的。因此必须通过你的钱包，在 **Reactive Network (RNK)** 链上直接调用合约的 `subscribe()` 函数。
+
+亦或者，我们可以使用 callback。
+
+-   合约 A 处理完逻辑，向目标链发一个回调。  
+    
+-   如果需要，这个回调可以触发目标链上的某个事件，再由合约 B 在 RNK 链上重新捕获。
+    
+
+## 执行层状态
+
+### 状态独立性
+
+ReactVM（执行层）并不是一个巨大的共享数据库，而是碎片化的：
+
+-   **私有性：** 每个 ReactVM 维护自己的状态（State）。这意味着合约 A 在 RVM 里的变量修改，默认情况下不会影响到合约 B，除非它们是由同一个钱包部署的。  
+    
+-   **整体性：** 整个 Reactive Network 的全局状态，实际上是成千上万个独立运行的 ReactVM 状态的**总和**。
+    
+
+### 抗分叉机制
+
+由于 RVM 监听的是外部链（如以太坊），而外部链可能会发生**回滚**，ReactVM 必须应对这种情况：
+
+-   **区块关联：** RVM 的每一个区块都“背着”源链的 Block Number 和 Hash。  
+    
+-   **自动回溯：** 如果以太坊主网发生了 2 个区块的回滚，Reactive Network 能够识别到哈希的变化，并自动将对应的 ReactVM 状态也回滚到正确的时间点。这保证了自动化的**确定性**。
+    
+
+## 生命周期
+
+Pasted image 20260315163329.png
+
+一切的起点是左侧的 **Origin Chain**（如以太坊）。
+
+1.  **New Block (新区块)：** 源链产生一个新区块。
+    
+2.  **Catch Block (捕获区块)：** Reactive Network 的节点第一时间“捕获”这个区块。
+    
+
+然后中间第一个大框的内容，可以理解为“数据预处理”。
+
+-   **Iterate Transactions (遍历交易)：** 扫描区块里的每一笔交易。  
+    
+-   **Extract Transaction Logs (提取日志)：** Reactive 只关心事件日志（Logs/Events），而不是交易本身。  
+    
+-   **Find transactions at System SC (查找系统合约关联)：** 检查这些日志是否匹配任何已有的**订阅（Subscriptions）**。  
+    
+-   **Prepare & Publish to RVM (准备并发布给 RVM)：** 一旦匹配成功，系统将数据打包，送往对应的 **ReactVM**。
+    
+
+中间第二个大框是RVM环境。
+
+-   **ReactVM Exists? (RVM 是否存在)：** 如果是第一次运行或被释放了，执行 **Setup ReactVM**（初始化环境）。
+    
+    -   如果已在运行，直接进入 **Run ReactVM**。
+        
+-   **Execute Transaction (执行交易)：** 这里运行的是发布者写的 **Solidity 逻辑**。它读取日志内容，根据设定的 `if/else` 条件进行计算。  
+    
+-   **Stop ReactVM (停止运行)：** 完成逻辑处理后，释放执行资源。
+    
+
+执行完逻辑后，数据流向两个方向：
+
+1.  **Transaction Receipt (交易收据)：** RVM 将执行结果反馈给 Reactive Network，用于状态更新（RVM State）。
+    
+2.  **Prepare for Destination Chain (准备目标链交易)：** 如果你的逻辑触发了 `emit_callback`，Reactive Network 会封装一个发送往目标链的交易。
+    
+
+最后一步发生在右侧：
+
+-   **Transaction at Mem. Pool (内存池中的交易)：** 最终生成的交易被推送到目标链（如 Arbitrum 或 Base）的内存池，等待打包执行。此时，**Callback Proxy** 就会发挥作用，验证并完成最终的合约调用。
+    
+
+# Economy
+
+## RVM 交易
+
+### 异步扣费
+
+**ReactVM (RVM) 的执行和扣费是异步的。** 在以太坊上，你没钱发不出交易；但在 RVM 里，它是先帮你干活，然后再找你结账。这也是 Reactive Network 与传统 EVM 链最大的财务区别：
+
+-   **无实时气价：** 当 RVM 监听到事件并开始跑你的逻辑时，它并不携带 `gas price`。  
+    
+-   **延后扣费：** 费用是在执行完成后的后续区块（通常是下一个）中，根据该区块的 `BaseFee` 追溯计算的。  
+    
+-   **黑盒审计：** 因为扣费是在区块层面汇总的，你在 Reactscan 浏览器上只能看到合约总共欠了多少钱，而很难查到某一次具体的 RVM 执行到底花了多少钱。
+    
+
+**计算公式：**  
+fee = BaseFee \\cdot GasUsed
+
+-   **Max Gas Limit:** 单次执行上限是 **900,000** 单位。如果你的逻辑太复杂（比如死循环），超过这个数就会强行停止。
+    
+
+### 合约状态
+
+既然是“先干活后结账”，就必然存在“欠债”的情况。
+
+-   **Active (活跃)：** 合约账户里有足够的 REACT，或者欠款在可控范围内，机器人正常工作。  
+    
+-   **Inactive (失效)：** 这是一个危险信号。这意味着你的合约**欠费了**。此时，RVM 会停止处理该合约的所有订阅事件。  
+    
+-   **恢复方法：** 必须结算欠款，状态才会切回 `active`。
+    
+
+### 付费
+
+可以把 Reactive 合约想象成一个预付费手机号。
+
+方案 A：直接充值 + 手动结账
+
+1.  **转账：** 使用 `cast send` 直接往合约地址转入 REACT。
+    
+2.  **平账：** 调用合约的 `coverDebt()` 函数。这步操作会告诉系统已经有费用了，请求系统结清欠款。
+    
+
+方案 B：系统合约代扣 (推荐)
+
+通过 **System Contract**（地址：`0x...fffFfF`）调用 `depositTo()`。
+
+-   **优点：** 这是一个“一键式”操作。系统收到钱后，会**自动**触发平账逻辑，把该合约的欠款结清。
+    
+
+这里需要注意的是这些都是RVM环境里的扣费，而不是RN上的，两者环境不同，结账方式也有很大差别：
+
+-   **Reactive Network (RNK) 交易：** 遵循**标准 EVM 模型**。你部署合约、修改配置时，就像在以太坊上一样，发送交易时就要付 Gas。  
+    
+-   **ReactVM (RVM) 交易：** 遵循**后结算模型**。它是响应式的，由事件触发，费用自动计入债务。
+    
+
+## 跨链回调（Callback）
+
+### 定价
+
+跨链操作涉及两个网络的资源，因此费用不是简单的 Gas 消耗。公式如下：
+
+p\_{callback} = p\_{base} \\cdot C \\cdot (g\_{callback} + K)
+
+-   **p\_{base} (基础气价)：** 当前区块的 Gas 价格。  
+    
+-   **C (网络系数)：** 这是一个调节杠杆。由于目标链（如以太坊主网）的 Gas 成本可能远高于 Reactive 网络，这个系数确保收取的 REACT 代币足以兑换成目标链的 Gas。  
+    
+-   **g\_{callback} (回调 Gas 消耗)：** 你的代码在目标链上实际跑了多少路。  
+    
+-   **K (固定附加费)：** 协议运行所需的固定开销（如节点审计、跨链消息头处理）。
+    
+
+**重要门槛：** 每次回调**最低必须申请 100,000 Gas**。如果你的设置低于这个数，Reactive 网络会直接**忽略**你的请求，因为它认为这连最基础的安全审计都跑不完。
+
+### 支付模型
+
+回调的支付逻辑和 RVM 是一样的：**先执行，后结算。**
+
+-   **欠债 (Debt)：** 回调完成后，产生的费用会记在合约的账上。  
+    
+-   **黑名单 (Blocklist)：** 如果合约账户余额不足以抵扣这笔费用，合约会被标记为“欠费”，并立即被列入黑名单。
+    
+-   一旦进入黑名单，合约的 RVM 逻辑会停摆，也不会再发出任何新的回调，直到你把账补齐。
+    
+
+### 付费
+
+如果你没有写自动支付逻辑，或者合约已经进入黑名单，你需要执行这两步：
+
+-   **充值：**
+    
+    ```bash
+    cast send $CALLBACK_ADDR --value 0.1ether --rpc-url $DEST_RPC --private-key $KEY
+    ```
+    
+-   **平账：**
+    
+    ```bash
+    cast send $CALLBACK_ADDR "coverDebt()" --rpc-url $DEST_RPC --private-key $KEY
+    ```
+    
+
+其次也可以使用系统代理一键充值：
+
+这相当于“直接往信用账户存钱”，存入的同时会自动平掉欠款：
+
+```bash
+cast send $CALLBACK_PROXY_ADDR "depositTo(address)" $CALLBACK_ADDR --value 0.1ether --rpc-url $DEST_RPC
+```
+
+### 自动化结算
+
+手动调用 `coverDebt()` 既麻烦又容易出错。官方提供了一套**自动支付**模板。通过继承 `AbstractPayer`，你的合约可以在产生债务的瞬间“自动划款”：
+
+```solidity
+// 引入 Reactive 官方库
+import "./abstracts/AbstractPayer.sol";
+
+// 你的目标链业务合约，继承 AbstractPayer
+contract MyDestinationContract is AbstractPayer {
+    
+    // 构造函数需要传入 Callback Proxy 地址
+    constructor(address _callbackProxy) AbstractPayer(_callbackProxy) {}
+
+    // 这是回调的核心函数
+    function onReactiveCall(bytes32 rvmId, bytes calldata payload) external {
+        // 1. 验证调用者必须是官方代理（AbstractPayer 已包含部分校验逻辑）
+        require(msg.sender == callback_proxy, "Only proxy allowed");
+
+        // 2. 执行你的业务逻辑
+        // ... 比如：根据指令给用户发奖金
+    }
+
+    // 关键：实现自动支付逻辑
+    // 当回调执行完产生债务时，Proxy 会尝试调用这个 pay 函数
+    function pay() external override payable {
+        // 校验：只有官方 Proxy 才能扣钱
+        require(msg.sender == callback_proxy, "Unauthorized payer");
+        
+        // AbstractPayer 内部通常已经写好了：
+        // 检查余额 -> 支付债务 -> 更新状态
+        _pay(); 
+    }
+}
+```
+
+## 财务查询
+
+### 目标链回调合约财务查询 (Callback Contract)
+
+在目标链（如 Base, Arbitrum 等）上，你需要确保你的业务合约有足够的资金来支付跨链回调产生的费用。
+
+余额 (Balance)
+
+指该合约地址在目标链上持有的**原生代币**（如 ETH）数量。
+
+```bash
+# 查询合约在目标链上的原生代币余额
+cast balance $CONTRACT_ADDR --rpc-url $DESTINATION_RPC
+```
+
+债务 (Debt)
+
+指该合约通过 **Callback Proxy** 执行回调后产生的尚未结清的费用。
+
+```bash
+# 查询回调代理记录的该合约欠款（16进制转10进制）
+cast call $CALLBACK_PROXY_ADDR "debts(address)" $CONTRACT_ADDR \
+  --rpc-url $DESTINATION_RPC | cast to-dec
+```
+
+准备金 (Reserves)
+
+指你通过 `depositTo()` 预存在 **Callback Proxy** 内部、专门用于抵扣后续回调费用的资金。
+
+```bash
+# 查询你在回调代理中预存的储备金
+cast call $CALLBACK_PROXY_ADDR "reserves(address)" $CONTRACT_ADDR \
+  --rpc-url $DESTINATION_RPC | cast to-dec
+```
+
+### 源链响应式合约财务查询(Reactive Contract)
+
+在 Reactive Network 本身，你需要监控合约的 **REACT** 代币情况，以保证 ReactVM 的逻辑处理不会中断。
+
+余额 (Balance)
+
+指该合约在 Reactive 链上的 **REACT** 代币余额。
+
+```bash
+# 查询合约在 Reactive Network 的 REACT 余额
+cast balance $CONTRACT_ADDR --rpc-url $REACTIVE_RPC
+```
+
+债务 (Debt)
+
+由 **System Contract** 记录的、该合约在 RVM 中执行逻辑所消耗的费用。
+
+```bash
+# 查询系统合约记录的 RVM 执行欠款
+cast call $SYSTEM_CONTRACT_ADDR "debts(address)" $CONTRACT_ADDR \
+  --rpc-url $REACTIVE_RPC | cast to-dec
+```
+
+准备金 (Reserves)
+
+预存在系统合约中、用于自动抵扣 RVM 费用的资金。
+
+```bash
+# 查询你在系统合约中预存的准备金
+cast call $SYSTEM_CONTRACT_ADDR "reserves(address)" $CONTRACT_ADDR \
+  --rpc-url $REACTIVE_RPC | cast to-dec
+```
+
+### 区分
+
+这里需要区分balance和reserves的原因很重要：
+
+1.  权限问题
+    
+
+在以太坊或 Reactive Network 这种 EVM 兼容链上，**原生代币（REACT 或 ETH）没有** `approve` **机制**。
+
+-   **你的 Balance 是你的私人领域：** 如果资金只是躺在你的合约地址（Balance）里，除了你的合约代码主动调用 `call` 或 `transfer` 发送出去，任何外部合约（包括系统合约）都**无权**强行把这笔钱从你账户里划走。  
+    
+-   **安全防线：** 如果系统合约能直接扣你 Balance 里的钱，那就意味着系统合约拥有全网所有资产的“万能钥匙”。为了去中心化的安全，系统被设计成只能动用你主动授权（即转账过去）的那部分钱。
+    
+
+2.  性能问题
+    
+
+RN 每天要处理海量的事件流。当它决定是否运行你的逻辑时，它必须在几毫秒内知道：“这家伙有钱付账吗？”
+
+-   **查余额太慢：** 如果系统每次都要去查几千个不同合约地址的 `balance`，这涉及到大量的磁盘 I/O 操作（访问账户状态树），速度非常慢。  
+    
+-   **查“内部账本”极快：** 当你把钱转到系统合约（Reserves）里时，系统合约只会在它自己的内部维护一张像 `mapping(address => uint256) public reserves` 这样的简单表格。  
+    
+-   **逻辑：** RN 只需扫一眼这张表就能判断你的状态（Active/Inactive），而不需要跨合约去查你的私人余额。
+    
+
+3.  结算逻辑
+    
+
+由于 Reactive 是“先执行、后结算”的，系统合约需要扮演一个“押金中心”的角色。
+
+1.  **锁定准备金：** 当你把钱存入系统合约，这部分钱就变成了**准备金（Reserves）**。
+    
+2.  **原子扣款：** RVM 执行完产生债务（Debt）后，系统可以直接在内部账本上执行简单的减法：  
+    NewReserves = OldReserves - Debt
+    
+3.  **如果扣 Balance：** 万一 RN 刚干完活准备扣你 Balance，结果你正好在同一毫秒把 Balance 里的钱全部转走了，那系统就白干活了。
+<!-- DAILY_CHECKIN_2026-03-15_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 # **R1 - Reactive Basic(WIP)**
 
 # Origins & Destinations
@@ -177,6 +804,7 @@ Reactive的测试网是**Reactive Lasna**，它自己也有 Callback Proxy，意
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 # **L2.2 - 部署睿应式合约**
 
@@ -514,6 +1142,7 @@ return (sync.reserve0 * coefficient) / sync.reserve1 <= threshold;
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
 
+
 # **L2.1 - Uniswap V2**
 
 # 流动性池
@@ -815,6 +1444,7 @@ event Sync(uint112 reserve0, uint112 reserve1);
 
 
 
+
 # **L1.5 - 预言机**
 
 **blog:**[**https://beautifulremi.dpdns.org/**](https://beautifulremi.dpdns.org/)
@@ -994,6 +1624,7 @@ contract ChainlinkPriceReactor is IReactive {
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -1729,6 +2360,7 @@ require(evm_id == owner, 'Wrong EVM ID');
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
