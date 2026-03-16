@@ -15,13 +15,20 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+今天学习了RC的Gas和费用模型。
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 整理了一下学习笔记，已上传个人博客。
 <!-- DAILY_CHECKIN_2026-03-15_END -->
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 完成官方文档模块一的学习。
@@ -32,11 +39,13 @@ Let's vibe Reactive dApp！
 
 
 
+
 完成Reactive 挑战「第二关」！
 <!-- DAILY_CHECKIN_2026-03-12_END -->
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -51,11 +60,13 @@ Let's vibe Reactive dApp！
 
 
 
+
 看了一些材料以及官方文档。
 <!-- DAILY_CHECKIN_2026-03-10_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
