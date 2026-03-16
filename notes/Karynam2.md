@@ -77,8 +77,9 @@ Let’s vibe Reactive dApp
 
 **这就像是一个“跨链自动触发器”，让你不用自己盯着电脑点鼠标，一切都自动化了。**
 
-## Lesson3  
-把它想象成\*\*“后台操作间”\*\*，就像奶茶店或者餐厅那种模式：
+## Lesson3
+
+把它想象成“后台操作间”，就像奶茶店或者餐厅那种模式：
 
 ### 1\. 前台（Reactive Network）：负责“接单”和“外联”
 
@@ -120,6 +121,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 
@@ -202,6 +204,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -355,6 +358,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 
 
+
 # 3月13号  
 目标🎯跑完链路
 
@@ -376,6 +380,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 
 
+
 # 3.12植树节
 
 1.再来把Reactive contracts弄懂
@@ -383,6 +388,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -718,6 +724,7 @@ Krystal 姐，你担心的“看错”确实是开发者最容易踩的坑，但
 
 
 
+
 # 3.9—3.10两场会议总结
 
 1.  🧘集中精力看着自己脚下的路走，不要分心左顾右盼（不是让你闭门造车/与世隔绝的意思，重点是强调集中精力在解决问题是，精力是一种有限且珍贵的资源，每天是定量供应的，不要浪费它）保持对外界的信息的觉知度，看事情尽量抓本质（是什么东西What，什么原因Why, 具体有什么用Value，怎么样我能用上How，碰上具体什么问题？然后厚着脸皮去问，不管问题是否能完满解决，至少训练了自己的脸皮（褒义））
@@ -732,6 +739,7 @@ Krystal 姐，你担心的“看错”确实是开发者最容易踩的坑，但
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
