@@ -15,19 +15,27 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+今日听了ivan讲解了上周的作业
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 今日大致看了一下vibecoding相关的教程
 <!-- DAILY_CHECKIN_2026-03-15_END -->
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
+
 今日看了ivan的workshop，继续学习文档
 <!-- DAILY_CHECKIN_2026-03-12_END -->
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 打卡一下
@@ -38,11 +46,13 @@ Let’s vibe Reactive dApp
 
 
 
+
 今日打卡 阅读了技术文档
 <!-- DAILY_CHECKIN_2026-03-10_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
