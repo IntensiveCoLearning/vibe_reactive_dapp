@@ -15,8 +15,14 @@ Reactive 探索者
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+今天看一下 [https://dev.reactive.network/hyperlane](https://dev.reactive.network/hyperlane)
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 # **Lesson 6: How Uniswap Works / Understanding Uniswap V2 Pools and Smart Contracts**
 
 X \* y = k
@@ -45,6 +51,7 @@ X \* y = k
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
 
+
 # **Lesson 5: How Oracles Work**
 
 **尝试使用漫画方式来理解**
@@ -54,6 +61,7 @@ X \* y = k
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 # **Lesson 4: How Subscriptions Work**
@@ -181,6 +189,7 @@ Unsubscribing is an expensive operation due to the necessity of searching and re
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -715,6 +724,7 @@ function react(LogRecord calldata log) external vmOnly {
 
 
 
+
 # **Lesson 2: How Events and Callbacks Work**
 
 本课重点讲解事件和回调在智能合约中的作用。通过学习如何发出、处理和监听事件，开发者可以创建能够实时响应区块链变化的动态去中心化应用（dApp）。我们还将探讨响应式合约如何使用 `react()` 方法处理事件，并通过回调发起跨链交易，从而增强响应式网络的功能。
@@ -804,6 +814,7 @@ For security and authorization purposes, the Reactive Network automatically repl
 
 
 
+
 # 学习计划
 
 1.  学习：[https://dev.reactive.network/education/module-1/reactive-contracts](https://dev.reactive.network/education/module-1/reactive-contracts)
@@ -869,6 +880,7 @@ RC 可以监控来自不同智能合约、兼容 EVM 的区块链的数据，它
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
