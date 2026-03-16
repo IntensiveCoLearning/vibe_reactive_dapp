@@ -15,8 +15,60 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+Uniswap V2 集成与 Reactive Stop Order 实战
+
+-   今日重点（Module 2 延续）：
+    
+    -   深入 Uniswap V2 池机制 + Reactive 订阅 Sync 事件，实现止损单（Stop Order）原型。
+        
+    -   目标：从订阅 → react() 逻辑 → Callback 执行完整闭环。
+        
+-   Uniswap V2 关键回顾：
+    
+    -   Sync 事件：event Sync(uint112 reserve0, uint112 reserve1) — 储备更新后 emit，用于实时价格计算。
+        
+    -   价格计算：price = reserve1 / reserve0（或反向，根据 token 顺序）。
+        
+    -   Swap 函数：swap(uint amount0Out, uint amount1Out, address to, bytes data) — Callback 中调用实现自动卖出。
+        
+-   Reactive Stop Order 示例流程（GitHub demo：uniswap-v2-stop-order）：
+    
+    1.  订阅：构造函数中静态订阅 Uniswap Pair Sync 事件。
+        
+        -   topics\[0\] = keccak256("Sync(uint112,uint112)")
+            
+        -   originChainId = 1（Ethereum）或其他。
+            
+    2.  Trigger & react()：事件触发 → ReactVM 调用 react(LogRecord log)。
+        
+        -   解码：uint112 reserve0 = abi.decode([log.data](http://log.data), (uint112, uint112));
+            
+        -   计算当前价格 vs 用户设置阈值（stopPrice）。
+            
+    3.  Callback：价格 ≤ stopPrice → emit Callback 到执行合约。
+        
+        -   payload：abi.encodeWithSignature("executeStopLoss()", amount, recipient 等)。
+            
+        -   执行：swap token → 转出 ETH/稳定币 → emit Stop 事件确认。
+            
+    4.  可选：订阅 Stop 事件结束循环。
+        
+-   开发要点：
+    
+    -   使用 AbstractReactive 基类（或类似）。
+        
+    -   Callback gas limit ≥ 100k，避免失败。
+        
+    -   REACT 余额预存支付 Callback fee。
+        
+    -   测试：Lasna 测试网 + mock Uniswap Pair 。
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 Uniswap V2 池与合约理解
 
 -   学习目标：
@@ -60,6 +112,7 @@ Uniswap V2 池与合约理解
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 How Uniswap Works（Uniswap V2 池与合约理解）
 
@@ -115,6 +168,7 @@ How Uniswap Works（Uniswap V2 池与合约理解）
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 How Oracles Work
@@ -179,6 +233,7 @@ How Oracles Work
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -324,6 +379,7 @@ How Subscriptions Work（订阅机制详解）
 
 
 
+
 **ReactVM and Reactive Network As a Dual-State Environment**
 
 **1\. 学习目标（Lesson Objectives）**
@@ -420,6 +476,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 
 
+
 **Events and Callbacks 工作原理**
 
 **1\. 学习目标（Lesson Objectives**）
@@ -494,6 +551,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
