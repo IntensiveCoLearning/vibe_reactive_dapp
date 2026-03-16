@@ -15,13 +15,30 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+**1.AI Contract → Reactive Execution**
+
+```
+Upload contract
+AI parse clauses
+Generate reactive rules
+Monitor real world events
+Trigger contract logic
+```
+
+2**.Freelancer Smart Contract**
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 休息休息休息
 <!-- DAILY_CHECKIN_2026-03-15_END -->
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 今天
 
@@ -32,6 +49,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 The meeting discussed how to use AI to build reactive contracts, including workflow, tips, and application examples, as follows:
@@ -99,6 +117,7 @@ The meeting discussed how to use AI to build reactive contracts, including workf
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -278,6 +297,7 @@ contract DestinationContract {
 
 
 
+
 ```
 
 Origin Contract (链A)
@@ -332,6 +352,7 @@ Trigger(sender, amount)
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
