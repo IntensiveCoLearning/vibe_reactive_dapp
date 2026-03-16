@@ -15,8 +15,16 @@ timezone: UTC+8
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+Day-8
+
+休一天，明日补上进度
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 Day-6
 
 今日完成了“构建一个跨链事件与回调合约”挑战
@@ -28,6 +36,7 @@ Day-6
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 Day-5
 
@@ -55,6 +64,7 @@ Day-5
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
 
+
 Day-4
 
 今天出差请假一天
@@ -62,6 +72,7 @@ Day-4
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -89,6 +100,7 @@ Day-3
 
 
 
+
 Day-2  
   
 基于今天的学习，我想用生活例子来理解 Reactive 与传统 EVM 的区别：
@@ -102,6 +114,7 @@ Day-2
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
