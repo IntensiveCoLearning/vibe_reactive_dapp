@@ -17,11 +17,56 @@ Let’s vibe Reactive dApp
 <!-- Content_START -->
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
-1
+源链事件 -> 订阅捕获 -> 条件判断 -> 发起目标链回调
+
+核心知识点：
+
+\- 源链合约可以通过 event 把链上行为暴露为日志，供外部系统监听。
+
+\- receive() 可以在合约接收 ETH 时自动执行逻辑。
+
+\- 事件里的 indexed 参数会进入 topic，后续可用于高效过滤和订阅。
+
+\- 一个合约可以只负责“产生事件”，不承担复杂业务处理。
+
+\- Reactive 合约的关键不是主动调用，而是“订阅特定日志后被动响应”。
+
+\- 构造函数中可通过系统合约注册订阅条件：链 ID、合约地址、topic\_0 等。
+
+\- topic\_0 通常对应事件签名哈希，用来唯一标识某类事件。
+
+\- react(LogRecord log) 表示接收到匹配日志后的响应入口。
+
+\- 可以直接读取日志中的 topic\_1/topic\_2/topic\_3 做条件判断。
+
+\- 这里利用 log.topic\_3 判断转账金额是否达到阈值。
+
+\- Reactive 合约本身不直接完成目标链调用，而是通过发出 Callback(...) 事件交给底层系统执行。
+
+\- 回调负载通常通过 abi.encodeWithSignature(...) 编码。
+
+\- 目标链回调合约需要做调用来源校验，避免任意地址伪造调用。
+
+\- authorizedSenderOnly 用来限制只有授权回调代理可调用。
+
+\- rvmIdOnly(sender) 用来校验调用是否来自合法的 Reactive 执行上下文。
+
+\- 跨链流程里通常有三类角色：
+
+\- 源链合约：产生日志
+
+\- Reactive 合约：监听并决策
+
+\- 目标链合约：接收回调并执行业务
+
+\- 部署时通常需要分别配置源链、目标链、Reactive Network 的 RPC 和私钥。
+
+\- 这类架构适合做“事件触发型自动执行”，例如条件触发、告警响应、自动回调等。
 <!-- DAILY_CHECKIN_2026-03-16_END -->
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 # Implementing Basic Reactive Functions 学习笔记
 
@@ -310,6 +355,7 @@ Reactive Contract运行逻辑：
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 # Uniswap V2 学习笔记
@@ -682,6 +728,7 @@ Sync
 
 
 
+
 # Oracles 学习笔记
 
 ## 1\. Oracle 的作用
@@ -959,6 +1006,7 @@ Reactive Contract 监听事件
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -1345,6 +1393,7 @@ Reactive Contracts 订阅机制核心：
 
 
 
+
 # Reactive Contracts (RCs) 架构与执行机制
 
 ## 一、 双重执行环境：一个合约，两个状态
@@ -1458,6 +1507,7 @@ Reactive Contracts 订阅机制核心：
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -1736,6 +1786,7 @@ Reactive Network 会自动：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
