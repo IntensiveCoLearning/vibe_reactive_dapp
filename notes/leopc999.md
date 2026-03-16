@@ -15,8 +15,42 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+# 部署睿应式合约讲解
+
+1.  **部署准备**：
+    
+    -   **变量设置**：检查环境变量，包括回调合约地址和源地址。此前部署的基础示例合约的源地址被加入到环境变量中。
+        
+    -   **资金检查**：有足够资金用于部署睿应式合约（reactive contract）。
+        
+2.  **合约部署步骤**：
+    
+    -   **在以太坊网络上部署合约**：讲者运行命令将基础示例合约部署到 Ethereum Sepolia，得到源合约地址。
+        
+    -   **回调合约部署**：使用类似命令部署回调合约，并将其部署地址保存到环境变量。
+        
+    -   **部署睿应式合约**：使用 Foundry 工具，执行一条包含 RPC 地址、私钥、要部署的合约、初始以太金额和构造函数参数的命令来部署。
+        
+3.  **部署结果与验证**：
+    
+    -   **部署成功**：睿应式合约部署成功，但尚未通过验证。提供了查看合约的链接。
+        
+    -   **交易查看**：讲者向源地址发送了测试交易。在 Etherscan 上，可以查看到相关交易和事件（源合约的 received 事件、睿应式合约的 reaction 交易）。目标链的交易正在等待被打包，可在内部交易（internal transactions）中找到。
+        
+4.  **功能说明**：
+    
+    -   **反应机制**：源合约收到以太并触发 `received` 事件。睿应式合约检查交易中的以太数量，并调用回调合约的回调函数，后者再发出 `callback received` 事件。
+        
+5.  **总结与问答**：
+    
+    -   **总结**：讲者认为已解答如何部署睿应式合约的问题；在更复杂的配置中，构造函数参数可能会更多。
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 ## **🦄 Uniswap V2 Stop Order Demo：去中心化自动止损**
 
 这个 Demo 更具实战意义。它监听 Uniswap 价格，当价格跌破阈值时，自动卖出代币止损。
@@ -121,11 +155,13 @@ cast send $PAIR_ADDR 'swap(uint,uint,address,bytes calldata)' --rpc-url $SEPOLIA
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
 
+
 今天尝试进行第二关的 Uniswap 止损单的练习，在学习文档内容。
 <!-- DAILY_CHECKIN_2026-03-14_END -->
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 # 用 AI 构建睿应式合约
@@ -178,6 +214,7 @@ cast send $PAIR_ADDR 'swap(uint,uint,address,bytes calldata)' --rpc-url $SEPOLIA
 
 
 
+
 ### **实时监控问题解答**
 
 **监控原理**：市场波动与Reactive实时监控无关，其监控每条链的每个区块，并对合约订阅的事件做出反应。
@@ -205,6 +242,7 @@ cast send $PAIR_ADDR 'swap(uint,uint,address,bytes calldata)' --rpc-url $SEPOLIA
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -270,6 +308,7 @@ cast send $PAIR_ADDR 'swap(uint,uint,address,bytes calldata)' --rpc-url $SEPOLIA
 
 
 
+
 # **Basic Reactive Demo：理解“监听-反应”闭环**
 
 这个 Demo 是 Reactive 的 "Hello World"。流程很简单：在 Sepolia 上转账 -> Reactive 监听到 -> 自动通知 Sepolia 上的回调合约。
@@ -320,6 +359,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
