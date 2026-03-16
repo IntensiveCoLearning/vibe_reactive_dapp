@@ -362,7 +362,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [PaulCoinmanlabs](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/PaulCoinmanlabs.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |   | | | | | | |
 | [hhjthhjtcv-sudo](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/hhjthhjtcv-sudo.md) | ✅ | ✅ | ⭕️ | ⭕️ | ❌ | | | | | | | | | |
 | [zzz100868](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/zzz100868.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
-| [MarnieWu](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/MarnieWu.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕️ | ✅ |   | | | | | | |
+| [MarnieWu](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/MarnieWu.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕️ | ✅ | ✅ | | | | | | |
 | [SeafaringSoul](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/SeafaringSoul.md) | ✅ | ⭕️ | ⭕️ | ❌ | | | | | | | | | | |
 | [oiGho5t](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/oiGho5t.md) | ⭕️ | ✅ | ✅ | ⭕️ | ❌ | | | | | | | | | |
 | [surdress](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/surdress.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |   | | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
