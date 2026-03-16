@@ -15,8 +15,25 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+# ReactiveDApp学习第六天
+
+-   Reactive Contracts 很擅长响应链上事件，但如果要让合约感知链外信息，就必须依赖 Oracle。神谕机负责把价格、汇率、天气、比赛结果等链外数据带到区块链上，而 Reactive Contracts 则可以对这些由神谕机带来的事件自动作出反应。因此，这节课的重点是理解神谕机的作用、神谕机问题，以及如何把 Oracle 与 Reactive Contracts 结合起来。
+    
+-   Oracle Problem 的关键不只是把链外数据带到链上，还包括由谁提交数据、如何签名、以及如何保证数据可信。去中心化神谕机网络通常通过多节点或多签机制降低单点故障和恶意操控风险。神谕机的应用场景包括 DeFi、保险、竞猜等。而在代码层面，合约可以通过 Chainlink 提供的 `AggregatorV3Interface` 读取链上的价格喂价合约，从而获取最新价格数据。
+    
+-   Chainlink 示例说明普通智能合约可以读取链上的预言机价格数据，但这种方式本质上仍依赖函数被显式调用，无法天然实现对价格变化的实时响应。由于普通合约不能主动发起交易，系统通常还需要依赖 EOA、bot 或外部服务来触发执行，这正好凸显了 Reactive Contracts 在响应预言机事件方面的优势。
+    
+-   Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常积公式 `x * y = k` 决定。`swap()` 函数会在检查输出、计算输入、扣除手续费并验证常积不变量后，更新池子储备并发出 `Swap` 事件。而 `Sync` 事件则记录新的储备状态，因此这两个事件是后续 Reactive Contracts 监控 Uniswap V2 活动的重点。
+    
+
+Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常积公式 `x * y = k` 决定。`swap()` 函数会在检查输出、计算输入、扣除手续费并验证常积不变量后，更新池子储备并发出 `Swap` 事件。而 `Sync` 事件则记录新的储备状态，因此这两个事件是后续 Reactive Contracts 监控 Uniswap V2 活动的重点。
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 # Reactive DApp学习第5天
 
 -   什么是幂等性：同样的事情就算被触发多次，结果也不能乱。
@@ -34,6 +51,7 @@ Let’s vibe Reactive dApp
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
 
+
 # ReactiveDapp学习第四天
 
 -   ReactVM 这边就像“真正干活的机器人”：它一边盯价格，一边判断是否该止损；一旦该止损就立刻发 callback；等收到执行成功的回执后，再把订单状态标记为完成。
@@ -45,6 +63,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 # 学习Reactive 第三天
@@ -61,6 +80,7 @@ Let’s vibe Reactive dApp
 
 
 
+
 # Reactive Dapp 学习第二天
 
 直播学习:
@@ -72,6 +92,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
