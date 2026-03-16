@@ -15,8 +15,34 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+今天完成任务二。回滚了一次，总结下回滚的原因。
+
+查询发现要么是余额不足，要么是TK1TK2没有授权回调
+
+![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/daidaidawang/images/2026-03-16-1773672535755-image.png)
+
+查询后发现是TK2没授权回调
+
+![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/daidaidawang/images/2026-03-16-1773672620901-image.png)
+
+还有一点，一开始用的文档中给出的TK1，2，后面在向池子里面转代币时，发现为0。后面自己新创建TK。（因为代币需要用到创建者地址，感觉有一点麻烦，所以感觉自己创建更方便）
+
+Uniswap V2 止损订单触发回调的过程比较简单理解，在检测到低于原有税率时触发回调，这一过程也从而实现自动化处理，损失也可以小化一些。
+
+价格变化 → Pair Sync事件 → Reactive Network监听
+
+→ 汇率计算(0.988) → 低于阈值(1.0) → 触发回调
+
+→ 代理合约跨链消息 → 回调合约执行swap
+
+→ 用户代币变化 → Stop事件完成
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 # 抽象合约
 
 ## AbstractCallback
@@ -528,6 +554,7 @@ AbstractPausableReactive
 <!-- DAILY_CHECKIN_2026-03-14_START -->
 
 
+
 # 反应式合约
 
 ## **部署**
@@ -777,6 +804,7 @@ service.subscribe(...);
 
 
 
+
 花费了近一周的时间，今天完成了任务一。从学习部署合约，向地址转账，到最后回调成功。感觉收获很多，印象最深的是最后的回调一直在回滚问了AI了解到是`BasicDemoL1Callback` 构造函数接收了 `_callback_sender`。由于之前在Callback合约中开启了 `authorizedSenderOnly`，合约会执行： `require(msg.sender == _callback_sender)`
 
 如果之前传入的 `$env:DESTINATION_CALLBACK_PROXY_ADDR` **不等于** `0xc9f36411C9897e7F959D99ffca2a0Ba7ee0D7bDA`，那么合约就会 Revert，回调回滚
@@ -975,6 +1003,7 @@ cast call $CALLBACK_PROXY_ADDR "reserves(address)" $CONTRACT_ADDR --rpc-url $DES
 
 
 
+
 这几天主要学习了如何部署reactive合约，包括设置地址，转账等一系列操作，也对reactive合约的实现流程有了个大致了解
 
 **\[源链（如Sepolia）\] -> \[Reactive Network\] -> \[目标链（如Sepolia）\]**
@@ -1007,6 +1036,7 @@ cast call $CALLBACK_PROXY_ADDR "reserves(address)" $CONTRACT_ADDR --rpc-url $DES
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
