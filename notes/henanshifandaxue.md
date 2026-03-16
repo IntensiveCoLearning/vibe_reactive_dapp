@@ -15,8 +15,14 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+打卡
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 ### 理解 Reactive Contract（响应式契约）的组成结构
 
 Reactive Contract 是**响应式系统**（Reactive System）中定义服务间交互规则的核心规范，本质是 “可执行的接口契约”，结合了响应式编程的异步、非阻塞特性和契约测试（Contract Testing）的确定性，确保分布式服务间的交互可预测、可验证。
@@ -189,6 +195,7 @@ Reactive Contract 的核心组成可归纳为 3 个关键点：
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
+
 **学习目标：**
 
 -   理解睿应层（Reactive Network）与传统 EVM 的根本区别
@@ -330,11 +337,13 @@ Reactive Contract 的核心组成可归纳为 3 个关键点：
 
 
 
+
 没有学
 <!-- DAILY_CHECKIN_2026-03-10_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
