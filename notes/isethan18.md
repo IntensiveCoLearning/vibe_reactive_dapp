@@ -15,8 +15,20 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+前端：
+
+-   能连接钱包并切换到：Origin 链与 Lasna 链
+    
+-   做一个最小交互：能够触发 Origin 事件
+    
+-   能够展示 Reactive 三段链路的时间线（Origin- Reactive- Destination）
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 **挑战任务与经济模型复盘**
 
 **今日重点：** 完成 Notion 挑战，并理解“谁来付钱”。
@@ -39,6 +51,7 @@ Let’s vibe Reactive dApp
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
 
+
 **代码拆解 —— 以 Uniswap V2 Stop Order 为例**
 
 **今日重点：** 结合 GitHub 源码，看技术理论如何变成逻辑代码。
@@ -60,6 +73,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 2026.03.13
@@ -94,6 +108,7 @@ Let’s vibe Reactive dApp
 
 
 
+
 ## Day 3：挑战任务实战（终极目标）
 
 **核心点：按照 Notion 指引完成跨链自动化**
@@ -116,6 +131,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -167,6 +183,7 @@ bytes calldata data
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
