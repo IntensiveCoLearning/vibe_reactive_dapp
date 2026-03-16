@@ -15,8 +15,14 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+今日已学
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 \# Reactive 官方 Module 1 逐行注释代码笔记
 
 我直接给你\*\*官方教程原文代码 + 逐行中文注释 + 极简解释\*\*，完全对应你看的页面：
@@ -395,6 +401,7 @@ emit Event / call other contract
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
 
+
 1
 <!-- DAILY_CHECKIN_2026-03-14_END -->
 
@@ -402,11 +409,13 @@ emit Event / call other contract
 <!-- DAILY_CHECKIN_2026-03-13_START -->
 
 
+
 电脑今日坏了 今天主要还是学语法
 <!-- DAILY_CHECKIN_2026-03-13_END -->
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -589,6 +598,7 @@ return user;
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -838,6 +848,7 @@ require做校验
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
