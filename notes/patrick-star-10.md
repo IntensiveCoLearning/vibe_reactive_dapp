@@ -15,8 +15,233 @@ learning
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+# **今日学习总结：理解 Reactive 合约的双状态与执行流程**
+
+## **一、Reactive 架构中的三类合约**
+
+在 Reactive 系统中，一次完整的自动化流程通常涉及三类合约：
+
+**Event 合约（Source Chain）**
+
+-   部署在源链（如 Ethereum、BSC 等）。
+    
+-   负责 emit event，产生链上事件。
+    
+-   Reactive Network 会监听这些事件日志。
+    
+
+**Reactive 合约（ReactVM）**
+
+-   运行在 Reactive Network 的 **ReactVM 执行环境**中。
+    
+-   负责执行 react() 逻辑。
+    
+-   根据监听到的事件判断是否触发 callback()。
+    
+
+**Destination 合约（Destination Chain）**
+
+-   部署在目标链。
+    
+-   接收 Reactive Network 发送的交易。
+    
+-   执行 callback() 函数并修改链上状态。
+    
+
+整体流程：
+
+```
+Event (source chain)
+      ↓
+ReactVM 监听事件
+      ↓
+Reactive 合约执行 react()
+      ↓
+触发 callback 请求
+      ↓
+Reactive Network 发送交易
+      ↓
+Destination 合约执行 callback()
+      ↓
+链上状态改变
+```
+
+* * *
+
+# **二、Reactive 的“双状态”概念**
+
+Reactive 合约具有 **双状态（Dual State）**：
+
+**1 .ReactVM 状态（执行层状态）**
+
+-   Reactive 合约在 ReactVM 中有一份执行实例。
+    
+-   主要用于执行 react() 逻辑。
+    
+
+可能包含：
+
+-   判断逻辑
+    
+-   中间计算
+    
+-   临时变量
+    
+
+-   这些状态 **不一定会上链**。
+    
+
+示例：
+
+```
+function react(...) external {
+    if(price < 1000){
+        callback(...);
+    }
+}
+```
+
+* * *
+
+**2.Reactive Network 链上状态（可信状态）**
+
+-   Reactive 合约在 Reactive Network 链上也有一份实例。
+    
+
+用于保存 **可信的链上状态**，例如：
+
+-   subscription 信息
+    
+-   gas 余额
+    
+-   ownership
+    
+-   系统记录
+    
+
+这些状态：
+
+-   上链
+    
+-   可验证
+    
+-   所有节点一致
+    
+
+* * *
+
+# **三、为什么需要双状态**
+
+Reactive 需要双状态的原因：
+
+**执行效率**
+
+-   ReactVM 可以快速执行逻辑，不需要每一步都上链。
+    
+
+**降低 gas 成本**
+
+-   中间计算不需要写入区块链。
+    
+
+**保证可信性**
+
+-   重要信息仍然保存在链上。
+    
+
+因此 Reactive 架构可以理解为：
+
+```
+ReactVM（执行层）
+        +
+Reactive Network（可信状态层）
+```
+
+* * *
+
+# **四、callback 与链上状态改变**
+
+Reactive 合约不会直接改变目标链状态。
+
+真正改变链上状态的流程是：
+
+```
+ReactVM 触发 callback
+        ↓
+Reactive Network 发送交易
+        ↓
+Destination 合约执行 callback()
+        ↓
+修改 storage
+```
+
+例如：
+
+```
+function callback(uint price) external {
+    position += 1;
+}
+```
+
+这里的 position += 1 才是真正的 **链上状态改变**。
+
+* * *
+
+# **五、emit 的作用**
+
+emit 的作用是：
+
+```
+记录 event log
+```
+
+特点：
+
+-   只是日志
+    
+-   用于监听和索引
+    
+-   **不会改变合约状态**
+    
+
+所以：
+
+```
+emit ≠ 状态改变
+```
+
+Reactive 监听的是 **event log**。
+
+* * *
+
+# **六、Reactive 的核心思想**
+
+Reactive 的核心模型可以总结为：
+
+```
+Event → React → Callback
+```
+
+也就是：
+
+```
+监听事件
+↓
+执行响应逻辑
+↓
+自动触发链上交易
+```
+
+本质上是一种：
+
+**事件驱动的跨链自动化执行系统（Event-driven cross-chain automation）。**
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 # **_今天完成了第二个挑战：_**
 
 [**https://github.com/patrick-star-10/reactive-network-Hackathon/tree/main/uniswap-v2-stop-order-sepolia-demo**](https://github.com/patrick-star-10/reactive-network-Hackathon/tree/main/uniswap-v2-stop-order-sepolia-demo)
@@ -24,6 +249,7 @@ learning
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 # **今日学习笔记**
 
@@ -195,6 +421,7 @@ emit Deposited(user, amount)
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 # **今日学习总结：ReactVM 执行逻辑理解**
@@ -388,6 +615,7 @@ ReactVM 本质上就是：
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -776,6 +1004,7 @@ Callback  = 执行动作
 
 
 
+
 # **今日学习笔记｜Reactive Contract 结构理解**
 
 今天主要学习 **Reactive Contract 的组成结构与执行流程**。
@@ -1133,6 +1362,7 @@ Reactive Network 的本质是一个：
 
 
 
+
 # **今天完成了第一个挑战任务**
 
 [https://github.com/patrick-star-10/reactive-network-day1](https://github.com/patrick-star-10/reactive-network-day1)
@@ -1140,6 +1370,7 @@ Reactive Network 的本质是一个：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
