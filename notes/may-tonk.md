@@ -15,8 +15,356 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+# 今天的学习总结
+
+## 一、合约理解方面
+
+**问题1：两层 decode 的原因**
+
+-   `trigger()` 传入 `bytes` 类型数据
+    
+-   以太坊记录事件时会对 `bytes` 再做一次 ABI 编码
+    
+-   所以 `handle()` 收到的是两层编码，需要两层 decode 才能取出原始数据
+    
+
+**问题2：**`dispatch()` **和** `handle()` **的关系**
+
+-   `dispatch()` 是发送方调用，指定目标链、目标合约、消息内容
+    
+-   `handle()` 是被动接收，由 Hyperlane Mailbox 自动调用
+    
+-   两者参数一一对应，Hyperlane 负责中间传递
+    
+
+**问题3：**`_send()` **函数三行的含义**
+
+-   第一行：地址格式转换 `address → bytes32`
+    
+-   第二行：`quoteDispatch()` 先查询手续费
+    
+-   第三行：`dispatch{value: fee}` 附带手续费发送消息
+    
+
+**问题4：**`log.data` **是怎么来的**
+
+-   不是手动赋值的
+    
+-   是 Reactive Network 从链上日志里自动读取并注入到 `react()` 里的
+    
+-   你只需要 `emit`，Reactive Network 自动监听并调用 `react(log)`
+    
+
+* * *
+
+## 二、代币和费用方面
+
+**问题5：两套费用系统**
+
+| 费用 | 币种 | 用途 |
+| --- | --- | --- |
+| Reactive 订阅费 | REACT / lREACT | 激活合约订阅，支付监听费用 |
+| Hyperlane 手续费 | lREACT（原生币） | dispatch() 发送跨链消息 |
+
+**问题6：lREACT 和 REACT 的关系**
+
+-   lREACT 是 Lasna 链的原生币
+    
+-   REACT 是订阅计价单位
+    
+-   `sendTransaction {value}` 发送 lREACT，系统自动换算成 REACT 余额
+    
+
+**问题7：合约里需要充什么**
+
+-   Lasna 合约需要同时有两种费用
+    
+-   部署时 `{value}` 充入 lREACT，同时覆盖订阅费和 Hyperlane 手续费
+    
+-   `coverDebt` 是额外补充订阅费用，不是必须单独执行
+    
+
+* * *
+
+## 三、部署方面
+
+**问题8：常见代码错误**
+
+-   `origin.deployed()` → 应改为 `origin.waitForDeployment()`
+    
+-   `origin.address` → 应改为 `await origin.getAddress()`
+    
+-   `ethers.ethers.parseEther` → 应改为 `ethers.parseEther`
+    
+-   `waitForDeployment(2)` 不接受参数 → 等待区块确认应用 `tx.wait(2)`
+    
+-   `catch` 里用逗号 → 应改为分号或换行
+    
+
+**问题9：合约名和文件名的区别**
+
+-   Hardhat 找的是合约名（`contract CrossChainOrigin`），不是文件名
+    
+-   两者不一致会报 `HH700: Artifact not found` 错误
+    
+-   解决方法：先 `npx hardhat compile`，再确认合约名
+    
+
+**问题10：RPC 连接超时**
+
+-   原因：Lasna 的 RPC URL 失效
+    
+-   解决：换成 `https://kopli-rpc.reactive.network`
+    
+
+* * *
+
+## 四、部署顺序和流程
+
+**正确的部署流程：**
+
+```
+第一步：部署 Origin → BSC Testnet
+第二步：部署 Reactive → Lasna（带上 {value} 充入 lREACT）
+第三步：coverDebt 激活订阅（如果部署时已充值可跳过）
+第四步：调用 trigger() → BSC Testnet
+第五步：等待 1~3 分钟
+第六步：验证结果
+  → ReactScan 查看 RVM TRANSACTIONS
+  → BSCScan 查看 Events 标签
+```
+
+* * *
+
+## 五、验证结果的方法
+
+**ReactScan 看什么：**
+
+-   CONTRACT STATUS = ACTIVE ✅  
+    合同状态 = 有效 ✅
+    
+-   RVM TRANSACTIONS 里有新记录
+    
+-   DESTINATION TRANSACTION 显示 BNB SMART CHAIN TESTNET
+    
+
+**BSCScan 看什么：**
+
+-   Events 标签里有 `TransactionReceived` 事件
+    
+-   Events 标签里有 `Received` 事件
+    
+
+* * *
+
+## 六、今天遇到的 Bug
+
+**Bug1：lREACT 余额不足**
+
+-   现象：Callback 被送回 Lasna 而不是 BSC
+    
+-   原因：`dispatch()` 手续费不够
+    
+-   解决：往合约补充更多 lREACT（至少 0.5）
+    
+
+* * *
+
+## 七、扩展思路
+
+**跟单机器人的可行性：**
+
+-   可以监听 PancakeSwap 的 `Swap` 事件
+    
+-   判断金额是否超过阈值
+    
+-   超过则触发通知或自动跟单
+    
+-   限制：只能监听有 `emit` 事件的合约，无法监听普通转账
+    
+
+# 代码问题补充总结
+
+## 一、Hardhat ethers v6 新旧写法对比
+
+| 旧版写法（会报错） | 新版写法（正确） |
+| --- | --- |
+| await contract.deployed() | await contract.waitForDeployment() |
+| contract.address | await contract.getAddress() |
+| ethers.utils.parseEther() | ethers.parseEther() |
+| ethers.utils.formatEther() | ethers.formatEther() |
+| ethers.utils.AbiCoder | ethers.AbiCoder.defaultAbiCoder() |
+
+* * *
+
+## 二、等待区块确认的正确写法
+
+javascript
+
+```javascript
+// 错误：waitForDeployment 不接受参数
+await contract.waitForDeployment(2)
+
+// 正确：部署后用 deploymentTransaction().wait(n) 等待区块
+await contract.waitForDeployment()
+const tx = contract.deploymentTransaction()
+await tx.wait(2)  // 等待2个区块确认
+```
+
+* * *
+
+## 三、main() 函数结构
+
+javascript
+
+```javascript
+// 错误：main() 调用写在函数内部
+async function main() {
+    // ...
+    main().catch((error) => {  // ❌ 不能在里面调用自己
+        console.log(error),    // ❌ 逗号不对
+        process.exitCode = 1
+    })
+}
+
+// 正确：main() 调用写在函数外部
+async function main() {
+    // ...
+}
+
+main().catch((error) => {      // ✅ 写在外面
+    console.error(error)       // ✅ 用分号或换行
+    process.exitCode = 1
+})
+```
+
+* * *
+
+## 四、部署新合约 vs 连接已有合约
+
+javascript
+
+```javascript
+// 部署新合约（创建一个新的）
+const Factory = await ethers.getContractFactory("CrossChainOrigin")
+const contract = await Factory.deploy(参数)
+
+// 连接已有合约（找到已部署的）
+const contract = await ethers.getContractAt(
+    "CrossChainOrigin",          // 合约名
+    "0xddeC2eE0...2307a6"        // 合约地址
+)
+```
+
+* * *
+
+## 五、带 ETH 部署合约
+
+javascript
+
+```javascript
+// 构造函数有 payable 时，部署时可以附带原生币
+const contract = await Factory.deploy(
+    param1,
+    param2,
+    { value: ethers.parseEther("0.1") }  // ✅ 附带 0.1 原生币
+)
+
+// 注意：ethers.ethers.parseEther 是错误的！
+{ value: ethers.ethers.parseEther("0.1") }  // ❌ 多写了一个 ethers
+{ value: ethers.parseEther("0.1") }          // ✅ 正确
+```
+
+* * *
+
+## 六、ABI 编码和解码
+
+javascript
+
+```javascript
+// 编码：把多个参数打包成 bytes
+const message = ethers.AbiCoder.defaultAbiCoder().encode(
+    ["address", "address", "uint256"],   // 类型数组
+    [senderAddr, receiverAddr, amount]   // 值数组
+)
+
+// 解码：把 bytes 还原成多个参数
+const [sender, receiver, amt] = ethers.AbiCoder.defaultAbiCoder().decode(
+    ["address", "address", "uint256"],
+    message
+)
+```
+
+* * *
+
+## 七、查询余额
+
+javascript
+
+```javascript
+// 查询钱包余额
+const balance = await ethers.provider.getBalance(deployer.address)
+console.log(ethers.formatEther(balance))
+
+// 查询合约余额
+const contractBalance = await ethers.provider.getBalance(contractAddress)
+console.log(ethers.formatEther(contractBalance))
+
+// 注意：address 是字符串，没有 .balance() 方法
+const address = await contract.getAddress()
+address.balance()  // ❌ 报错！
+ethers.provider.getBalance(address)  // ✅ 正确
+```
+
+* * *
+
+## 八、Solidity 中的地址类型转换
+
+solidity  坚固性
+
+```solidity
+// address(20字节) → bytes32(32字节)
+// 不能直接转换，必须经过三步
+bytes32 result = bytes32(uint256(uint160(originAddress)));
+//               ↑第三步  ↑第二步  ↑第一步
+
+// bytes32 → address
+address result = address(uint160(uint256(bytes32Value)));
+```
+
+* * *
+
+## 九、{value} 语法
+
+solidity  坚固性
+
+```solidity
+// Solidity 中调用 payable 函数时附带原生币
+mailbox.dispatch{value: fee}(param1, param2, param3);
+//              ↑ 这是附带手续费的语法，不是参数
+
+// 等价于
+// 调用 dispatch 函数，同时转入 fee 数量的原生币
+```
+
+* * *
+
+## 十、常见报错和解决方法
+
+| 报错信息 | 原因 | 解决方法 |
+| --- | --- | --- |
+| HH700: Artifact not found | 合约名写错 | 检查 contract XXX 名字是否一致，重新 compile |
+| ConnectTimeoutError | RPC URL 失效 | 换一个 RPC URL |
+| insufficient funds | 余额不足 | 充值对应链的原生币 |
+| Not authorized | 调用者不是 owner | 检查调用账户是否正确 |
+| revert | value 不足 | 先用 quoteDispatch 查询手续费再发送 |
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 ## 今天学习的内容
 
 ### 一、跨链架构理解
@@ -193,6 +541,7 @@ CrossChainReactive（Lasna）：
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 ## 一、CRON 和 HF 相关
 
@@ -386,6 +735,7 @@ contract HyperlaneReactive is AbstractReactive, AbstractCallback {
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 ## 顺序安排思路
@@ -658,6 +1008,7 @@ Reactive Contract 在运行时会产生费用，例如：
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -1287,6 +1638,7 @@ Destination Chain 执行交易
 
 
 
+
 # 使用AI演示和分析了reactive contract的工作原理，图片和简单动画演示
 
 [Reactive\_Contract步骤分析](https://may-tonk.github.io/html_may_tonk_web/reactive_contract_image.html/second_reactiveframe.html)
@@ -1525,6 +1877,7 @@ Destination Chain 执行交易
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -1816,6 +2169,7 @@ L1Callback 开门之前要检查：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
