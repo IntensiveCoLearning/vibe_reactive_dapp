@@ -15,19 +15,27 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+新的一周开始新的学习！
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 先留个爪！晚上更新
 <!-- DAILY_CHECKIN_2026-03-13_END -->
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
 
+
 ![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/drinkingmorewater/images/2026-03-12-1773325301284-image.png)
 <!-- DAILY_CHECKIN_2026-03-12_END -->
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 Reactive 与传统 EVM 的根本区别  
@@ -102,11 +110,13 @@ Reactive 与传统 EVM 的根本区别
 
 
 
+
 今日打卡~学习基础知识中
 <!-- DAILY_CHECKIN_2026-03-10_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
