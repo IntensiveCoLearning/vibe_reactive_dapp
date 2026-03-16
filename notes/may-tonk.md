@@ -19,6 +19,16 @@ Let’s vibe Reactive dApp
 <!-- DAILY_CHECKIN_2026-03-16_START -->
 # 今天的学习总结
 
+# ！！！！！！！！！！！啊啊啊啊啊找了好久发现
+
+脚本 ✅ 完全没问题
+
+合约 ✅ 完全没问题
+
+问题只有一个：
+
+# Hyperlane 不支持 Lasna Testnet → BSC Testnet 这条路 ❌
+
 ## 一、合约理解方面
 
 **问题1：两层 decode 的原因**
@@ -365,6 +375,7 @@ mailbox.dispatch{value: fee}(param1, param2, param3);
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
 
+
 ## 今天学习的内容
 
 ### 一、跨链架构理解
@@ -541,6 +552,7 @@ CrossChainReactive（Lasna）：
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 ## 一、CRON 和 HF 相关
@@ -735,6 +747,7 @@ contract HyperlaneReactive is AbstractReactive, AbstractCallback {
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -1008,6 +1021,7 @@ Reactive Contract 在运行时会产生费用，例如：
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -1639,6 +1653,7 @@ Destination Chain 执行交易
 
 
 
+
 # 使用AI演示和分析了reactive contract的工作原理，图片和简单动画演示
 
 [Reactive\_Contract步骤分析](https://may-tonk.github.io/html_may_tonk_web/reactive_contract_image.html/second_reactiveframe.html)
@@ -1877,6 +1892,7 @@ Destination Chain 执行交易
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -2169,6 +2185,7 @@ L1Callback 开门之前要检查：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
