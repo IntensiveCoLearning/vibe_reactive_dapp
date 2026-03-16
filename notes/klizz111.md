@@ -15,8 +15,80 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+## Economy
+
+### 1\. 交易执行与计费模型
+
+\* **RVM 交易 (Reactive Virtual Machine)**：
+
+\* **后付费机制**：执行时不收取 Gas 费，费用在后续区块（通常是下一个）根据当时的 `BaseFee` 结算。
+
+\* **计算公式**`费用 = BaseFee × GasUsed`。
+
+\* **限制**：最大 Gas Limit 为 **900,000**。
+
+\* **特性**：由于是区块级聚合记账，区块链浏览器（Reactscan）无法将费用关联到单笔 RVM 交易。
+
+\* **RNK 交易 (Reactive Network Transactions)**：
+
+\* 遵循标准的 EVM Gas 模型（即传统的先付费/即时扣费模式）。
+
+### 2\. 合约状态与资金管理
+
+\* **资金要求**：合约在执行 RVM 交易前必须持有足够的 **REACT** 代币。
+
+\* **合约状态**：
+
+\* **Active (活跃)**：正常执行。
+
+\* **Inactive (非活跃)**：存在未结清的债务，需充值并调用 `coverDebt()` 偿还后才能恢复。
+
+\* **充值方式**：
+
+1\. **直接转账**：向合约地址发送 REACT，然后手动调用 `coverDebt()` 结算债务。
+
+2\. **系统合约存款**：向系统合约 `0x0000...fffFfF`) 调用 `depositTo(address)`，可\*\*自动结算\*\*未结债务。
+
+### 3\. 跨链回调 (Cross-Chain Callbacks)
+
+\* **定价公式**：
+
+$$p\_{callback} = p\_{base} \\times C \\times (g\_{callback} + K)$$
+
+\* $p\_{base}$: 基础 Gas 价格。
+
+\* $C$: 目标网络的定价系数。
+
+\* $g\_{callback}$: 回调消耗的 Gas。
+
+\* $K$: 固定 Gas 附加费。
+
+\* **Gas 限制**：强制执行\*\*最小 100,000 Gas\*\* 的限制（低于此值的请求会被忽略），以确保内部审计和计算的安全。
+
+\* **支付模式**：与 RVM 交易类似（后付费）。资金不足的合约会被列入黑名单，无法执行交易或回调。
+
+\* **自动结算 (On-The-Spot)**：通过实现 `pay()` 函数或继承 `AbstractPayer`，可在回调产生债务时由代理合约自动调用并结算。
+
+### 4\. 关键系统地址与查询
+
+\* **系统合约 / 回调代理地址**`0x0000000000000000000000000000000000fffFfF` (在 Reactive Network 上两者共用此地址)。
+
+\* **关键查询命令**：
+
+\* **余额**：使用 `cast balance` 查询。
+
+\* **债务 (Debt)**：调用系统/代理合约的 `debts(address)` 视图函数。
+
+\* **储备金 (Reserves)**：调用系统/代理合约的 `reserves(address)` 视图函数。
+
+**核心逻辑总结**：Reactive Network 采用“先执行，后算账”的模式来优化用户体验和跨链交互，但要求开发者必须密切关注合约的 **REACT 余额** 和 **未结债务**，一旦资不抵债，合约将立即停止服务直到债务被清偿。
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 ## Subscription 的工作原理
 
 ### 1\. 核心概念
@@ -87,6 +159,7 @@ Let’s vibe Reactive dApp
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
 
+
 ### **1\. 事件的本质**
 
 -   **定义**：在区块链上下文中，事件是智能合约执行过程中产生的日志记录（Logs）。
@@ -140,6 +213,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 <!-- DAILY_CHECKIN_2026-03-13_START -->
 
 
+
 -   ReactVM: ReactiveNetwork中的核心组件，负责执行Reactive Contract，并发送回调信息到目标链
     
 -   归属权：Reactive COntract会部署到基于同一个地址的EOA的独有的ReactVM，并且同一个ReactVM中的合约可以进行状态共享
@@ -154,11 +228,13 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 
 
+
 -   参加了Workshop
 <!-- DAILY_CHECKIN_2026-03-12_END -->
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -171,6 +247,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
