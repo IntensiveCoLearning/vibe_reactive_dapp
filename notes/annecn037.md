@@ -15,13 +15,123 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+## **Reactive Network 核心模块笔记**
+
+### **一、项目定位与核心价值**
+
+**Reactive Network** 是一条 **EVM 兼容的 Layer 1 区块链**，其核心创新在于 **Reactive Contracts（反应式智能合约，简称 RCs）** —— 一种事件驱动的智能合约范式，专为跨链自动化和链上自动化场景设计。
+
+**核心解决的问题**：
+
+-   传统智能合约需要用户或机器人主动触发交易
+    
+-   跨链操作复杂且需要链下基础设施
+    
+-   条件执行依赖外部预言机或 keeper 网络
+    
+
+**Reactive 的解决方案**：合约持续监控多链事件日志，条件满足时自动执行 Solidity 逻辑并发送跨链回调交易，实现真正的"if-this-then-that"链上自动化。
+
+* * *
+
+### **二、核心应用场景**
+
+| 场景 | 说明 |
+| --- | --- |
+| 自动化止损/止盈订单 | 价格触发自动执行，无需用户手动操作 |
+| 清算保护 | 抵押品价值跌破阈值自动补充或平仓 |
+| 自动化投资组合再平衡 | 资产比例偏离目标自动调整 |
+| 收益优化 | 收益率变化自动切换最优策略 |
+| 跨链工作流 | 一条链的事件触发另一条链的操作 |
+
+  
+
+* * *
+
+### **三、技术架构关键组件**
+
+**1\. 基础概念层（Step 1 — Reactive Basics）**
+
+| 组件 | 功能说明 |
+| --- | --- |
+| Origins & Destinations | 定义源链（监控事件）和目标链（执行回调），包含各链的 Callback Proxy 合约地址 |
+| Hyperlane | 跨链消息传输协议，承载 Reactive 的跨链回调 |
+| Reactive Contracts | 订阅链上事件并触发自动化动作的核心合约类型 |
+| ReactVM | Reactive 的执行环境，处理反应式合约的执行逻辑 |
+| Economy | 回调交易的支付机制和经济模型 |
+
+**2\. 开发工具层（Step 2 — Reactive Essentials）**
+
+| 资源 | 用途 |
+| --- | --- |
+| Reactive Mainnet / Lasna Testnet | 主网和测试网连接配置 |
+| Reactive Library | 抽象合约和接口集合，简化开发 |
+| Events & Callbacks | 事件订阅与跨链回调的触发机制 |
+| Subscriptions | 事件订阅的具体配置方法 |
+| RNK RPC Methods | Reactive 节点特有的 RPC 接口 |
+
+**3\. 实践资源层（Step 3 — Reactive Building）**
+
+-   **Demos**：官方提供的可运行示例
+    
+-   **GitHub 仓库**：`Reactive-Network/reactive-smart-contract-demos` — 可直接克隆的 demo 项目
+    
+
+* * *
+
+### **四、辅助工具与社区资源**
+
+| 资源 | 链接/说明 |
+| --- | --- |
+| Reactscan | https://reactscan.net/ — 浏览器工具，用于探索 Reactive 交易和合约 |
+| Reactive Education | 技术课程，系统化学习路径 |
+| Debugging 文档 | 常见问题排查指南 |
+| 社区支持 | Telegram: https://t.me/reactivedevs |
+| GitHub | https://github.com/Reactive-Network/reactive-smart-contract-demos |
+
+  
+
+* * *
+
+### **五、关键理解要点**
+
+**1\. 架构本质**
+
+-   Reactive Network 不是简单的跨链桥或消息层
+    
+-   它是一个完整的执行环境 + 跨链自动化编排层
+    
+-   开发者编写的是"反应式"合约，而非传统主动调用式合约
+    
+
+**2\. 经济模型特殊性**
+
+-   回调交易需要支付费用（区别于普通链上交易）
+    
+-   具体机制需查阅 Economy 章节
+    
+
+**3\. 开发范式转变**
+
+| 传统智能合约 | Reactive Contracts |
+| --- | --- |
+| 被动等待调用 | 主动监控事件 |
+| 单链执行 | 跨链自动化编排 |
+| 用户/机器人触发 | 条件自动触发 |
+| 即时执行 | 事件驱动执行 |
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 今日打卡√
 <!-- DAILY_CHECKIN_2026-03-13_END -->
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 **Subscriptions** 是 Reactive Contracts 感知外部事件的注册机制，通过订阅特定链上日志或状态变化，使合约能够在无需人工干预的情况下自动触发响应；这一机制构成了 Reactive Network **跨链自动化能力**的核心纽带，实现了从**事件监听**到**自主执行**的无缝衔接。
 
@@ -285,11 +395,13 @@ function react(LogRecord calldata log) external vmOnly {
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
 
+
 回来太晚了，各位加油，I need to lie down
 <!-- DAILY_CHECKIN_2026-03-11_END -->
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -470,6 +582,7 @@ function react(LogRecord calldata log) external vmOnly {
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
