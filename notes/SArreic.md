@@ -15,8 +15,20 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-16
+<!-- DAILY_CHECKIN_2026-03-16_START -->
+Today I learnt the study case of Fiet.
+
+Fiet is a novel protocol enabling market makers to bridge actively managed off-chain liquidity (from banks, exchanges, etc.) into on-chain AMMs via synthetic assets. Traders interact with these pools normally, but settlement occurs asynchronously—when liquidity is temporarily unavailable, trades enter a queue requiring users to manually claim funds later. This creates a paradox: in volatile moments demanding speed, the experience degrades due to manual intervention.
+
+Reactive Network resolves this by introducing **event-driven automation**. Through Reactive Smart Contracts, the system autonomously monitors the settlement queue and, upon detecting that liquidity has been restored (signaled by on-chain events), **instantly executes the final settlement transaction** without any user action or centralized keepers.
+
+This integration transforms asynchronous settlement from a UX compromise into a competitive advantage. It demonstrates a sophisticated use case beyond simple event mirroring—involving **queue management, state aggregation, and conditional execution**. As DeFi evolves to incorporate institutional-grade, off-chain capital, automation ceases to be a "nice-to-have" and becomes core infrastructure. Reactive Network provides the native, trust-minimized layer that makes off-chain liquidity feel on-chain native.
+<!-- DAILY_CHECKIN_2026-03-16_END -->
+
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 Today I read the article - Exit driven universal evolution theory - redundancy, governance, and innovation
 
 This article introduces a unifying theoretical framework for understanding long-term evolution across scales—from biology to technology to institutions—termed **Exit-driven Evolution**. It challenges the traditional focus on selection, competition, and fitness by proposing that evolution is not driven by rewarding success, but by the **continuous elimination of structures that fail to persist**. In an uncertain world characterized by dispersed information, bounded rationality, and perpetual perturbations, errors are not anomalies but statistical certainties. Thus, a system's primary objective is not to optimize, but to **maximize survival time** under the condition of inevitable failure.
@@ -38,6 +50,7 @@ Key corollaries emerge from this view. System vitality is not a function of inte
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
 
+
 This week's Ethereum ecosystem update highlights four pivotal developments spanning infrastructure, governance, institutional adoption, and wallet UX.
 
 ENS introduced **on.eth**, a canonical on-chain registry assigning each blockchain a resolvable subdomain (e.g., `base.on.eth`) within the ENS namespace. Leveraging ERC-7828 and the Interop SDK, it returns verifiable metadata including chain IDs and interoperable addresses, replacing fragmented off-chain mappings. This transforms ENS into a multi-chain naming layer, enabling human-readable cross-chain identifiers in the `domain.eth@chain` format.
@@ -51,6 +64,7 @@ MetaMask integrated Uniswap as its primary swap provider, routing trades through
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 Today I learnt the ERC-8183.
@@ -69,6 +83,7 @@ Despite these debates, ERC-8183's true value is its **grounding in market realit
 
 
 
+
 Today I learnt the relationships and connections between polymarkets and reactive network.
 
 Prediction markets, long predating blockchain, have proven their core thesis: markets aggregate dispersed knowledge more effectively than polls or pundits. However, their traditional form as corporate-run platforms introduced a structural dependency—participants must trust the operator to fairly adjudicate outcomes and process payouts. Blockchain fundamentally transforms this model by encoding markets into self-executing protocols. Trust shifts from a counterparty to transparent, immutable code, enabling permissionless participation where anyone can create markets or provide liquidity without gatekeepers. Crucially, on-chain markets transcend mere decentralization through **composability**; they become infrastructure components whose price signals can be integrated into DeFi protocols, DAO treasuries, or insurance mechanisms. The technical stack—market contracts issuing result tokens (e.g., YES/NO), AMMs for continuous liquidity, oracles for deterministic settlement—forms a pipeline where beliefs flow in and settlements flow out.
@@ -82,11 +97,13 @@ Yet, even this evolved model operates as a passive observer. Markets measure sen
 
 
 
+
 Ivan Ivanitskiy, Head of Developer Relations at Reactive Network, provided key insights into the technology's capabilities and limitations during a workshop. He clarified that while Reactive Smart Contracts are inherently public—meaning any arbitrage strategy coded within them can be reverse-engineered from the bytecode—the network is best suited for non-high-frequency strategies due to an inherent ~10-second latency in cross-chain execution. A major advantage highlighted is enhanced security, particularly when integrated with AI agents; instead of entrusting an agent with a private key, the AI only triggers a predefined workflow, with the actual fund movement logic secured immutably on-chain. Regarding cross-chain operations, Ivan acknowledged the impossibility of true atomicity across different chains but demonstrated how the network handles failures through application-level retry mechanisms, as implemented in their bridge. He also confirmed that while the core focus remains on EVM chains, Solana support is on the roadmap, initially targeting specific applications via community-developed connectors. Finally, he noted that while trading bots can be built on Reactive, the technology's true value lies in embedding secure, automated features like stop-loss directly into DApps, with developer grants flexibly awarded based on a project's specific needs and alignment.
 <!-- DAILY_CHECKIN_2026-03-10_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
