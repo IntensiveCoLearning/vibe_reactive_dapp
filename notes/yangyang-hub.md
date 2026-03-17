@@ -15,8 +15,324 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-17
+<!-- DAILY_CHECKIN_2026-03-17_START -->
+# Reactive Network Demo 学习笔记
+
+## 一、整体概念
+
+**Reactive Network 的核心能力：**
+
+-   🔍 低延迟监听链上事件（logs）
+    
+-   🔁 根据事件自动触发跨链调用
+    
+-   ⚡ 实现“事件驱动”的智能合约逻辑
+    
+
+👉 本 Demo 展示的是一个**基础的响应式（Reactive）合约系统**
+
+* * *
+
+## 二、系统架构
+
+整个 Demo 包含三个核心合约：
+
+### 1️⃣ Origin Contract（源链合约）
+
+**BasicDemoL1Contract**
+
+功能：
+
+-   接收 Ether
+    
+-   将 Ether 原路返回给发送者
+    
+-   触发 `Received` 事件（记录交易信息）
+    
+
+👉 本质：**事件产生者（Event Source）**
+
+* * *
+
+### 2️⃣ Reactive Contract（响应式合约）
+
+**BasicDemoReactiveContract**
+
+功能核心：
+
+-   订阅源链合约的事件（logs）
+    
+-   解析事件数据
+    
+-   满足条件时触发跨链回调
+    
+
+👉 本质：**事件监听 + 自动执行逻辑**
+
+* * *
+
+### 3️⃣ Destination Contract（目标链合约）
+
+**BasicDemoL1Callback**
+
+功能：
+
+-   接收 Reactive Network 发来的回调
+    
+-   校验调用来源是否合法
+    
+-   记录执行信息（`CallbackReceived` 事件）
+    
+
+👉 本质：**执行最终动作**
+
+* * *
+
+## 三、核心机制详解
+
+### 🔹 1. 事件订阅（Subscription）
+
+部署时自动订阅：
+
+```
+service.subscribe(
+    originChainId,
+    _contract,
+    topic_0,
+    REACTIVE_IGNORE,
+    REACTIVE_IGNORE,
+    REACTIVE_IGNORE
+);
+```
+
+说明：
+
+-   `originChainId`：源链
+    
+-   `_contract`：监听的合约地址
+    
+-   `topic_0`：事件签名（Event Signature）
+    
+
+👉 作用：**只监听特定事件**
+
+* * *
+
+### 🔹 2. Log 数据结构
+
+```
+struct LogRecord {
+    uint256 chain_id;
+    address _contract;
+    uint256 topic_0;
+    uint256 topic_1;
+    uint256 topic_2;
+    uint256 topic_3;
+    bytes data;
+    uint256 block_number;
+    uint256 op_code;
+    uint256 block_hash;
+    uint256 tx_hash;
+    uint256 log_index;
+}
+```
+
+重点字段：
+
+-   `topic_0`：事件类型
+    
+-   `topic_3`：本 Demo 用来表示金额（重要！）
+    
+-   `data`：额外数据
+    
+
+👉 本质：**链上事件的结构化表示**
+
+* * *
+
+### 🔹 3. 事件响应逻辑（react 函数）
+
+```
+function react(LogRecord calldata log) external vmOnly {
+    
+    if (log.topic_3 >= 0.01 ether) {
+        bytes memory payload = abi.encodeWithSignature("callback(address)", address(0));
+        emit Callback(destinationChainId, callback, GAS_LIMIT, payload);
+    }
+}
+```
+
+逻辑拆解：
+
+1.  接收事件数据（log）
+    
+2.  判断条件：
+    
+    -   `topic_3 >= 0.01 ETH`
+        
+3.  构造调用 payload
+    
+4.  触发跨链回调（emit Callback）
+    
+
+👉 核心思想：
+
+> “监听事件 → 判断条件 → 触发动作”
+
+* * *
+
+### 🔹 4. 跨链回调机制
+
+```
+emit Callback(destinationChainId, callback, GAS_LIMIT, payload);
+```
+
+参数含义：
+
+-   `destinationChainId`：目标链
+    
+-   `callback`：目标合约地址
+    
+-   `payload`：调用函数数据
+    
+-   `GAS_LIMIT`：执行 gas 限制
+    
+
+👉 作用：**让目标链执行函数**
+
+* * *
+
+### 🔹 5. Callback 合约安全机制
+
+Destination 合约会：
+
+-   校验调用者是否合法（Reactive Network）
+    
+-   防止恶意调用
+    
+-   记录事件：
+    
+
+```
+CallbackReceived(...)
+```
+
+* * *
+
+## 四、完整流程（重点！）
+
+### 🔄 整体执行流程：
+
+1️⃣ 用户在源链调用 `BasicDemoL1Contract`  
+2️⃣ 合约 emit `Received` 事件
+
+⬇️
+
+3️⃣ Reactive Network 捕获 log
+
+⬇️
+
+4️⃣ `BasicDemoReactiveContract.react()` 被触发
+
+⬇️
+
+5️⃣ 判断金额 ≥ 0.01 ETH
+
+⬇️
+
+6️⃣ emit `Callback`
+
+⬇️
+
+7️⃣ 目标链执行 `callback()`
+
+⬇️
+
+8️⃣ `BasicDemoL1Callback` 记录结果
+
+* * *
+
+## 五、关键设计思想
+
+### 💡 1. 事件驱动架构（Event-driven）
+
+-   不主动调用
+    
+-   等事件触发逻辑
+    
+
+* * *
+
+### 💡 2. 跨链自动化
+
+-   无需人工干预
+    
+-   自动执行跨链逻辑
+    
+
+* * *
+
+### 💡 3. 解耦设计
+
+-   源链：只负责产生事件
+    
+-   Reactive：只负责判断逻辑
+    
+-   目标链：只负责执行
+    
+
+👉 优点：可扩展性强
+
+* * *
+
+## 六、可扩展方向
+
+文中提到的增强点：
+
+### 🔹 1. 多事件订阅
+
+-   同时监听多个合约/事件
+    
+
+### 🔹 2. 动态订阅
+
+-   根据条件调整监听对象
+    
+
+### 🔹 3. 状态持久化
+
+-   让 reactive contract 有“记忆”
+    
+
+### 🔹 4. 自定义 callback
+
+-   灵活构造 payload
+    
+
+* * *
+
+## 七、部署要点
+
+-   克隆项目
+    
+-   配置环境变量（重要！）
+    
+-   按 Deployment & Testing 步骤执行
+    
+
+* * *
+
+## 八、总结一句话
+
+👉 Reactive Network 的核心模式：
+
+> **“监听链上事件 → 自动判断 → 跨链执行”**
+<!-- DAILY_CHECKIN_2026-03-17_END -->
+
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 源链事件 -> 订阅捕获 -> 条件判断 -> 发起目标链回调
 
 核心知识点：
@@ -66,6 +382,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 # Implementing Basic Reactive Functions 学习笔记
@@ -355,6 +672,7 @@ Reactive Contract运行逻辑：
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -729,6 +1047,7 @@ Sync
 
 
 
+
 # Oracles 学习笔记
 
 ## 1\. Oracle 的作用
@@ -1006,6 +1325,7 @@ Reactive Contract 监听事件
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -1394,6 +1714,7 @@ Reactive Contracts 订阅机制核心：
 
 
 
+
 # Reactive Contracts (RCs) 架构与执行机制
 
 ## 一、 双重执行环境：一个合约，两个状态
@@ -1507,6 +1828,7 @@ Reactive Contracts 订阅机制核心：
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -1786,6 +2108,7 @@ Reactive Network 会自动：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
