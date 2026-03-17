@@ -322,7 +322,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [swen-chan](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/swen-chan.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕️ | ⭕️ | ⭕️ |   | | | | | |
 | [kvxunz](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/kvxunz.md) | ⭕️ | ✅ | ✅ | ⭕️ | ✅ | ✅ | ✅ | ⭕️ |   | | | | | |
 | [2831753275-Tang](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/2831753275-Tang.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
-| [yangyang-hub](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yangyang-hub.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |   | | | | | |
+| [yangyang-hub](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yangyang-hub.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | | | | | |
 | [annecn037](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/annecn037.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕️ | ⭕️ | ✅ | ✅ | | | | | |
 | [nu1lspaxe](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/nu1lspaxe.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [klizz111](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/klizz111.md) | ✅ | ⭕️ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |   | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
