@@ -15,8 +15,48 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-17
+<!-- DAILY_CHECKIN_2026-03-17_START -->
+## **Reactive Network 原理**
+
+**核心思想**：让合约感知世界并自动执行逻辑，通过event触发、捕捉事件，经reactive control，由RC合约执行逻辑，条件满足后发起链上操作。
+
+**订阅机制**：开发者可指定监听链、合约及事件，订阅只负责监听，逻辑判断在RC合约执行。
+
+**架构模型**：采用双环境模型，一个负责监听和调度，一个负责执行逻辑，彼此隔离，提高安全性。
+
+## **应用案例及局限**
+
+**案例**：以Uniswap自动止损为例，市场流动性变化触发事件，系统重新计算价格，低于阈值自动卖出，引入状态变量控制流程防止重复触发。
+
+**局限**：存在5 - 15秒的必然延迟，不适合高频交易。
+
+## **总结及意义**
+
+**总结**：智能合约定义规则，区块链提供账本，Reactive Network提供执行能力，让系统从记录走向行动。
+
+**意义**：使Web3应用更加自动化和去中心化，未来更多逻辑将不再依赖链下系统。
+
+## **RC合约相关问题**
+
+**更新迭代**：RC合约本质不可升级，功能改变需重新部署，涉及签约定义、订阅及状态管理，因订阅规则、地址和回调逻辑已绑定。
+
+**注销监听**：无法真正注销监听，若要注销需重新写合约，也可部署新版本合约使旧版本监听无效。
+
+## **应用场景探讨**
+
+**自动止盈止损**：用户主动操作，自定义价格，用于锁定利润和限制损失。
+
+**替代预言机**：可直接用链上时间，监听多个合约事件，聚合数据触发执行，做更轻量级链上语义机。
+
+**自动清算**：在质押合同、质押池子中，用户抵押不足时自动清算。
+
+**清算保护**：可在快到清算线时自动补仓，继续下跌则自动止损。
+<!-- DAILY_CHECKIN_2026-03-17_END -->
+
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 # 部署睿应式合约讲解
 
 1.  **部署准备**：
@@ -50,6 +90,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 ## **🦄 Uniswap V2 Stop Order Demo：去中心化自动止损**
 
@@ -156,11 +197,13 @@ cast send $PAIR_ADDR 'swap(uint,uint,address,bytes calldata)' --rpc-url $SEPOLIA
 <!-- DAILY_CHECKIN_2026-03-14_START -->
 
 
+
 今天尝试进行第二关的 Uniswap 止损单的练习，在学习文档内容。
 <!-- DAILY_CHECKIN_2026-03-14_END -->
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -215,6 +258,7 @@ cast send $PAIR_ADDR 'swap(uint,uint,address,bytes calldata)' --rpc-url $SEPOLIA
 
 
 
+
 ### **实时监控问题解答**
 
 **监控原理**：市场波动与Reactive实时监控无关，其监控每条链的每个区块，并对合约订阅的事件做出反应。
@@ -242,6 +286,7 @@ cast send $PAIR_ADDR 'swap(uint,uint,address,bytes calldata)' --rpc-url $SEPOLIA
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -309,6 +354,7 @@ cast send $PAIR_ADDR 'swap(uint,uint,address,bytes calldata)' --rpc-url $SEPOLIA
 
 
 
+
 # **Basic Reactive Demo：理解“监听-反应”闭环**
 
 这个 Demo 是 Reactive 的 "Hello World"。流程很简单：在 Sepolia 上转账 -> Reactive 监听到 -> 自动通知 Sepolia 上的回调合约。
@@ -359,6 +405,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
