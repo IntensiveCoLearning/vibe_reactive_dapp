@@ -15,8 +15,28 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-17
+<!-- DAILY_CHECKIN_2026-03-17_START -->
+**3月17日 (周二)：Reactive 合约核心：订阅与生命周期**
+
+-   **目标**：理解 Reactive 合约的双状态，并完成订阅逻辑。
+    
+-   **任务**：
+    
+    1.  **理论学习**：阅读 [Dev Guide](https://dev.reactive.network/)，重点理解 Reactive 合约如何在 Reactive Network（同步）与 ReactVM（私有状态）中存在。
+        
+    2.  **编写 Reactive 合约**：
+        
+        -   在 `constructor` 中调用系统合约（地址固定为 `0x...ffff`）的 `subscribe()` 方法。
+            
+        -   配置过滤维度：`chainId`（Origin 链 ID）、`originContract`、`topic0`。
+            
+    3.  **理解隔离**：明确 Reactive 合约的状态更新与普通 EVM 合约的区别。
+<!-- DAILY_CHECKIN_2026-03-17_END -->
+
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 前端：
 
 -   能连接钱包并切换到：Origin 链与 Lasna 链
@@ -28,6 +48,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 **挑战任务与经济模型复盘**
 
@@ -52,6 +73,7 @@ Let’s vibe Reactive dApp
 <!-- DAILY_CHECKIN_2026-03-14_START -->
 
 
+
 **代码拆解 —— 以 Uniswap V2 Stop Order 为例**
 
 **今日重点：** 结合 GitHub 源码，看技术理论如何变成逻辑代码。
@@ -73,6 +95,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -109,6 +132,7 @@ Let’s vibe Reactive dApp
 
 
 
+
 ## Day 3：挑战任务实战（终极目标）
 
 **核心点：按照 Notion 指引完成跨链自动化**
@@ -131,6 +155,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -183,6 +208,7 @@ bytes calldata data
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
