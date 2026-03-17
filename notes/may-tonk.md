@@ -15,8 +15,139 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-17
+<!-- DAILY_CHECKIN_2026-03-17_START -->
+## 今天学习总结
+
+### 一、项目目标
+
+用 Reactive Network 在 Uniswap V2 上实现**链上自动止损/止盈订单**，全程无需人工干预。当价格触发阈值时，合约自动帮你卖出代币。
+
+* * *
+
+### 二、三个合约的职责
+
+| 合约 | 部署位置 | 职责 |
+| --- | --- | --- |
+| UniswapDemoToken | Sepolia | 普通 ERC-20，提供流动性池入口 |
+| StopOrderReactive | Lasna | 订阅 Sync + Stop 事件，react() 判断价格阈值 |
+| StopOrderCallback | Sepolia | 被触发后执行 swap，把代币卖出还给你 |
+
+* * *
+
+### 三、DeFi 基础知识
+
+**Uniswap V2 AMM**
+
+-   池子里有两种代币，公式 `x * y = k`（恒定乘积）自动定价
+    
+-   没有订单簿，合约本身就是交易对手
+    
+-   买的量越大，价格越贵（滑点）
+    
+
+**Sync 事件**
+
+-   每次池子发生交易，自动 emit `Sync(reserve0, reserve1)`
+    
+-   Reactive 合约盯着这个事件来判断当前价格
+    
+
+**价格阈值表达方式**
+
+-   Solidity 没有小数，用两个整数表示：`reserve1 / reserve0 < threshold / coefficient`
+    
+-   止损和止盈的判断方向相反，写错会导致永远不触发或立刻触发
+    
+
+**approve 机制  批准机制**
+
+-   `approve(spender, amount)` = 允许某个合约动用你的代币
+    
+-   `transferFrom(from, to, amount)` = 代替别人转账（需要提前获得 approve）
+    
+-   授权链：你 → approve → Callback 合约 → approve → Uniswap Router
+    
+
+**Uniswap Router  Uniswap 路由器**
+
+-   不是 Reactive Network 的合约，是 Uniswap 官方部署的
+    
+-   负责找路径、算数量、替你操作池子
+    
+-   代码开源、不可升级、全球审计，安全可信
+    
+
+* * *
+
+### 四、Reactive 新概念
+
+**双订阅模式**
+
+solidity
+
+````solidity
+service.subscribe(chain_id, pair_address, SYNC_TOPIC_0, ...);   // 监听价格变化
+service.subscribe(chain_id, stop_order, STOP_TOPIC_0, ...);     // 监听任务完成
+```
+
+**状态机设计**
+```
+triggered = false → 价格触发 → triggered = true（只发一次 Callback）
+                                      ↓
+done = false     → Stop 事件 → done = true（合约关闭，assert 阻断一切）
+```
+没有状态机，每次 Sync 都会触发止损，代币会被反复卖出。
+
+**Loopback 回环**
+Callback 合约执行完 swap 后 emit `Stop` 事件，Reactive 合约订阅到这个事件后设置 `done = true`，整个订单闭环关闭，无需人工干预。
+
+**react() 双分支逻辑**
+通过 `_contract` 地址区分收到的是 Sync 事件还是 Stop 事件，走不同的处理逻辑。
+
+---
+
+### 五、自动卖出的完整资金流向
+```
+你的钱包 (100 TokenA)
+    ↓ 提前 approve Callback 合约
+价格触发阈值
+    ↓ Reactive 调用 stop()
+    ↓ transferFrom(你 → Callback合约, 100 TokenA)
+    ↓ approve(Router, 100 TokenA)
+    ↓ Router.swapExactTokensForTokens()
+    ↓ TokenA 进入 Uniswap 池子
+    ↓ transfer(你, 换来的 TokenB)
+你的钱包收到 TokenB，止损完成
+    ↓ emit Stop → Reactive 收到 → done=true → 订单关闭
+````
+
+* * *
+
+### 六、安全信任分析
+
+| 对象 | 风险等级 | 原因 |
+| --- | --- | --- |
+| Uniswap Router  Uniswap 路由器 | 极低 | 不可升级、开源、全球审计 |
+| Reactive Network  响应式网络 | 可控 | stop() 内部有二次价格验证保护 |
+| Callback 合约  回调合约 | 需要关注 | 你 approve 的对象，必须自己部署或审查代码 |
+
+**铁律：approve 之前，必须知道那个合约的代码里会用这个授权做什么。**
+
+* * *
+
+### 七、明天要做的事
+
+1.  看三个合约的具体代码，逐行理解
+    
+2.  学习 Foundry 的基础用法（`forge script` 部署方式）
+    
+3.  开始部署和测试
+<!-- DAILY_CHECKIN_2026-03-17_END -->
+
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 # 今天的学习总结
 
 # ！！！！！！！！！！！啊啊啊啊啊找了好久发现
@@ -376,6 +507,7 @@ mailbox.dispatch{value: fee}(param1, param2, param3);
 <!-- DAILY_CHECKIN_2026-03-15_START -->
 
 
+
 ## 今天学习的内容
 
 ### 一、跨链架构理解
@@ -552,6 +684,7 @@ CrossChainReactive（Lasna）：
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -747,6 +880,7 @@ contract HyperlaneReactive is AbstractReactive, AbstractCallback {
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -1021,6 +1155,7 @@ Reactive Contract 在运行时会产生费用，例如：
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -1654,6 +1789,7 @@ Destination Chain 执行交易
 
 
 
+
 # 使用AI演示和分析了reactive contract的工作原理，图片和简单动画演示
 
 [Reactive\_Contract步骤分析](https://may-tonk.github.io/html_may_tonk_web/reactive_contract_image.html/second_reactiveframe.html)
@@ -1892,6 +2028,7 @@ Destination Chain 执行交易
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -2185,6 +2322,7 @@ L1Callback 开门之前要检查：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
