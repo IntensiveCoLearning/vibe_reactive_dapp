@@ -15,8 +15,22 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-17
+<!-- DAILY_CHECKIN_2026-03-17_START -->
+今日完成：
+
+1、睿应层（Reactive Network）官网 Overview学习完成；
+
+2、Reactive Contracts 文档学习到Lesson 3；
+
+今日感想：
+
+1、到现在还是只知道概念，无法实际操作，基础太弱有点无从下手的感觉；
+<!-- DAILY_CHECKIN_2026-03-17_END -->
+
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 今日完成：
 
 Uniswap v2止损订单demo学习完成：50%；
@@ -29,6 +43,7 @@ Uniswap v2止损订单demo学习完成：50%；
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
 
+
 今日完成：
 
 将uniswapv2 demo在本地启动完成；
@@ -36,6 +51,7 @@ Uniswap v2止损订单demo学习完成：50%；
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 今日完成：
@@ -49,6 +65,7 @@ ai是个好老师，好的大模型就是超级好老师，教程实在是太简
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -77,6 +94,7 @@ emit Callback(destinationChainId, callback, GAS\_LIMIT, payload);
 
 
 
+
 今日完成：
 
 1、Dev 文档核心模块学习；  
@@ -89,6 +107,7 @@ emit Callback(destinationChainId, callback, GAS\_LIMIT, payload);
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -119,6 +138,7 @@ emit Callback(destinationChainId, callback, GAS\_LIMIT, payload);
 
 
 
+
 今日完成：
 
 1、睿应层（Reactive Network）官网 Overview学习完成；
@@ -132,6 +152,7 @@ emit Callback(destinationChainId, callback, GAS\_LIMIT, payload);
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
