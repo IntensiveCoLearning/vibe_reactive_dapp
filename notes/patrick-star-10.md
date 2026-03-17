@@ -15,8 +15,14 @@ learning
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-17
+<!-- DAILY_CHECKIN_2026-03-17_START -->
+> ### **_今天理解了 Reactive 合约的标准范式：源合约通过稳定的事件签名发出链上信号（Event），Reactive 网络基于 topic0 进行监听与执行逻辑调度，最终通过统一格式的 callback(address destination, …) 在目标链完成状态变更。本质是一个事件驱动 + 双状态执行的链上自动化系统。_**
+<!-- DAILY_CHECKIN_2026-03-17_END -->
+
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 # **今日学习总结：理解 Reactive 合约的双状态与执行流程**
 
 ## **一、Reactive 架构中的三类合约**
@@ -242,6 +248,7 @@ Event → React → Callback
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
 
+
 # **_今天完成了第二个挑战：_**
 
 [**https://github.com/patrick-star-10/reactive-network-Hackathon/tree/main/uniswap-v2-stop-order-sepolia-demo**](https://github.com/patrick-star-10/reactive-network-Hackathon/tree/main/uniswap-v2-stop-order-sepolia-demo)
@@ -249,6 +256,7 @@ Event → React → Callback
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 # **今日学习笔记**
@@ -421,6 +429,7 @@ emit Deposited(user, amount)
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -615,6 +624,7 @@ ReactVM 本质上就是：
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -1005,6 +1015,7 @@ Callback  = 执行动作
 
 
 
+
 # **今日学习笔记｜Reactive Contract 结构理解**
 
 今天主要学习 **Reactive Contract 的组成结构与执行流程**。
@@ -1363,6 +1374,7 @@ Reactive Network 的本质是一个：
 
 
 
+
 # **今天完成了第一个挑战任务**
 
 [https://github.com/patrick-star-10/reactive-network-day1](https://github.com/patrick-star-10/reactive-network-day1)
@@ -1370,6 +1382,7 @@ Reactive Network 的本质是一个：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
