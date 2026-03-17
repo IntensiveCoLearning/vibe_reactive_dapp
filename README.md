@@ -332,7 +332,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [YTT-Iris](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/YTT-Iris.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [zhuoyu18](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/zhuoyu18.md) | ✅ | ✅ | ✅ | ✅ | ⭕️ | ⭕️ | ❌ | | | | | | | |
 | [fylcr](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/fylcr.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
-| [yoona333](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yoona333.md) | ✅ | ✅ | ✅ | ✅ | ⭕️ | ⭕️ | ✅ | ✅ |   | | | | | |
+| [yoona333](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yoona333.md) | ✅ | ✅ | ✅ | ✅ | ⭕️ | ⭕️ | ✅ | ✅ | ✅ | | | | | |
 | [wangty1013tianna](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/wangty1013tianna.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [huawanrr](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/huawanrr.md) | ✅ | ✅ | ⭕️ | ⭕️ | ❌ | | | | | | | | | |
 | [XGe711](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/XGe711.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |   | | | | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
