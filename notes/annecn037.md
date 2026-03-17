@@ -15,8 +15,203 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-17
+<!-- DAILY_CHECKIN_2026-03-17_START -->
+Reactive Network 的**经济模型**采用**"先执行、后计费"**的独特机制，让智能合约能够在无需预先支付 gas 的情况下完成跨链交互。本文系统梳理了 RVM 交易费用计算、合约充值方式、跨链回调定价公式及债务结算机制，帮助开发者理解如何维持合约活跃状态，避免因余额不足导致的执行中断。
+
+# **Reactive Network 经济模型笔记**
+
+## **一、核心概念**
+
+Reactive Network 采用**先执行后计费**的模式：RVM 交易和回调首先执行，费用在后续区块中计算和扣除。合约必须维持足够余额才能保持活跃状态。
+
+* * *
+
+## **二、RVM 交易费用机制**
+
+### **基本特性**
+
+| 项目 | 说明 |
+| --- | --- |
+| 执行时 gas price | 无（执行时不包含 gas price） |
+| 计费时机 | 使用后续区块（通常是下一个区块）的 base fee 计算 |
+| 计费粒度 | 区块级别聚合计费 |
+| 最大 gas 限制 | 900,000 units |
+
+### **费用公式**
+
+fee=BaseFee×GasUsed
+
+-   **BaseFee**：计费区块的每单位 gas 基础费用
+    
+-   **GasUsed**：执行消耗的 gas
+    
+
+> ⚠️ 由于区块级聚合，Reactscan 无法将费用与单个 RVM 交易关联
+
+### **RNK 交易**
+
+标准 EVM gas 模型，与常规以太坊交易相同。
+
+* * *
+
+## **三、Reactive 合约充值方式**
+
+### **方式一：直接转账 + 手动结算债务**
+
+**步骤 1：充值**
+
+```
+cast send $CONTRACT_ADDR \
+  --rpc-url $REACTIVE_RPC \
+  --private-key $REACTIVE_PRIVATE_KEY \
+  --value 0.1ether
+```
+
+**步骤 2：结算债务**
+
+```
+cast send \
+  --rpc-url $REACTIVE_RPC \
+  --private-key $REACTIVE_PRIVATE_KEY \
+  $CONTRACT_ADDR "coverDebt()"
+```
+
+### **方式二：系统合约充值（推荐）**
+
+使用 `depositTo()`，发送方支付交易费，债务自动结算：
+
+```
+cast send \
+  --rpc-url $REACTIVE_RPC \
+  --private-key $REACTIVE_PRIVATE_KEY \
+  $SYSTEM_CONTRACT_ADDR "depositTo(address)" \
+  $CONTRACT_ADDR \
+  --value 0.1ether
+```
+
+> **  
+> 关键地址**：系统合约与回调代理共享地址 `0x0000000000000000000000000000000000fffFfF`
+
+### **合约状态**
+
+| 状态 | 含义 |
+| --- | --- |
+| active | 正常执行 |
+| inactive | 存在未结债务，需结算 |
+
+状态查询：[Reactscan](https://reactscan.net/)
+
+* * *
+
+## **四、跨链回调定价**
+
+### **回调价格公式**
+
+_pcallback_​=_pbase_​×_C_×(_gcallback_​+_K_)  
+
+| 参数 | 说明 |
+| --- | --- |
+| pbase​ | 基础 gas 价格（tx.gasprice 或 block.basefee） |
+| C | 目标网络定价系数 |
+| gcallback​ | 回调 gas 使用量 |
+| K | 固定 gas 附加费 |
+
+## **五、回调支付机制**
+
+### **核心规则**
+
+-   与 RVM 交易相同的支付模型
+    
+-   **余额不足 → 列入黑名单 → 无法执行交易或回调**
+    
+
+### **重要限制**
+
+> **最小回调 gas 限制：100,000 gas**
+> 
+> 低于此阈值的回调请求将被忽略，确保内部审计和计算有足够 gas。
+
+### **充值方式**
+
+**直接转账 + 手动结算**
+
+```
+# 充值
+cast send $CALLBACK_ADDR \
+  --rpc-url $DESTINATION_RPC \
+  --private-key $DESTINATION_PRIVATE_KEY \
+  --value 0.1ether
+
+# 结算债务
+cast send \
+  --rpc-url $DESTINATION_RPC \
+  --private-key $DESTINATION_PRIVATE_KEY \
+  $CALLBACK_ADDR "coverDebt()"
+```
+
+**回调代理充值（自动结算债务）**
+
+```
+cast send \
+  --rpc-url $DESTINATION_RPC \
+  --private-key $DESTINATION_PRIVATE_KEY \
+  $CALLBACK_PROXY_ADDR "depositTo(address)" \
+  $CALLBACK_ADDR \
+  --value 0.1ether
+```
+
+### **即时支付机制**
+
+实现 `pay()` 函数或继承 `AbstractPayer` 可实现自动结算：
+
+-   回调代理在回调产生债务时调用 `pay()`
+    
+-   标准实现：验证调用者 → 检查余额 → 结算债务
+    
+
+* * *
+
+## **六、余额与债务查询命令**
+
+### **回调合约（目标链）**
+
+| 操作 | 命令 |
+| --- | --- |
+| 查余额 | cast balance $CONTRACT_ADDR --rpc-url $DESTINATION_RPC |
+| 查债务 | cast call $CALLBACK_PROXY_ADDR "debts(address)" $CONTRACT_ADDR --rpc-url $DESTINATION_RPC \| cast to-dec |
+| 查储备金 | cast call $CALLBACK_PROXY_ADDR "reserves(address)" $CONTRACT_ADDR --rpc-url $DESTINATION_RPC \| cast to-dec |
+
+### **Reactive 合约（Reactive 链）**
+
+| 操作 | 命令 |
+| --- | --- |
+| 查 REACT 余额 | cast balance $CONTRACT_ADDR --rpc-url $REACTIVE_RPC |
+| 查债务 | cast call $SYSTEM_CONTRACT_ADDR "debts(address)" $CONTRACT_ADDR --rpc-url $REACTIVE_RPC \| cast to-dec |
+| 查储备金 | cast call $SYSTEM_CONTRACT_ADDR "reserves(address)" $CONTRACT_ADDR --rpc-url $REACTIVE_RPC \| cast to-dec |
+
+|   |
+
+* * *
+
+## **七、关键设计要点总结**
+
+1.  **延迟计费**：执行与计费分离，降低实时计算开销
+    
+2.  **债务机制**：合约可能积累债务，需主动或自动结算
+    
+3.  **双轨充值**：直接转账（需手动结算）vs 系统/代理合约（自动结算）
+    
+4.  **跨链系数**：回调价格包含目标网络特定系数 _C_
+    
+5.  **安全下限**：100K gas 最低限制保障回调可靠性
+    
+6.  **统一地址**：系统合约与回调代理使用同一地址
+<!-- DAILY_CHECKIN_2026-03-17_END -->
+
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 ## **Reactive Network 核心模块笔记**
 
 ### **一、项目定位与核心价值**
@@ -126,11 +321,13 @@ Let’s vibe Reactive dApp
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
 
+
 今日打卡√
 <!-- DAILY_CHECKIN_2026-03-13_END -->
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 **Subscriptions** 是 Reactive Contracts 感知外部事件的注册机制，通过订阅特定链上日志或状态变化，使合约能够在无需人工干预的情况下自动触发响应；这一机制构成了 Reactive Network **跨链自动化能力**的核心纽带，实现了从**事件监听**到**自主执行**的无缝衔接。
@@ -396,11 +593,13 @@ function react(LogRecord calldata log) external vmOnly {
 
 
 
+
 回来太晚了，各位加油，I need to lie down
 <!-- DAILY_CHECKIN_2026-03-11_END -->
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -582,6 +781,7 @@ function react(LogRecord calldata log) external vmOnly {
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
