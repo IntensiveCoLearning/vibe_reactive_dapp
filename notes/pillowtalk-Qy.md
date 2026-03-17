@@ -15,8 +15,96 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-18
+<!-- DAILY_CHECKIN_2026-03-18_START -->
+### **触发合同逻辑**
+
+-   **自动执行**：当满足某个条件或事件时，智能合约会自动触发预定的行动，比如：
+    
+    -   **释放支付款项**：当完成某个里程碑或任务时，合约自动向自由职业者支付约定的款项。
+        
+    -   **应用惩罚条款**：如果任务未按时完成，合约会自动扣除相应的金额作为惩罚。
+        
+    -   **争议解决**：如果对支付条款产生争议，合约可以触发争议解决机制，如使用仲裁服务或按合同条款执行。
+        
+
+### 示例：自由职业者智能合约（Solidity代码）
+
+```
+pragma solidity ^0.8.0;
+
+contract FreelancerContract {
+
+    address public freelancer;
+    address public client;
+    uint256 public paymentAmount;
+    uint256 public milestoneDeadline;
+    uint256 public penaltyRate;
+    bool public milestoneCompleted = false;
+
+    event PaymentReleased(address to, uint256 amount);
+    event MilestoneCompleted(address freelancer, uint256 milestoneAmount);
+    event PenaltyApplied(address freelancer, uint256 penaltyAmount);
+
+    constructor(address _freelancer, address _client, uint256 _paymentAmount, uint256 _milestoneDeadline, uint256 _penaltyRate) {
+        freelancer = _freelancer;
+        client = _client;
+        paymentAmount = _paymentAmount;
+        milestoneDeadline = _milestoneDeadline;
+        penaltyRate = _penaltyRate;
+    }
+
+    // 标记里程碑完成并在按时完成时释放支付
+    function completeMilestone(bool onTime) public {
+        require(msg.sender == freelancer, "Only freelancer can complete milestone");
+
+        if (onTime) {
+            milestoneCompleted = true;
+            emit MilestoneCompleted(freelancer, paymentAmount);
+        } else {
+            uint256 penalty = (paymentAmount * penaltyRate) / 100;
+            emit PenaltyApplied(freelancer, penalty);
+        }
+    }
+
+    // 如果里程碑完成，释放支付款项
+    function releasePayment() public {
+        require(msg.sender == client, "Only client can release payment");
+        require(milestoneCompleted, "Milestone is not completed yet");
+
+        uint256 payment = milestoneCompleted ? paymentAmount : (paymentAmount - (paymentAmount * penaltyRate) / 100);
+        payable(freelancer).transfer(payment);
+        emit PaymentReleased(freelancer, payment);
+    }
+
+    // 监控里程碑状态（可以集成外部API）
+    function getMilestoneStatus() public view returns (bool) {
+        return milestoneCompleted;
+    }
+}
+```
+
+### 这个智能合约的功能：
+
+-   **支付释放**：当里程碑完成时，自动释放支付款项。
+    
+-   **惩罚应用**：如果自由职业者未按时完成任务，合约会自动扣除罚金。
+    
+-   **事件触发**：通过外部系统的触发事件（如任务完成、延迟等）来更新合约的状态并执行相应动作。
+    
+
+### 实现步骤：
+
+1.  **在区块链上部署智能合约**：可以选择以太坊或币安智能链等区块链平台进行部署和执行。
+    
+2.  **前端或仪表盘**：需要一个用户界面（UI），让自由职业者和客户能够方便地查看任务进度、支付状态和违约情况。
+    
+3.  **与外部API集成**：例如，通过集成项目管理工具API来实时监控任务进度，或者通过支付网关API确认支付是否完成。
+<!-- DAILY_CHECKIN_2026-03-18_END -->
+
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 **1.AI Contract → Reactive Execution**
 
 ```
@@ -33,11 +121,13 @@ Trigger contract logic
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
 
+
 休息休息休息
 <!-- DAILY_CHECKIN_2026-03-15_END -->
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 今天
@@ -49,6 +139,7 @@ Trigger contract logic
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -117,6 +208,7 @@ The meeting discussed how to use AI to build reactive contracts, including workf
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -298,6 +390,7 @@ contract DestinationContract {
 
 
 
+
 ```
 
 Origin Contract (链A)
@@ -352,6 +445,7 @@ Trigger(sender, amount)
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
