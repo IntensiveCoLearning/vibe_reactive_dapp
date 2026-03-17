@@ -15,8 +15,74 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-17
+<!-- DAILY_CHECKIN_2026-03-17_START -->
+# 📝 笔记：订阅生命周期管理
+
+在响应式编程中，你创建的每一条流，本质上都是一个**资源连接**（比如网络连接、数据库监听器、定时器等）。如果这些连接在不需要的时候没有被断开，它们就会像“僵尸”一样驻留在内存里，这就是最常见的**内存泄漏**来源。
+
+### 1\. 为什么“订阅”需要管理？
+
+当你调用 .subscribe() 时，框架会在内部建立一个监听管道。
+
+-   如果你的页面销毁了，但管道还在（比如它还在等待网络响应），那么这个管道会持有该页面的引用，导致页面对象无法被垃圾回收（GC）。
+    
+-   这就是为什么在 Android、iOS 或前端框架（如 React/Vue）中，响应式流一定要挂载在组件的生命周期上。
+    
+
+### 2\. 核心工具：Disposable / Subscription
+
+每个 subscribe() 方法在调用后，通常会返回一个对象（在 RxJava 中叫 Disposable，在 Kotlin 协程/Flow 中叫 Job，在 RxJS 中叫 Subscription）。
+
+这个对象只有一个核心使命：**dispose() 或 cancel()**。
+
+-   调用它，意味着告诉生产者：“我不玩了，后续的数据别再发给我了，赶紧把资源释放掉。”
+    
+
+### 3\. 最佳实践：如何优雅地“断开”
+
+千万不要手动去记每一个 Disposable 变量，那会累死人，也容易漏。工业级的做法是使用\*\*“容器”\*\*。
+
+A. 统一容器 (CompositeDisposable / CompositeSubscription)
+
+创建一个容器，把所有该页面的订阅都扔进去。
+
+code JavaScript
+
+```
+// 页面初始化
+const disposables = new CompositeDisposable();
+
+// 每次订阅时，把返回的 handle 加进容器
+disposables.add(
+  api.getData().subscribe(...)
+);
+
+// 页面销毁时 (onDestroy / componentWillUnmount)
+disposables.clear(); // 或者 dispose()，一次性干掉所有连接
+```
+
+B. 自动解绑机制 (Lifecycle Binding)
+
+在现代框架中，你甚至不需要手动调 clear()：
+
+-   **Android (RxLifecycle / LifeCycle)**：框架可以直接监听 Activity/Fragment 的生命周期，自动在 onStop 或 onDestroy 时切断所有流。
+    
+-   **Kotlin (viewModelScope)**：在协程中，使用 viewModelScope 启动的流，会自动跟随 ViewModel 的销毁而自动取消，不需要写任何 dispose 代码。
+    
+
+### 4\. 避坑指南
+
+-   **不要忽略 subscribe 的返回值**：写代码时，如果 IDE 提示你 Result of subscribe is ignored，请一定要重视。这通常意味着你创建了一个“失控”的资源。
+    
+-   **流的“自杀”行为**：有时候流处理完数据后会发送 onComplete 或 onError。如果流已经自然结束了，它会自动执行解绑，你不需要额外手动操作。只有那些**持续运行、永不结束的流**（如 UI 事件、Socket 监听），才必须通过 dispose() 手动干掉。
+    
+-   **千万别在异步回调里更新已销毁的 UI**：在解绑流的同时，如果你的后续逻辑包含 UI 更新，一定要确保断开连接后，代码不会再执行到更新界面的逻辑，否则会报“找不到 View”或者“Context 为空”的异常。
+<!-- DAILY_CHECKIN_2026-03-17_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 # 📝 笔记：时间轴控制
 
 ## 1\. 核心定义：把“时间”视为流的一部分
@@ -93,6 +159,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 # 📝 笔记：多流组合
 
@@ -218,6 +285,7 @@ Observable.combineLatest(
 
 
 
+
 # 📝 笔记：线程调度
 
 ## 1\. 核心定义：打破“默认同步”的幻觉
@@ -270,6 +338,7 @@ Observable.combineLatest(
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -371,6 +440,7 @@ Observable.combineLatest(
 
 
 
+
 **map 与 flatMap 的区别**
 
 在处理数据流时，我们经常需要对流中的元素进行转换。map 和 flatMap 都是用来做转换的，但它们的“维度”处理完全不同。
@@ -453,6 +523,7 @@ flatMap 是**并发执行**的。如果你连续发出请求，flatMap 内部产
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
