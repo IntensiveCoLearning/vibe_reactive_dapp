@@ -15,8 +15,20 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-17
+<!-- DAILY_CHECKIN_2026-03-17_START -->
+在看文档的第三课。
+
+_ReactVM 是一个受限虚拟机，旨在隔离地处理事件。从一个地址部署的合约在同一个 ReactVM 中执行。它们可以相互交互，但不能与响应式网络上的其他合约交互。_
+
+ReactVM为了安全而隔离各个地址部署的合约很好理解。然而也有一些还没懂的问题有待探究：
+
+ReactVM虚拟机这样的时空开销会不会很大？毕竟一个地址就要开一个ReactVM，极限在哪儿？
+<!-- DAILY_CHECKIN_2026-03-17_END -->
+
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 接着昨天的。
 
 Reactive合约部署成功：
@@ -34,6 +46,7 @@ Error: server returned an error response: error code 3: execution reverted, data
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 再试一次，Uniswap V2 止损单触发！啊啊啊！
 
@@ -68,11 +81,13 @@ Deployer: 0x74217992032536E195DAD5aDa6E7bDf127B0A1E4 Deployed to: 0xe59645736e7d
 <!-- DAILY_CHECKIN_2026-03-13_START -->
 
 
+
 还卡在 Uniswap V2 止损单配置，明天继续研究。
 <!-- DAILY_CHECKIN_2026-03-13_END -->
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -107,6 +122,7 @@ Deployer: 0x74217992032536E195DAD5aDa6E7bDf127B0A1E4 Deployed to: 0x15D5ed21F405
 
 
 
+
 1\. 今天贴个我曾经给Reactive写的推文吧：[https://x.com/JaggerLam/status/2022665535197204713](https://x.com/JaggerLam/status/2022665535197204713) 比较粗浅的认知，但是毕竟跑过玩具Demo，也看了一些相关资料，写了这么一篇。
 
 2\. 日拱一卒，Solidity 和 EVM 还得学。今天解开一个小困惑，关于tx.origin, msg.sender, msg.value. 原来这是 Solidity 语言内置的、在合约执行时可访问的全局变量。
@@ -116,6 +132,7 @@ Deployer: 0x74217992032536E195DAD5aDa6E7bDf127B0A1E4 Deployed to: 0x15D5ed21F405
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
