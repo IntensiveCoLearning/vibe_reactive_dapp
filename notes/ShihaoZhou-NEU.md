@@ -15,13 +15,66 @@ Reactive 探索者
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-17
+<!-- DAILY_CHECKIN_2026-03-17_START -->
+四个环境/合约在整个架构中各自承担的具体任务和技术逻辑：
+
+### 1\. 源头链（Origin Chain，如以太坊主网）
+
+**职责：抛出“触发器”（Emit Events）**
+
+-   **需要做什么：** 部署在源头链上的合约不需要知道 Reactive 网络的存在，它的唯一任务就是在特定动作发生时**发出（Emit）标准的 EVM 事件**。这个事件包含了关键数据（如谁发生了交易、金额是多少、价格变动等）。
+    
+-   _补充说明：_ 在很多实际应用中（比如自动止损），你甚至**不需要**在源头链部署自己的合约。你可以直接利用现有的 DeFi 协议（如 Uniswap 资金池）抛出的原生事件（如 `Sync` 或 `Swap` 事件）作为触发器。
+    
+
+### 2\. Reactive Network（公开网络层）
+
+**职责：系统登记与事件订阅（Subscription Management）**
+
+-   **需要做什么：** 部署在 Reactive Network 上的反应式合约实例（公开状态），主要任务是**与系统合约交互，注册你想监听的事件**。
+    
+-   **工作机制：** 你通常会在合约的构造函数或使用带有 `rnOnly` 修饰符的函数中，调用 `service.subscribe(...)` 方法。这就相当于你在公开大厅的登记簿上写下：“请帮我盯着以太坊主网上 Uniswap 的那个资金池，一旦它发出 `Sync` 事件，请立刻通知我。” 这个实例不处理复杂的业务计算，只负责订阅的开启和暂停。
+    
+
+### 3\. ReactVM（隔离虚拟机层）
+
+**职责：执行核心业务逻辑与跨链指令（Business Logic & Callbacks）**
+
+-   **用来干什么：**正如你所知，每个 Reactive 合约都会在底层生成一个代码完全相同、但状态隔离的副本，运行在部署者专属的 ReactVM 中。
+    
+-   **工作机制：** 当 Reactive Network 监听到源头链的事件后，会把事件数据打包（`LogRecord`）并转发给你的 ReactVM 实例。此时，ReactVM 里的合约会被自动唤醒，并执行 `react()` 函数。
+    
+-   **核心动作：**
+    
+    1.  **条件判断：** 它在这个绝对隔离的环境中核对业务逻辑，比如判断此时的价格是否跌破了你设置的止损阈值（`threshold`）。
+        
+    2.  **发出跨链回调（Emit Callback）：** 如果条件满足，ReactVM 实例会在代码的最后抛出一个特殊的 `Callback` 事件。这个事件的 `payload` 里包含了目标链的 ID、目标合约地址以及要执行的具体指令。
+        
+
+### 4\. 目标链（Destination Chain）
+
+**职责：接收指令并执行最终动作（Execution）**
+
+-   **需要做什么：** 部署在目标链上的合约（通常称为 Callback 合约），负责接收来自 Reactive 网络的最终指令，并执行实际的链上动作。
+    
+-   **工作机制：** Reactive 网络底层系统检测到 ReactVM 发出的 `Callback` 指令后，会通过中继（如默认回调代理或 Hyperlane）向目标链上的这个合约发送一笔真实交易。目标链合约接收到指令，校验第一个参数 `rvm_id` （以确保指令确实是由你本人的 ReactVM 发出的安全授权机制）后，执行比如抛售代币、补仓清算或铸造跨链 NFT 等实质性操作。
+    
+
+**总结这套架构的精妙之处：** 你写了**一份**反应式智能合约代码，但它被拆分成了“双态（Dual-State）”运行：Reactive Network 上的实例像一个\*\*“耳朵”**，负责跨链听取事件；而 ReactVM 里的实例像一个**“大脑”\*\*，负责独立思考并在满足条件时向目标链发号施令。这种设计既保证了系统能同时处理海量并发事件（高性能），又确保了每个用户的核心业务逻辑在隔离环境中安全执行。
+
+![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-17-1773731399284-image.png)![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-17-1773731410739-image.png)![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-17-1773731420815-image.png)![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-17-1773731429536-image.png)![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-17-1773731439214-image.png)![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-17-1773731446390-image.png)![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-17-1773731453896-image.png)![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-17-1773731464232-image.png)![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-17-1773731471816-image.png)![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/ShihaoZhou-NEU/images/2026-03-17-1773731478932-image.png)
+<!-- DAILY_CHECKIN_2026-03-17_END -->
+
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 今天看一下 [https://dev.reactive.network/hyperlane](https://dev.reactive.network/hyperlane)
 <!-- DAILY_CHECKIN_2026-03-16_END -->
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 # **Lesson 6: How Uniswap Works / Understanding Uniswap V2 Pools and Smart Contracts**
 
@@ -52,6 +105,7 @@ X \* y = k
 <!-- DAILY_CHECKIN_2026-03-14_START -->
 
 
+
 # **Lesson 5: How Oracles Work**
 
 **尝试使用漫画方式来理解**
@@ -61,6 +115,7 @@ X \* y = k
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -189,6 +244,7 @@ Unsubscribing is an expensive operation due to the necessity of searching and re
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -725,6 +781,7 @@ function react(LogRecord calldata log) external vmOnly {
 
 
 
+
 # **Lesson 2: How Events and Callbacks Work**
 
 本课重点讲解事件和回调在智能合约中的作用。通过学习如何发出、处理和监听事件，开发者可以创建能够实时响应区块链变化的动态去中心化应用（dApp）。我们还将探讨响应式合约如何使用 `react()` 方法处理事件，并通过回调发起跨链交易，从而增强响应式网络的功能。
@@ -815,6 +872,7 @@ For security and authorization purposes, the Reactive Network automatically repl
 
 
 
+
 # 学习计划
 
 1.  学习：[https://dev.reactive.network/education/module-1/reactive-contracts](https://dev.reactive.network/education/module-1/reactive-contracts)
@@ -880,6 +938,7 @@ RC 可以监控来自不同智能合约、兼容 EVM 的区块链的数据，它
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
