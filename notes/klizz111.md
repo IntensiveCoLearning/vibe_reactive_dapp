@@ -15,8 +15,28 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-17
+<!-- DAILY_CHECKIN_2026-03-17_START -->
+**跨链回调（Callback）定价与支付** ：
+
+-   回调费用公式： $p\_callback = p\_base × C × (g\_callback + K)$
+    
+    -   $p\_base$：目标链的 BaseFee
+        
+    -   $C$：定价系数（针对不同链的调整因子）
+        
+    -   $g\_callback$：回调实际使用的 gas
+        
+    -   $K$：固定附加费（常数）
+        
+-   **最低回调 Gas 要求**：100,000 gas，低于这个值的回调请求会被直接忽略（防止滥用或无效调用）。
+    
+-   回调也是先执行，后从合约 REACT 余额扣费。
+<!-- DAILY_CHECKIN_2026-03-17_END -->
+
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 ## Economy
 
 ### 1\. 交易执行与计费模型
@@ -89,6 +109,7 @@ $$p\_{callback} = p\_{base} \\times C \\times (g\_{callback} + K)$$
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
 
+
 ## Subscription 的工作原理
 
 ### 1\. 核心概念
@@ -160,6 +181,7 @@ $$p\_{callback} = p\_{base} \\times C \\times (g\_{callback} + K)$$
 <!-- DAILY_CHECKIN_2026-03-14_START -->
 
 
+
 ### **1\. 事件的本质**
 
 -   **定义**：在区块链上下文中，事件是智能合约执行过程中产生的日志记录（Logs）。
@@ -214,6 +236,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 
 
+
 -   ReactVM: ReactiveNetwork中的核心组件，负责执行Reactive Contract，并发送回调信息到目标链
     
 -   归属权：Reactive COntract会部署到基于同一个地址的EOA的独有的ReactVM，并且同一个ReactVM中的合约可以进行状态共享
@@ -229,11 +252,13 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 
 
+
 -   参加了Workshop
 <!-- DAILY_CHECKIN_2026-03-12_END -->
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -247,6 +272,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
