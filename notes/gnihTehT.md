@@ -15,8 +15,72 @@ shadowdoge，web3新人
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-18
+<!-- DAILY_CHECKIN_2026-03-18_START -->
+## 对于 Cron 事件，`react()` 收到的是什么
+
+Cron 不来自任何用户合约——它来自 Reactive 的 **SystemContract**，按固定区块间隔自动 emit。所以 `react()` 收到的 `LogRecord` 里：
+
+-   `_contract` = SystemContract 地址（固定值）
+    
+-   `topic_0` = cron 事件的 topic（订阅时指定的那个）
+    
+-   `block_number` = 当前区块号（可以用来做"每 X 块执行一次"的二次过滤）
+    
+-   `data` 里可能带有时间戳或间隔信息
+    
+
+因此在 Cron 场景里，`react()` 的典型结构是这样的：
+
+solidity
+
+```solidity
+function react(LogRecord calldata log) external vmOnly {
+
+    // 1. 可选：按区块号做频率过滤（每 100 块才真正执行）
+    if (log.block_number % 100 != 0) return;
+
+    // 2. 读取外部状态（只能读同一 deployer 的合约）
+    uint256 healthFactor = myPositionTracker.getHealthFactor(user);
+
+    // 3. 条件判断
+    if (healthFactor < LIQUIDATION_THRESHOLD) {
+
+        // 4. 构造 callback payload
+        bytes memory payload = abi.encodeWithSignature(
+            "protect(address,uint256)",
+            address(0),   // ReactVM ID 自动填入
+            healthFactor
+        );
+
+        // 5. 触发目标链上的保护操作
+        emit Callback(DEST_CHAIN_ID, protectionContract, GAS_LIMIT, payload);
+    }
+}
+```
+
+* * *
+
+## `react()` 里最常见的三种模式
+
+**模式一：一次性触发**。用状态变量 `triggered` 做守卫，只触发一次——止损单就是这样，触发后不再重复执行。
+
+**模式二：持续监控**。每次 cron 都检查，条件成立就触发，条件不成立就静默返回——Aave 清算保护就是这样，始终盯着健康因子。
+
+**模式三：数据累积**。不触发 callback，只把事件数据存到 ReactVM 内部的状态变量里，等查询时再用——ERC-20 Turnovers Demo 就是这个模式，持续记录交易量，不主动干预。
+
+* * *
+
+## 一个隐藏细节：ReactVM 的 payload 第一个参数
+
+Reactive Network 会自动把 callback payload 的前 160 bit 替换为 ReactVM ID（即 deployer 的地址）。 [Reactive](https://dev.reactive.network/events-&-callbacks)所以你在 `stop(address,...)` 里写的 `address(0)` 只是占位符，实际执行时那个位置会变成 ReactVM 地址——目标链合约可以用这个地址来验证调用方，防止伪造 callback。
+
+这是 Reactive 的安全机制，写代码时要记得第一个参数永远留 `address(0)` 作占位。
+<!-- DAILY_CHECKIN_2026-03-18_END -->
+
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 ### 关键概念与实现
 
 1.  **ERC-20** `Approval` **事件监听**：
@@ -55,6 +119,7 @@ shadowdoge，web3新人
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 ## Cron Demo — 给智能合约装上时钟
 
@@ -95,6 +160,7 @@ RC 定期订阅 cron 事件，每次触发时检查用户的健康因子（Healt
 <!-- DAILY_CHECKIN_2026-03-14_START -->
 
 
+
 Uniswap 是以太坊上最重要的去中心化交易所（DEX）协议之一，彻底改变了加密资产的交换方式。下面我来分几个核心概念为你讲清楚。
 
 ## 核心思想：自动做市商（AMM）
@@ -123,6 +189,7 @@ Uniswap 是以太坊上最重要的去中心化交易所（DEX）协议之一，
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -295,6 +362,7 @@ cast send <ORIGIN\_CONTRACT\_ADDR> \\
 
 
 
+
 遇到了一个坑
 
 # 坑 1：`--broadcast` 被当成 constructor 参数
@@ -355,6 +423,7 @@ forge create (dry run)
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -421,6 +490,7 @@ execution reverted
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
