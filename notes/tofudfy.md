@@ -15,8 +15,24 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-18
+<!-- DAILY_CHECKIN_2026-03-18_START -->
+第三阶段进展汇报（初步实践）
+
+本阶段主要开始上手 Reactive 跨链机制的实际开发，目标是打通基础链路并熟悉整体流程。
+
+前端方面，已完成钱包连接，并能够在 Origin 链与 Lasna（Reactive）之间切换。目前可以通过前端触发 Origin 合约事件，正在尝试搭建简单的跨链状态展示。
+
+后端方面，初步实现了对链上事件的监听（以 Origin 为主），并在尝试将事件结构化，作为后续跨链处理与前端展示的基础。
+
+智能合约方面，完成了基础事件合约（emit Event）的编写，并在学习 Reactive 合约的订阅与 react(LogRecord) 处理逻辑，逐步理解其执行机制。
+
+整体仍处于熟悉框架与打通最小流程阶段，下一步将重点放在链路联通（Origin → Reactive）以及简单的端到端验证上。
+<!-- DAILY_CHECKIN_2026-03-18_END -->
+
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 Reactive Network 学习总结
 
 一、学习主题与目标
@@ -260,6 +276,7 @@ Reactive 模式：Protocol-level automation，实现去中心化
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 Reactive Network 学习总结
 
@@ -566,6 +583,7 @@ Execute Swap
 <!-- DAILY_CHECKIN_2026-03-11_START -->
 
 
+
 在本次作业中，我主要围绕 Reactive Network 的跨链事件与回调机制进行了开发实践。首先梳理了系统整体架构，理解了 **Origin Contract、Reactive Contract 和 Destination Contract** 在跨链事件流程中的角色划分。Origin Contract 部署在源链上，用于触发事件；Reactive Contract 运行在 Reactive Network 上，用于监听指定事件并执行响应逻辑；Destination Contract 部署在目标链上，用于接收回调交易并执行最终操作。
 
 在开发过程中，我重点学习了 Reactive Smart Contract 的基本结构以及事件监听与回调的触发方式，并理解了 Reactive Network 的事件驱动执行模式。相比传统依赖 off-chain bot 监听事件再手动发送交易的方式，Reactive Network 将事件监听和自动执行逻辑通过合约形式进行编程，实现了更自动化的跨链响应机制。通过这一过程，我对事件驱动智能合约以及跨链自动化执行的设计思路有了更直观的认识。
@@ -577,6 +595,7 @@ Execute Swap
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -699,6 +718,7 @@ react(LogRecord log)
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
