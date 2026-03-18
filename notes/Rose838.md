@@ -15,19 +15,27 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-18
+<!-- DAILY_CHECKIN_2026-03-18_START -->
+依旧在弄挑战二，每一步都在报错，已经放弃了原先选的改弄清算保护的了，但是依旧报错，我恨
+<!-- DAILY_CHECKIN_2026-03-18_END -->
+
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 仍然1在试图完成挑战2
 <!-- DAILY_CHECKIN_2026-03-17_END -->
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
 
+
 学习了co-learning,试图完成第二个作业
 <!-- DAILY_CHECKIN_2026-03-16_END -->
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 ## **一、核心概述**
@@ -200,6 +208,7 @@ Reactive Network 提供通配符实现**模糊匹配**，但要求**至少有一
 
 
 
+
 一、极端市场波动下的实时监控机制
 
 核心监控逻辑
@@ -321,6 +330,7 @@ Reactive 更适合非高频场景，高频场景需考虑中心化方案。
 
 
 
+
 Reactive Library 是用于在 Reactive Network 上开发响应式智能合约的基础库，基于 Foundry 构建，提供订阅、回调、支付与系统合约交互能力，安装命令为 `forge install Reactive-Network/reactive-lib`。
 
 库核心是四类抽象合约：AbstractReactive 作为基础合约，提供执行环境区分与系统合约接入；AbstractPayer 处理支付、债务结算与授权发送；AbstractCallback 实现回调权限控制；AbstractPausableReactive 支持订阅暂停与恢复，方便管理链上事件监听。
@@ -334,6 +344,7 @@ Reactive Library 是用于在 Reactive Network 上开发响应式智能合约的
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -390,6 +401,7 @@ Reactive Library 是用于在 Reactive Network 上开发响应式智能合约的
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -535,6 +547,7 @@ Reactive Network 做的是：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
