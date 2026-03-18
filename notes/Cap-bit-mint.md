@@ -15,8 +15,16 @@ timezone: UTC+8
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-18
+<!-- DAILY_CHECKIN_2026-03-18_START -->
+Day-10
+
+take a. rest
+<!-- DAILY_CHECKIN_2026-03-18_END -->
+
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 **小白学习Day-9**
 
 今天尝试完成第二阶段的实战任务“让一个 Demo 在测试网上跑起来”。
@@ -62,6 +70,7 @@ timezone: UTC+8
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
 
+
 Day-8
 
 休一天，明日补上进度
@@ -69,6 +78,7 @@ Day-8
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 Day-6
@@ -82,6 +92,7 @@ Day-6
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -113,6 +124,7 @@ Day-5
 
 
 
+
 Day-4
 
 今天出差请假一天
@@ -120,6 +132,7 @@ Day-4
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -151,6 +164,7 @@ Day-3
 
 
 
+
 Day-2  
   
 基于今天的学习，我想用生活例子来理解 Reactive 与传统 EVM 的区别：
@@ -164,6 +178,7 @@ Day-2
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
