@@ -15,8 +15,18 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-18
+<!-- DAILY_CHECKIN_2026-03-18_START -->
+# Reactive DApp学习
+
+-   如何把智能合约变成一个自动运行的机器人：**Reactive 方式，**逻辑直接写在响应式合约里。它像是一个**永不掉线的链上监控器**，只要区块链在出块，你的止损逻辑就在运行，且具有去中心化的安全保障。
+    
+-   通过 `UniswapDemoStopOrderReactive` 示例，讲解了一个基础 Reactive 合约如何实现 Uniswap V2 止损单逻辑。合约首先在构造函数中保存 pair、stop\_order、client、token0、coefficient 和 threshold 等参数，并订阅 Uniswap Pair 的 `Sync` 事件以及 stop\_order 的完成事件。随后 `react()` 根据事件来源分类处理：若收到 Uniswap Pair 的 `Sync`，则解码储备数据并通过 `below_threshold()` 判断当前储备比例是否跌破阈值；若满足条件且尚未触发，则构造 `stop(...)` 的 callback payload 并发送给止损单合约执行。等收到 stop\_order 的确认事件后，再将 `done` 标记为真，表示整个止损流程完成
+<!-- DAILY_CHECKIN_2026-03-18_END -->
+
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 # ReactiveDApp学习第六天
 
 -   Reactive Contracts 很擅长响应链上事件，但如果要让合约感知链外信息，就必须依赖 Oracle。神谕机负责把价格、汇率、天气、比赛结果等链外数据带到区块链上，而 Reactive Contracts 则可以对这些由神谕机带来的事件自动作出反应。因此，这节课的重点是理解神谕机的作用、神谕机问题，以及如何把 Oracle 与 Reactive Contracts 结合起来。
@@ -33,6 +43,7 @@ Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 # Reactive DApp学习第5天
 
@@ -52,6 +63,7 @@ Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常
 <!-- DAILY_CHECKIN_2026-03-14_START -->
 
 
+
 # ReactiveDapp学习第四天
 
 -   ReactVM 这边就像“真正干活的机器人”：它一边盯价格，一边判断是否该止损；一旦该止损就立刻发 callback；等收到执行成功的回执后，再把订单状态标记为完成。
@@ -63,6 +75,7 @@ Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -81,6 +94,7 @@ Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常
 
 
 
+
 # Reactive Dapp 学习第二天
 
 直播学习:
@@ -92,6 +106,7 @@ Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
