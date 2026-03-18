@@ -15,8 +15,30 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-18
+<!-- DAILY_CHECKIN_2026-03-18_START -->
+-   今日重点：深化 Subscribe / Trigger / Callback 模型 + ReactVM 执行逻辑 + 跨链自动化机制。
+    
+    -   复习双状态（Reactive Network 主链 vs ReactVM 隔离沙箱）。
+        
+    -   掌握订阅参数（chainId、contract、topics 通配 REACTIVE\_IGNORE）。
+        
+    -   Callback payload 构造：abi.encodeWithSignature + 首160位替换 ReactVM ID。
+        
+    -   经济模型：REACT 预存支付 Callback fee（base × C × (gas + K)），不足黑名单需 coverDebt。
+        
+    -   跨链：Hyperlane 传输 Callback tx，支持 Ethereum/Base 等 destination。
+        
+-   关键实践回顾：
+    
+    -   Uniswap V2 Stop Order demo 链路：订阅 Sync 事件 → react() 计算价格阈值 → Callback swap + 转账 → Stop 确认。
+        
+    -   开发提示：用 vmOnly / rnOnly 修饰符防上下文错误；gas limit ≥ 100k；测试 Lasna 测试网。
+<!-- DAILY_CHECKIN_2026-03-18_END -->
+
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 -   订阅 Uniswap Pair Sync 事件（topics\[0\] = keccak256("Sync(uint112,uint112)")）。
     
 -   react() 中：解码 reserve0/reserve1 → 计算价格比率 → 若 ≤ stopPrice → emit Callback。
@@ -28,6 +50,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 Uniswap V2 集成与 Reactive Stop Order 实战
 
@@ -82,6 +105,7 @@ Uniswap V2 集成与 Reactive Stop Order 实战
 <!-- DAILY_CHECKIN_2026-03-15_START -->
 
 
+
 Uniswap V2 池与合约理解
 
 -   学习目标：
@@ -125,6 +149,7 @@ Uniswap V2 池与合约理解
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -182,6 +207,7 @@ How Uniswap Works（Uniswap V2 池与合约理解）
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -248,6 +274,7 @@ How Oracles Work
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -397,6 +424,7 @@ How Subscriptions Work（订阅机制详解）
 
 
 
+
 **ReactVM and Reactive Network As a Dual-State Environment**
 
 **1\. 学习目标（Lesson Objectives）**
@@ -495,6 +523,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 
 
+
 **Events and Callbacks 工作原理**
 
 **1\. 学习目标（Lesson Objectives**）
@@ -569,6 +598,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
