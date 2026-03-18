@@ -15,8 +15,279 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-18
+<!-- DAILY_CHECKIN_2026-03-18_START -->
+# Reactive Network 学习笔记
+
+## 一、核心概念
+
+### 🔹 Reactive Network 是什么？
+
+-   一个 **EVM 兼容链**
+    
+-   核心是 **Reactive Contracts（RCs）**
+    
+
+👉 本质：
+
+> **事件驱动 + 跨链自动执行**
+
+* * *
+
+### 🔹 Reactive Contracts（RCs）
+
+特点：
+
+-   监听多链事件（logs）
+    
+-   自动执行 Solidity 逻辑
+    
+-   条件满足 → 触发跨链 callback
+    
+
+👉 类比：
+
+> **链上版 IFTTT（If This Then That）**
+
+* * *
+
+## 二、核心能力（能做什么）
+
+-   自动止盈 / 止损
+    
+-   清算保护
+    
+-   自动调仓（Rebalancing）
+    
+-   收益优化（Yield）
+    
+-   跨链自动化流程
+    
+
+* * *
+
+## 三、关键架构
+
+### 🔹 1. Origin & Destination
+
+| 概念 | 含义 |
+| --- | --- |
+| Origin | 事件来源链（读 logs） |
+| Destination | 执行回调链 |
+
+✔ 可以：
+
+-   多 origin
+    
+-   多 destination
+    
+-   动态选择目标链
+    
+
+* * *
+
+### 🔹 2. Callback Proxy（关键安全组件）
+
+作用：
+
+-   统一入口执行 callback
+    
+-   保证调用可信
+    
+
+目标合约必须验证：
+
+1.  `msg.sender == Callback Proxy`
+    
+2.  RVM ID 匹配 RC
+    
+
+* * *
+
+### 🔹 3. Reactive 执行流程（核心！）
+
+```
+监听事件 → 满足条件 → 发起 callback → 目标链执行
+```
+
+* * *
+
+## 四、跨链通信
+
+### 🔹 默认方式：Callback Proxy
+
+-   官方提供
+    
+-   简单、安全
+    
+
+* * *
+
+### 🔹 替代方案：Hyperlane
+
+使用场景：
+
+-   某链没有 Callback Proxy
+    
+-   需要更灵活路由
+    
+-   已集成 Hyperlane 系统
+    
+
+👉 本质：**跨链消息传输层**
+
+* * *
+
+## 五、运行环境
+
+### 🔹 双环境部署（非常重要）
+
+| 环境 | 作用 |
+| --- | --- |
+| RNK（Reactive Network） | 用户交互 + 管理订阅 |
+| RVM（ReactVM） | 执行逻辑 |
+
+👉 特点：
+
+-   同一合约 **两份部署**
+    
+-   **状态不共享！**
+    
+
+* * *
+
+### 🔹 ReactVM 限制
+
+-   ❌ 不能访问外部 RPC
+    
+-   ❌ 不能调用链外服务
+    
+-   ✅ 只能：
+    
+    -   处理 logs
+        
+    -   发 callback
+        
+
+* * *
+
+## 六、开发关键点
+
+### 🔹 1. 订阅机制
+
+-   指定：
+    
+    -   chain
+        
+    -   contract
+        
+    -   event（topic）
+        
+
+* * *
+
+### 🔹 2. 触发逻辑
+
+-   在 `react()` 中写条件判断
+    
+
+* * *
+
+### 🔹 3. Callback
+
+-   构造 payload
+    
+-   发送到 destination
+    
+
+* * *
+
+## 七、网络 & 链支持
+
+### 🔹 主网（Mainnet）
+
+-   Ethereum / Arbitrum / Base / BSC / Avalanche 等
+    
+-   Reactive Chain ID：**1597**
+    
+
+* * *
+
+### 🔹 测试网（Testnet）
+
+-   Sepolia / Base Sepolia / Lasna
+    
+-   Lasna Chain ID：**5318007**
+    
+
+⚠️ 注意：
+
+> 主网和测试网 **不能混用**
+
+* * *
+
+## 八、合约验证（Sourcify）
+
+### 🔹 部署时验证
+
+```
+forge create --verify --verifier sourcify ...
+```
+
+### 🔹 部署后验证
+
+```
+forge verify-contract ...
+```
+
+* * *
+
+### 🔹 验证结果查看
+
+-   使用 **Reactscan**
+    
+-   状态：`VERIFIED (EXACT MATCH)`
+    
+
+* * *
+
+## 九、工具生态
+
+-   Reactscan（浏览器）
+    
+-   Reactive Library（开发库）
+    
+-   RNK RPC（节点接口）
+    
+-   Demo（学习入口）
+    
+
+* * *
+
+## 十、核心一句话总结
+
+> **Reactive = 监听链上事件 → 自动判断 → 跨链执行**
+
+* * *
+
+## 🔥 最关键理解（建议记住）
+
+1.  RC ≠ 普通合约  
+    👉 它是“自动运行”的
+    
+2.  不是用户触发  
+    👉 是“事件触发”
+    
+3.  双环境（RNK + RVM）  
+    👉 且状态隔离
+    
+
+* * *
+<!-- DAILY_CHECKIN_2026-03-18_END -->
+
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 # Reactive Network Demo 学习笔记
 
 ## 一、整体概念
@@ -333,6 +604,7 @@ CallbackReceived(...)
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
 
+
 源链事件 -> 订阅捕获 -> 条件判断 -> 发起目标链回调
 
 核心知识点：
@@ -382,6 +654,7 @@ CallbackReceived(...)
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 
@@ -672,6 +945,7 @@ Reactive Contract运行逻辑：
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -1048,6 +1322,7 @@ Sync
 
 
 
+
 # Oracles 学习笔记
 
 ## 1\. Oracle 的作用
@@ -1325,6 +1600,7 @@ Reactive Contract 监听事件
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -1715,6 +1991,7 @@ Reactive Contracts 订阅机制核心：
 
 
 
+
 # Reactive Contracts (RCs) 架构与执行机制
 
 ## 一、 双重执行环境：一个合约，两个状态
@@ -1828,6 +2105,7 @@ Reactive Contracts 订阅机制核心：
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -2108,6 +2386,7 @@ Reactive Network 会自动：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
