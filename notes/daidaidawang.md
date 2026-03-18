@@ -15,8 +15,257 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-18
+<!-- DAILY_CHECKIN_2026-03-18_START -->
+## **订阅**
+
+### **设置订阅**
+
+**ISubscriptionService接口**
+
+> 事件订阅服务：根据特定标准订阅特定事件，在事件发生时接收通知
+
+```
+pragma solidity >=0.8.0;
+​
+import './IPayable.sol';
+​
+interface ISubscriptionService is IPayable {
+    function subscribe(
+        uint256 chain_id,
+        address _contract,
+        uint256 topic_0,
+        uint256 topic_1,
+        uint256 topic_2,
+        uint256 topic_3
+    ) external;
+    
+    function unsubscribe(
+        uint256 chain_id,
+        address _contract,
+        uint256 topic_0,
+        uint256 topic_1,
+        uint256 topic_2,
+        uint256 topic_3
+    ) external;
+}
+```
+
+> chain\_id A表示时间源链ID uint256 EIP155
+> 
+> \_contract 发送事件的起始链合约地址
+> 
+> topic\_0, , , 事件主题
+
+**无效接口**
+
+IReactive接口
+
+**LogRecord结构体**
+
+> 表示事情详细日志数据结构
+
+| chain_id | 起源区块链ID |
+| --- | --- |
+| _contract | 事件发生的合同地址 |
+| topic_0 到 topic_3 | 事件日志中已索引的主题 |
+| data | 额外未索引事件数据 |
+| block_number | 事件记录时的块号 |
+| op_code | 事件分类操作码 |
+| block_hash | 包含事件的块的哈希值 |
+| tx_hash | 触发事件的交易哈希值 |
+| log_index | 交易中日志索引 |
+
+**回调事件**
+
+| chain_id | 起源区块链ID |
+| --- | --- |
+| _contract | 发出事件的合同地址 |
+| gas_limit | 回调时分配的最大气体 |
+| payload | 回调过程发送的数据有效载荷 |
+
+**react函数**
+
+log
+
+> LogRecord
+
+包含事件细节
+
+### **标准订阅**
+
+-   万用符用途：用于表示按任意合约地址筛选，表示任何链ID，以及主题按任意主题过滤。address(0) uint256(0) REACTIVE\_IGNORE
+    
+-   具体价值：至少有一个标准必须是具体的数值，以确保有意义的订阅。
+    
+
+### **禁止订阅**
+
+**非等式运算**
+
+不能用范围或按位操作匹配事件参数
+
+**复杂标准集**
+
+不能在一个订阅中设置复杂的条件组合
+
+**单链及所有合约限制**
+
+不能订阅所有链上所有事件，某条链上所有合约时间，某条链上所有活动
+
+**重复订阅**
+
+同一用户创建多个内容完全相同订阅
+
+## **动态订阅**
+
+```
+                    ┌─────────────────┐
+                    │  收到事件日志   │  ← 第一步：ReactVM监听到新事件
+                    └────────┬────────┘
+                             │
+                    ┌────────▼────────┐
+                    │  判断事件类型   │  ← 第二步：react()函数判断是什么事件
+                    └────────┬────────┘
+                             │
+        ┌────────────────────┼────────────────────┐
+        ▼                    ▼                    ▼
+┌───────────────┐  ┌───────────────┐  ┌───────────────┐
+│  订阅请求     │  │  退订请求     │  │  批准事件     │  ← 第三步：识别出是订阅请求
+└───────┬───────┘  └───────┬───────┘  └───────┬───────┘
+        │                  │                  │
+        ▼                  ▼                  ▼
+┌───────────────┐  ┌───────────────┐  ┌───────────────┐
+│ 执行subscribe │  │执行unsubscribe│  │执行onApproval │  ← 第四步：准备调用对应的函数
+└───────────────┘  └───────────────┘  └───────────────┘
+        │                  │                  │
+        └──────────────────┼──────────────────┘
+                           ▼
+                ┌─────────────────────┐
+                │  发出Callback回调   │  ← 第五步：发出回调，实际执行订阅
+                │  通知目标链执行操作  │
+                └─────────────────────┘
+```
+
+### **导入初始化**
+
+```
+contract ApprovalListener is AbstractReactive {
+    // 常量定义（固定不变的值）
+    uint256 private constant REACTIVE_CHAIN_ID = 0x512578;    // 反应网络ID
+    uint256 private constant SEPOLIA_CHAIN_ID = 11155111;    // Sepolia测试网ID
+    
+    // 事件类型标识
+    uint256 private constant SUBSCRIBE_TOPIC_0 = 0x...;   // 订阅信号 
+    uint256 private constant UNSUBSCRIBE_TOPIC_0 = 0x...; // 取消订阅信号 
+    uint256 private constant APPROVAL_TOPIC_0 = 0x...;    // 批准事件信号 
+    
+    // 状态变量
+    address private owner;                    // 合约所有者（管理员）
+    ApprovalService private approval_service; // 订阅管理服务
+}
+```
+
+### **构造函数**
+
+```
+constructor(ApprovalService service_) payable {
+    owner = msg.sender;                    // 记录谁部署了这个合约
+    approval_service = service_;            // 记住订阅服务地址
+    
+    if (!vm) {
+        // 订阅两种信号：订阅请求和取消订阅请求
+        service.subscribe(..., SUBSCRIBE_TOPIC_0, ...);
+        service.subscribe(..., UNSUBSCRIBE_TOPIC_0, ...);
+    }
+}
+```
+
+### **权限控制**
+
+```
+modifier callbackOnly(address evm_id) {
+    require(msg.sender == address(service), 'Callback only');  // 必须是服务合约
+    require(evm_id == owner, 'Wrong EVM ID');                  // 必须是合约所有者
+    _;
+}
+```
+
+### **订阅退订**
+
+```
+function subscribe(address rvm_id, address subscriber) 
+    external rnOnly callbackOnly(rvm_id) {
+    // 订阅批准事件
+    service.subscribe(..., APPROVAL_TOPIC_0, ..., subscriber, ...);
+}
+​
+function unsubscribe(address rvm_id, address subscriber) 
+    external rnOnly callbackOnly(rvm_id) {
+    // 取消订阅
+    service.unsubscribe(..., APPROVAL_TOPIC_0, ..., subscriber, ...);
+}
+```
+
+> subscribe 批准事件
+> 
+> unsubscribe 取消订阅事件
+
+### **react**
+
+```
+function react(LogRecord calldata log) external vmOnly {
+    if (log.topic_0 == SUBSCRIBE_TOPIC_0) {
+        // 情况1：收到订阅请求
+        // 调用subscribe()方法
+        emit Callback(..., payload);  // 触发订阅操作
+        
+    } else if (log.topic_0 == UNSUBSCRIBE_TOPIC_0) {
+        // 情况2：收到取消订阅请求
+        // 调用unsubscribe()方法
+        emit Callback(..., payload);  // 触发取消订阅操作
+        
+    } else {
+        // 情况3：收到普通的批准事件
+        // 提取金额信息
+        // 调用onApproval()方法处理
+        emit Callback(..., payload);  // 触发批准处理
+    }
+}
+```
+
+## **预言机**
+
+> 将链下数据传给链上智能合约
+
+| Chainlink | BandProtocol |
+| --- | --- |
+| DeFi价格预言机 | 各种链上数据需求 |
+
+eg：Chainlink
+
+> 局限：手动调用，无法实时响应价格变化
+
+```
+// 获取ETH/USD最新价格
+contract PriceConsumerV3 {
+    AggregatorV3Interface internal priceFeed;
+    
+    constructor() {
+        priceFeed = AggregatorV3Interface(0x...); // 预言机合约地址
+    }
+    
+    function getLatestPrice() public view returns (int) {
+        (, int price, , , ) = priceFeed.latestRoundData();
+        return price; // 返回最新价格
+    }
+}
+```
+<!-- DAILY_CHECKIN_2026-03-18_END -->
+
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 今天完成任务二。回滚了一次，总结下回滚的原因。
 
 查询发现要么是余额不足，要么是TK1TK2没有授权回调
@@ -42,6 +291,7 @@ Uniswap V2 止损订单触发回调的过程比较简单理解，在检测到低
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 # 抽象合约
 
@@ -555,6 +805,7 @@ AbstractPausableReactive
 
 
 
+
 # 反应式合约
 
 ## **部署**
@@ -805,6 +1056,7 @@ service.subscribe(...);
 
 
 
+
 花费了近一周的时间，今天完成了任务一。从学习部署合约，向地址转账，到最后回调成功。感觉收获很多，印象最深的是最后的回调一直在回滚问了AI了解到是`BasicDemoL1Callback` 构造函数接收了 `_callback_sender`。由于之前在Callback合约中开启了 `authorizedSenderOnly`，合约会执行： `require(msg.sender == _callback_sender)`
 
 如果之前传入的 `$env:DESTINATION_CALLBACK_PROXY_ADDR` **不等于** `0xc9f36411C9897e7F959D99ffca2a0Ba7ee0D7bDA`，那么合约就会 Revert，回调回滚
@@ -1004,6 +1256,7 @@ cast call $CALLBACK_PROXY_ADDR "reserves(address)" $CONTRACT_ADDR --rpc-url $DES
 
 
 
+
 这几天主要学习了如何部署reactive合约，包括设置地址，转账等一系列操作，也对reactive合约的实现流程有了个大致了解
 
 **\[源链（如Sepolia）\] -> \[Reactive Network\] -> \[目标链（如Sepolia）\]**
@@ -1036,6 +1289,7 @@ cast call $CALLBACK_PROXY_ADDR "reserves(address)" $CONTRACT_ADDR --rpc-url $DES
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
