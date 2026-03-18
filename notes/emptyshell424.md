@@ -15,13 +15,328 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-18
+<!-- DAILY_CHECKIN_2026-03-18_START -->
+### 智能合约（Smart Contracts）
+
+1\. Origin 链上的简单 Emit 合约（只负责 emit Event，确保 topic0 稳定 + indexed Origin）
+
+部署在 **Origin 链**（Ethereum Sepolia 测试网，Chain ID 11155111）。 事件签名固定，topic0 永远不变，参数含 indexed origin。
+
+solidity
+
+```
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract OriginEmitter {
+    event OriginEvent(
+        address indexed origin,     // indexed（必含 Origin）
+        uint256 amount,
+        string message
+    );
+
+    function triggerEvent(uint256 amount, string calldata message) external {
+        emit OriginEvent(msg.sender, amount, message);
+    }
+}
+```
+
+-   **topic0**：keccak256("OriginEvent(address,uint256,string)")（稳定不变）。
+    
+-   部署后记下合约地址（后面订阅用）。
+    
+
+2\. Reactive 合约（核心：双状态理解 + subscribe + react + callback）
+
+-   **双状态**：合约在 **Reactive Network (RNK)** 公开部署一份（EOA 可交互、暂停订阅），同时在 **私有 ReactVM** 有一份隔离实例（仅执行 react()，状态不共享）。vmOnly 修饰符 + if (!vm) 保证订阅只在 RNK 执行。
+    
+-   使用官方 reactive-lib（AbstractReactive / IReactive / ISystemContract）。
+    
+-   constructor 调用 subscribe（过滤维度：chainId + contract + topics 等值匹配）。
+    
+-   react(LogRecord)：读取 topics/data，做条件判断（阈值、白名单、去重），emit 可观测事件。
+    
+-   Callback：emit Callback 事件触发系统代理到 Destination，**强制第一个参数为 address**。
+    
+
+solidity
+
+```
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "reactive-lib/src/interfaces/ISystemContract.sol";
+import "reactive-lib/src/abstract-base/AbstractReactive.sol";  // 推荐基类（含 vmOnly、service 等）
+
+contract ReactiveBridge is AbstractReactive {
+    uint64 constant GAS_LIMIT = 1_000_000;
+    uint256 constant REACTIVE_IGNORE = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
+
+    address public immutable SYSTEM_CONTRACT;
+    uint256 public originChainId;
+    address public originContract;
+    uint256 public topic0;
+    address public destinationContract;  // Destination 回调地址
+
+    event ReactiveTriggered(  // 可观测事件（供 UI/后端确认）
+        address indexed origin,
+        uint256 amount,
+        uint256 blockNumber
+    );
+
+    event Callback(
+        uint256 indexed chainId,
+        address indexed target,
+        uint64 gasLimit,
+        bytes payload
+    );
+
+    constructor(
+        address _systemContract,      // 固定 0x000...fffFfF
+        uint256 _originChainId,       // e.g. Sepolia 11155111
+        address _originContract,
+        address _destinationContract
+    ) payable AbstractReactive(_systemContract) {
+        SYSTEM_CONTRACT = _systemContract;
+        originChainId = _originChainId;
+        originContract = _originContract;
+        destinationContract = _destinationContract;
+
+        // 计算 topic0（OriginEvent）
+        topic0 = keccak256("OriginEvent(address,uint256,string)");
+
+        if (!vm) {  // 只在 RNK 实例订阅
+            ISystemContract(payable(_systemContract)).subscribe(
+                _originChainId,
+                _originContract,
+                topic0,
+                REACTIVE_IGNORE,  // topic1 不滤
+                REACTIVE_IGNORE,
+                REACTIVE_IGNORE
+            );
+        }
+    }
+
+    // 回调入口（Destination 侧会收到此签名，强制第一个参数 address）
+    function callback(address origin) external {
+        // 可在此加 Destination 逻辑（示例：简单 emit）
+        emit ReactiveTriggered(origin, 0, block.number);
+    }
+
+    function react(LogRecord calldata log) external vmOnly {
+        // 1. 读取 log（topics + data）
+        address originAddr = address(uint160(log.topic_1));  // indexed origin
+        uint256 amount = log.topic_2;                       // uint256 amount
+        // bytes memory message = log.data;                 // 可 decode
+
+        // 2. 条件判断（阈值 + 白名单 + 去重示例）
+        require(amount >= 0.001 ether, "Amount threshold not met");
+        // 白名单示例：if (originAddr != allowedAddress) return;
+        // 去重：可维护 mapping(lastProcessed) 或用 block.number
+
+        // 3. emit 可观测事件（便于 UI/后端确认）
+        emit ReactiveTriggered(originAddr, amount, block.number);
+
+        // 4. 触发 Destination 回调（强制第一个参数 address）
+        bytes memory payload = abi.encodeWithSignature(
+            "callback(address)",
+            originAddr
+        );
+        emit Callback(originChainId, destinationContract, GAS_LIMIT, payload);
+    }
+}
+```
+
+-   **部署命令（Lasna Testnet）**（用 Foundry）：
+    
+    Bash
+    
+    ```
+    forge create --rpc-url https://lasna-rpc.rnk.dev/ \
+      --private-key <YOUR_KEY> \
+      --chain-id 5318007 \
+      src/ReactiveBridge.sol:ReactiveBridge \
+      --constructor-args 0x0000000000000000000000000000000000fffFfF 11155111 <OriginContract> <DestinationContract>
+    ```
+    
+-   部署后立即验证：
+    
+    Bash
+    
+    ```
+    forge verify-contract --verifier sourcify --chain-id 5318007 <DEPLOYED_ADDR> ReactiveBridge
+    ```
+    
+-   **RVM 地址 / 排错**：部署地址在 Reactscan（[https://lasna.reactscan.net/）可见对应](https://lasna.reactscan.net/）可见对应) RVM ID（回调验证用）。后端可通过 RNK RPC 查询（见后端部分）。日志/返回中带上 RVM ID: 0x... 并提示用户去 Reactscan 对照 tx。
+    
+
+3\. Destination 链上的回调入口合约（示例）
+
+部署在 Destination（可复用 Sepolia）：
+
+solidity
+
+```
+contract DestinationReceiver {
+    event DestinationExecuted(address origin, string status);
+
+    function callback(address origin) external {
+        // 校验 sender == Callback Proxy（官方机制自动）
+        emit DestinationExecuted(origin, "Executed via Reactive");
+    }
+}
+```
+
+### 前端（Frontend）
+
+**技术栈**：Next.js + wagmi + viem + RainbowKit（钱包连接）+ React Timeline 组件。
+
+-   **连接钱包 + 切换链**：支持 Origin（Sepolia）和 Lasna。
+    
+-   **最小交互**：点击按钮触发 Origin 事件。
+    
+-   **展示三段链路时间线**（Origin → Reactive → Destination）。
+    
+
+关键代码（WalletConnect.tsx）：
+
+tsx
+
+```
+import { useAccount, useSwitchChain, useWriteContract } from 'wagmi';
+import { sepolia, lasnaChain } from './chains';  // 自定义 Lasna chain 定义
+
+const chains = [sepolia, lasnaChain];  // Lasna: chainId 5318007, rpc https://lasna-rpc.rnk.dev/
+
+function TriggerOrigin() {
+  const { chain } = useAccount();
+  const { switchChain } = useSwitchChain();
+  const { writeContract } = useWriteContract();
+
+  const trigger = async () => {
+    if (chain?.id !== 11155111) switchChain({ chainId: 11155111 });
+    // 调用 OriginEmitter.triggerEvent
+    writeContract({
+      address: ORIGIN_ADDR,
+      abi: ORIGIN_ABI,
+      functionName: 'triggerEvent',
+      args: [1000000000000000n, 'Test from frontend']
+    });
+  };
+
+  return <button onClick={trigger}>触发 Origin 事件 → Reactive</button>;
+}
+
+// 时间线（用 react-timeline 或 shadcn）
+const Timeline = ({ status }: { status: { origin: boolean; reactive: boolean; dest: boolean } }) => (
+  <div className="timeline">
+    <div>Origin ✅</div>
+    <div>Reactive {status.reactive ? '✅' : '⏳'}</div>
+    <div>Destination {status.dest ? '✅' : '⏳'}</div>
+  </div>
+);
+```
+
+-   用 WebSocket 接收后端推送，实时更新时间线状态。
+    
+
+### 后端（Backend）
+
+**技术栈**：Node.js + Express + ethers.js v6 + ws（WebSocket）。
+
+-   **同时监听至少两条链**（Origin + Lasna），统一事件结构。
+    
+-   **推送通道**：选择 **WebSocket**（实时性更好）。
+    
+-   **调用 RNK 专用 RPC**：用 ethers Provider 调用 view 方法验证（或 cast 等价）。
+    
+-   **返回排错信息**：部署地址 → RVM 地址 + Reactive tx 状态 + Reactscan 链接。
+    
+
+TypeScript
+
+```
+// server.ts
+import { ethers } from 'ethers';
+import { WebSocketServer } from 'ws';
+
+const originProvider = new ethers.JsonRpcProvider('https://sepolia.infura.io/...');
+const lasnaProvider = new ethers.JsonRpcProvider('https://lasna-rpc.rnk.dev/');  // RNK RPC
+
+const wss = new WebSocketServer({ port: 8080 });
+
+// 统一事件结构
+interface UnifiedEvent {
+  stage: 'Origin' | 'Reactive' | 'Destination';
+  txHash: string;
+  originAddr: string;
+  timestamp: number;
+  rvmId?: string;  // 排错
+}
+
+// 监听 Origin
+originProvider.on(ORIGIN_FILTER, (log) => {
+  const unified: UnifiedEvent = { stage: 'Origin', ... };
+  broadcast(unified);
+});
+
+// 监听 Lasna Reactive（react 触发的 ReactiveTriggered 事件）
+lasnaProvider.on(REACTIVE_FILTER, async (log) => {
+  // 调用 RNK 专用 RPC 验证（示例：查询合约状态）
+  const rvmId = await lasnaProvider.call({  // 或自定义 RNK 方法
+    to: REACTIVE_ADDR,
+    data: ethers.id('getRvmId()')  // 实际可根据系统合约查询
+  });
+
+  const unified: UnifiedEvent = {
+    stage: 'Reactive',
+    txHash: log.transactionHash,
+    rvmId: ethers.toBeHex(rvmId),  // 返回 RVM 地址
+    // ... 
+  };
+  broadcast(unified);
+
+  // 日志 + 返回给前端
+  console.log(`RVM 地址: ${rvmId} | 去 https://lasna.reactscan.net/tx/${log.transactionHash} 对照`);
+});
+
+// WebSocket 推送
+function broadcast(event: UnifiedEvent) {
+  wss.clients.forEach(client => client.send(JSON.stringify(event)));
+}
+```
+
+-   **SSE 备选**：如果喜欢简单，用 res.write 流式返回。
+    
+-   排错信息直接返回给前端：{ rvmAddress: "0x...", reactiveStatus: "confirmed", reactscanUrl: "[https://lasna.reactscan.net/](https://lasna.reactscan.net/)..." }。
+    
+
+### 部署 & 测试流程（Dev Guide 核心）
+
+1.  部署 Origin（Sepolia）→ 记地址。
+    
+2.  部署 Reactive（Lasna）→ 用上面命令，传入系统合约 + Origin 地址。
+    
+3.  部署 Destination（Sepolia）→ 记地址。
+    
+4.  前端连接钱包 → 切换 → 触发 → 后端推送 → 时间线实时更新。
+    
+5.  去 [**https://lasna.reactscan.net/**](https://lasna.reactscan.net/) 查看 Reactive tx + RVM 对应实例。
+    
+
+**Ecosystem Cases 灵感**：Rogues Studio（游戏事件 Origin → NFT Destination）、Reactive Bridge（跨链自动）、Based BRETT（实时 leaderboard 时间线）
+<!-- DAILY_CHECKIN_2026-03-18_END -->
+
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 今天有事，明天补
 <!-- DAILY_CHECKIN_2026-03-15_END -->
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 ## 整体架构：三合约模型
 
@@ -54,6 +369,7 @@ Reactive Network 的跨链系统需要三个合约，分工明确：
 <!-- DAILY_CHECKIN_2026-03-13_START -->
 
 
+
 ### 1\. 核心概念：控制反转 (Inversion of Control, IoC)
 
 这是 Reactive 合约与传统合约（如 Ethereum 上的合约）最本质的区别：
@@ -78,6 +394,7 @@ Reactive 合约的运行遵循“订阅 - 监测 - 反应”的循环：
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -152,6 +469,7 @@ ReactVM（Reactive Virtual Machine）与 EVM 的最大区别在于**并行处理
 
 
 
+
 ## 1\. 根本区别：被动调用 vs 主动反应
 
 在传统的 **EVM** 架构中，智能合约是“死的”。除非用户（或外部脚本）发送一笔交易来调用它，否则它永远不会主动执行任务。
@@ -211,6 +529,7 @@ ReactVM 是一种专门为**处理事件流**而优化的环境。
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
