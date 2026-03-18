@@ -15,8 +15,22 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-18
+<!-- DAILY_CHECKIN_2026-03-18_START -->
+## 开发所需预先条件
+
+-   Solidity及其开发环境
+    
+-   EVM
+    
+-   Git以及命令行基础
+    
+-   Ethereum测试环境及其代币
+<!-- DAILY_CHECKIN_2026-03-18_END -->
+
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 **跨链回调（Callback）定价与支付** ：
 
 -   回调费用公式： $p\_callback = p\_base × C × (g\_callback + K)$
@@ -36,6 +50,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 ## Economy
 
@@ -110,6 +125,7 @@ $$p\_{callback} = p\_{base} \\times C \\times (g\_{callback} + K)$$
 <!-- DAILY_CHECKIN_2026-03-15_START -->
 
 
+
 ## Subscription 的工作原理
 
 ### 1\. 核心概念
@@ -182,6 +198,7 @@ $$p\_{callback} = p\_{base} \\times C \\times (g\_{callback} + K)$$
 
 
 
+
 ### **1\. 事件的本质**
 
 -   **定义**：在区块链上下文中，事件是智能合约执行过程中产生的日志记录（Logs）。
@@ -237,6 +254,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 
 
+
 -   ReactVM: ReactiveNetwork中的核心组件，负责执行Reactive Contract，并发送回调信息到目标链
     
 -   归属权：Reactive COntract会部署到基于同一个地址的EOA的独有的ReactVM，并且同一个ReactVM中的合约可以进行状态共享
@@ -248,6 +266,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -265,6 +284,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 
 
+
 -   完成 **Reactive 挑战「第一关」**
     
 -   了解了REACTIVE的调用和部署流程
@@ -272,6 +292,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
