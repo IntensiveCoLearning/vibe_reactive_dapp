@@ -15,8 +15,26 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-18
+<!-- DAILY_CHECKIN_2026-03-18_START -->
+**3月18日 (周三)：Reactive 逻辑实现：LogRecord 与回调**
+
+-   **目标**：实现 `react(LogRecord)` 函数，处理捕获到的事件。
+    
+-   **任务**：
+    
+    1.  **解析 Log**：实现 `react` 入口，学习如何从 `LogRecord` 中提取 `topics` 和 `data`。
+        
+    2.  **业务逻辑**：在 `react` 内部加入简单的条件判断（例如：`value > 阈值` 或 `address 在白名单内`）。
+        
+    3.  **输出事件**：在 `react` 函数中 `emit` 一个可观测事件，用于后端和前端的 UI 展示。
+        
+    4.  **实操**：将合约部署到 **Lasna 链**。
+<!-- DAILY_CHECKIN_2026-03-18_END -->
+
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 **3月17日 (周二)：Reactive 合约核心：订阅与生命周期**
 
 -   **目标**：理解 Reactive 合约的双状态，并完成订阅逻辑。
@@ -37,6 +55,7 @@ Let’s vibe Reactive dApp
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
 
+
 前端：
 
 -   能连接钱包并切换到：Origin 链与 Lasna 链
@@ -48,6 +67,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 **挑战任务与经济模型复盘**
@@ -74,6 +94,7 @@ Let’s vibe Reactive dApp
 
 
 
+
 **代码拆解 —— 以 Uniswap V2 Stop Order 为例**
 
 **今日重点：** 结合 GitHub 源码，看技术理论如何变成逻辑代码。
@@ -95,6 +116,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -133,6 +155,7 @@ Let’s vibe Reactive dApp
 
 
 
+
 ## Day 3：挑战任务实战（终极目标）
 
 **核心点：按照 Notion 指引完成跨链自动化**
@@ -155,6 +178,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -208,6 +232,7 @@ bytes calldata data
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
