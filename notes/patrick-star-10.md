@@ -15,13 +15,122 @@ learning
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-18
+<!-- DAILY_CHECKIN_2026-03-18_START -->
+# **今天学习了 EVM 核心知识**
+
+**1\. EVM 本质**
+
+-   EVM 是以太坊的执行引擎，本质是一个**栈机模型**
+    
+-   所有计算通过 **Opcode（操作码）** 完成，基于栈进行数据处理
+    
+
+* * *
+
+**2\. 执行机制**
+
+-   合约执行由交易触发，按 Opcode 顺序运行
+    
+-   采用 **Gas 计费机制**，每一步计算都有成本
+    
+-   出错（revert）会回滚状态，但已消耗 Gas 不返还
+    
+
+* * *
+
+**3 状态与数据结构**
+
+-   **Storage（链上存储）**：持久化，最昂贵
+    
+-   **Memory（内存）**：临时变量，执行结束释放
+    
+-   **Calldata**：外部输入，只读，成本最低
+    
+
+* * *
+
+**4.账户模型**
+
+每个账户有：
+
+-   balance（余额）
+    
+-   nonce（防重放/交易计数）
+    
+-   code（合约代码）
+    
+-   storage（状态数据）
+    
+
+* * *
+
+**5.交易流程**
+
+```
+签名 → 广播 → mempool → 打包 → 执行 → 上链
+```
+
+-   nonce 用于保证交易顺序、防止重放
+    
+-   Gas 决定交易优先级（可被替换/插队）
+    
+
+* * *
+
+**6\. Event 与日志**
+
+-   Event 通过 log 写入链上日志
+    
+-   **不可修改、不可删除**
+    
+-   用于前端监听和跨系统通信（如 Reactive）
+    
+
+* * *
+
+**7\. 安全与风险**
+
+-   权限控制 ≠ 安全
+    
+
+常见风险：
+
+-   重入攻击
+    
+-   恶意事件触发
+    
+-   Gas 消耗攻击
+    
+-   外部调用不可信
+    
+
+* * *
+
+**8\. 核心理解（最重要）**
+
+> **EVM 是一个确定性执行环境，但输入（交易、事件、外部调用）是不可信的，安全来自于对状态、数据与执行路径的严格控制。**
+
+# **总结**
+
+> **EVM 是一个基于栈的确定性执行引擎，通过 Gas 驱动状态变化，真正的难点不在执行本身，而在如何安全地控制执行。**
+
+* * *
+
+如果你要，我可以给你下一版👇
+
+👉 **“面试级 EVM 总结（能直接拿去讲的那种）”**
+<!-- DAILY_CHECKIN_2026-03-18_END -->
+
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 > ### **_今天理解了 Reactive 合约的标准范式：源合约通过稳定的事件签名发出链上信号（Event），Reactive 网络基于 topic0 进行监听与执行逻辑调度，最终通过统一格式的 callback(address destination, …) 在目标链完成状态变更。本质是一个事件驱动 + 双状态执行的链上自动化系统。_**
 <!-- DAILY_CHECKIN_2026-03-17_END -->
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 # **今日学习总结：理解 Reactive 合约的双状态与执行流程**
 
@@ -249,6 +358,7 @@ Event → React → Callback
 <!-- DAILY_CHECKIN_2026-03-15_START -->
 
 
+
 # **_今天完成了第二个挑战：_**
 
 [**https://github.com/patrick-star-10/reactive-network-Hackathon/tree/main/uniswap-v2-stop-order-sepolia-demo**](https://github.com/patrick-star-10/reactive-network-Hackathon/tree/main/uniswap-v2-stop-order-sepolia-demo)
@@ -256,6 +366,7 @@ Event → React → Callback
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -429,6 +540,7 @@ emit Deposited(user, amount)
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -624,6 +736,7 @@ ReactVM 本质上就是：
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -1016,6 +1129,7 @@ Callback  = 执行动作
 
 
 
+
 # **今日学习笔记｜Reactive Contract 结构理解**
 
 今天主要学习 **Reactive Contract 的组成结构与执行流程**。
@@ -1375,6 +1489,7 @@ Reactive Network 的本质是一个：
 
 
 
+
 # **今天完成了第一个挑战任务**
 
 [https://github.com/patrick-star-10/reactive-network-day1](https://github.com/patrick-star-10/reactive-network-day1)
@@ -1382,6 +1497,7 @@ Reactive Network 的本质是一个：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
