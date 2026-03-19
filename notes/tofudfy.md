@@ -15,8 +15,165 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-19
+<!-- DAILY_CHECKIN_2026-03-19_START -->
+Reactive Network 经济模型总结（txt版）
+
+一、整体概念
+
+Reactive Network 的经济模型是一种“先执行、后付费”的机制。
+
+合约在 Reactive VM（RVM）中执行时不需要立即支付 gas，而是在执行后累积费用（debt），再由合约或用户后续统一偿还。
+
+本质上是一个基于债务（debt-based）的执行与结算体系。
+
+二、执行与计费分离
+
+1.  执行环境分为两类：
+    
+
+-   RVM（Reactive VM）：用于响应事件执行 reactive contract，不即时收费
+    
+-   RNK（普通交易）：类似传统 EVM，正常 gas 计费
+    
+
+2.  执行（execution）与付费（payment）解耦
+    
+
+执行发生时：
+
+-   不立即扣费
+    
+-   记录 gas 使用量
+    
+
+后续：
+
+-   根据 BaseFee × GasUsed 计算费用
+    
+-   在后续区块统一结算
+    
+
+→ 费用不是 per-transaction 精确绑定，而是延迟聚合计算
+
+三、债务模型（核心机制）
+
+1.  执行产生 debt：
+    
+    每次 reactive execution 都会产生未支付费用
+    
+2.  偿还方式：
+    
+
+-   手动：调用 coverDebt() 进行偿还
+    
+-   自动：通过 depositTo() 或 pay() 自动扣除
+    
+
+3.  惩罚机制：
+    
+
+-   若长期不偿还 debt
+    
+-   合约会被 blocklist（禁止继续执行）
+    
+
+→ 执行权限由“是否偿债”决定
+
+四、跨链回调（callback）与定价
+
+Reactive Network 的跨链能力通过 callback 实现：
+
+-   Reactive chain 触发 → 在目标链执行
+    
+
+callback 的费用为：p\_callback = p\_base × C × (g\_callback + K)，其中：
+
+-   p\_base：基础 gas 价格
+    
+-   C：目标链系数
+    
+-   g\_callback：回调执行 gas
+    
+-   K：固定开销
+    
+
+→ 跨链执行是显式定价的，不是隐式成本
+
+五、自动支付机制
+
+在 callback 执行时：
+
+-   系统可以自动调用支付函数
+    
+-   自动偿还对应 debt
+    
+
+→ 执行逻辑与支付逻辑是耦合的
+
+执行约束：
+
+-   callback 有最低 gas 限制（如 100,000）
+    
+-   确保跨链调用具备最小可执行性
+    
+
+六、与传统区块链模型的区别
+
+对比 EVM：
+
+1.  付费方式
+    
+
+-   EVM：交易前支付（upfront）
+    
+-   Reactive：执行后支付（post-factum）
+    
+
+2.  gas 计费
+    
+
+-   EVM：逐交易计费
+    
+-   Reactive：延迟聚合计费
+    
+
+3.  执行触发
+    
+
+-   EVM：用户主动触发
+    
+-   Reactive：事件驱动触发
+    
+
+4.  支付责任
+    
+
+-   EVM：交易发送者
+    
+-   Reactive：合约承担
+    
+
+→ Reactive 将“执行责任”从用户转移到合约
+
+* * *
+
+总结
+
+Reactive Network 的经济模型可以抽象为：
+
+1.  延迟计费（Deferred Fee）
+    
+2.  债务驱动执行（Debt-based Execution）
+    
+3.  自动结算（Auto Settlement）
+    
+4.  执行与支付耦合（Execution-Payment Coupling）
+<!-- DAILY_CHECKIN_2026-03-19_END -->
+
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 第三阶段进展汇报（初步实践）
 
 本阶段主要开始上手 Reactive 跨链机制的实际开发，目标是打通基础链路并熟悉整体流程。
@@ -32,6 +189,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 Reactive Network 学习总结
 
@@ -276,6 +434,7 @@ Reactive 模式：Protocol-level automation，实现去中心化
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 Reactive Network 学习总结
@@ -584,6 +743,7 @@ Execute Swap
 
 
 
+
 在本次作业中，我主要围绕 Reactive Network 的跨链事件与回调机制进行了开发实践。首先梳理了系统整体架构，理解了 **Origin Contract、Reactive Contract 和 Destination Contract** 在跨链事件流程中的角色划分。Origin Contract 部署在源链上，用于触发事件；Reactive Contract 运行在 Reactive Network 上，用于监听指定事件并执行响应逻辑；Destination Contract 部署在目标链上，用于接收回调交易并执行最终操作。
 
 在开发过程中，我重点学习了 Reactive Smart Contract 的基本结构以及事件监听与回调的触发方式，并理解了 Reactive Network 的事件驱动执行模式。相比传统依赖 off-chain bot 监听事件再手动发送交易的方式，Reactive Network 将事件监听和自动执行逻辑通过合约形式进行编程，实现了更自动化的跨链响应机制。通过这一过程，我对事件驱动智能合约以及跨链自动化执行的设计思路有了更直观的认识。
@@ -595,6 +755,7 @@ Execute Swap
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -718,6 +879,7 @@ react(LogRecord log)
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
