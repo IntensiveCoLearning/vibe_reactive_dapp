@@ -15,13 +15,20 @@ all in web3，杂学爱好者
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-19
+<!-- DAILY_CHECKIN_2026-03-19_START -->
+康复训练
+<!-- DAILY_CHECKIN_2026-03-19_END -->
+
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 只能浅浅打卡了，又发烧了
 <!-- DAILY_CHECKIN_2026-03-17_END -->
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 打卡一下
 <!-- DAILY_CHECKIN_2026-03-16_END -->
@@ -30,11 +37,13 @@ all in web3，杂学爱好者
 <!-- DAILY_CHECKIN_2026-03-15_START -->
 
 
+
 回顾复习
 <!-- DAILY_CHECKIN_2026-03-15_END -->
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -47,11 +56,13 @@ all in web3，杂学爱好者
 
 
 
+
 还在发病期，眼睛很痛，再休一天
 <!-- DAILY_CHECKIN_2026-03-12_END -->
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -70,11 +81,13 @@ all in web3，杂学爱好者
 
 
 
+
 结合优秀笔记回顾昨日内容
 <!-- DAILY_CHECKIN_2026-03-10_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
