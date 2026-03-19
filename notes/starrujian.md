@@ -15,19 +15,27 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-19
+<!-- DAILY_CHECKIN_2026-03-19_START -->
+参加Workshop
+<!-- DAILY_CHECKIN_2026-03-19_END -->
+
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 回顾往期 Workshop
 <!-- DAILY_CHECKIN_2026-03-17_END -->
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
 
+
 参加co-learning,完善Reactive项目
 <!-- DAILY_CHECKIN_2026-03-16_END -->
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 继续学习Dev 文档，整理笔记，浏览官方 Ecosystem 案例
@@ -37,6 +45,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -51,6 +60,7 @@ Let’s vibe Reactive dApp
 
 
 
+
 参加**Reactive Workshop**
 
 ![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/starrujian/images/2026-03-12-1773317505063-image.png)
@@ -58,6 +68,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -76,6 +87,7 @@ Let’s vibe Reactive dApp
 
 
 
+
 完善项目+学习原理
 
 ![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/starrujian/images/2026-03-10-1773155796187-image.png)
@@ -83,6 +95,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
