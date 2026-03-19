@@ -15,8 +15,18 @@ timezone: UTC+8
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-19
+<!-- DAILY_CHECKIN_2026-03-19_START -->
+Day-10
+
+完成二阶段挑战，中间出现了一些卡顿，结合 AI 配合解决了。
+
+还有几天就要结束共学了，这几天公事、私事一堆，加油吧
+<!-- DAILY_CHECKIN_2026-03-19_END -->
+
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 Day-10
 
 take a rest
@@ -24,6 +34,7 @@ take a rest
 
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 
 
 **小白学习Day-9**
@@ -73,6 +84,7 @@ take a rest
 
 
 
+
 Day-8
 
 休一天，明日补上进度
@@ -80,6 +92,7 @@ Day-8
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 
@@ -95,6 +108,7 @@ Day-6
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -130,6 +144,7 @@ Day-5
 
 
 
+
 Day-4
 
 今天出差请假一天
@@ -137,6 +152,7 @@ Day-4
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -172,6 +188,7 @@ Day-3
 
 
 
+
 Day-2  
   
 基于今天的学习，我想用生活例子来理解 Reactive 与传统 EVM 的区别：
@@ -185,6 +202,7 @@ Day-2
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
