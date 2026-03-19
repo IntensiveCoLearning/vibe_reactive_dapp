@@ -15,8 +15,14 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-19
+<!-- DAILY_CHECKIN_2026-03-19_START -->
+1
+<!-- DAILY_CHECKIN_2026-03-19_END -->
+
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 # Reactive Network 学习笔记
 
 ## 一、核心概念
@@ -287,6 +293,7 @@ forge verify-contract ...
 
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 
 # Reactive Network Demo 学习笔记
 
@@ -605,6 +612,7 @@ CallbackReceived(...)
 <!-- DAILY_CHECKIN_2026-03-16_START -->
 
 
+
 源链事件 -> 订阅捕获 -> 条件判断 -> 发起目标链回调
 
 核心知识点：
@@ -654,6 +662,7 @@ CallbackReceived(...)
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 
@@ -945,6 +954,7 @@ Reactive Contract运行逻辑：
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -1323,6 +1333,7 @@ Sync
 
 
 
+
 # Oracles 学习笔记
 
 ## 1\. Oracle 的作用
@@ -1600,6 +1611,7 @@ Reactive Contract 监听事件
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -1992,6 +2004,7 @@ Reactive Contracts 订阅机制核心：
 
 
 
+
 # Reactive Contracts (RCs) 架构与执行机制
 
 ## 一、 双重执行环境：一个合约，两个状态
@@ -2105,6 +2118,7 @@ Reactive Contracts 订阅机制核心：
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -2386,6 +2400,7 @@ Reactive Network 会自动：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
