@@ -15,19 +15,27 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-20
+<!-- DAILY_CHECKIN_2026-03-20_START -->
+打卡
+<!-- DAILY_CHECKIN_2026-03-20_END -->
+
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 打卡
 <!-- DAILY_CHECKIN_2026-03-18_END -->
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
 
+
 打卡
 <!-- DAILY_CHECKIN_2026-03-16_END -->
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 、打卡
@@ -38,11 +46,13 @@ Let’s vibe Reactive dApp
 
 
 
+
 打卡
 <!-- DAILY_CHECKIN_2026-03-14_END -->
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -57,11 +67,13 @@ Let’s vibe Reactive dApp
 
 
 
+
 打卡
 <!-- DAILY_CHECKIN_2026-03-12_END -->
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -80,6 +92,7 @@ Let’s vibe Reactive dApp
 
 
 
+
 已打卡
 
 ![proof-attachments.webp](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/azolonev-debug/images/2026-03-10-1773142439046-proof-attachments.webp)
@@ -87,6 +100,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
