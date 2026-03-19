@@ -17,11 +17,197 @@ Let’s vibe Reactive dApp
 <!-- Content_START -->
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
-1
+# Reactive Contracts — Subscriptions
+
+## 🧩 核心概念
+
+-   **Subscription（订阅）**：定义 RC 监听哪些链上事件
+    
+-   触发条件：匹配事件 → 自动调用 `react()`
+    
+
+订阅由以下条件组成：
+
+-   `originChainId`
+    
+-   `contract address`
+    
+-   `topics[0–3]`
+    
+
+* * *
+
+## ⚙️ 基本用法
+
+### 在构造函数中订阅
+
+```
+if (!vm) {
+    service.subscribe(
+        originChainId,
+        _contract,
+        _topic_0,
+        REACTIVE_IGNORE,
+        REACTIVE_IGNORE,
+        REACTIVE_IGNORE
+    );
+}
+```
+
+⚠️ 注意：
+
+-   ReactVM 中不能调用 `subscribe()` → 用 `if (!vm)` 判断
+    
+
+* * *
+
+## 🔍 过滤规则
+
+支持精确匹配：
+
+-   Chain ID
+    
+-   Contract address
+    
+-   Topics 0–3
+    
+
+* * *
+
+## 🎯 通配符
+
+### REACTIVE\_IGNORE（万能匹配）
+
+```
+0xa65f96fc...
+```
+
+### 其他通配方式
+
+-   `uint256(0)` → 任意 chain
+    
+-   `address(0)` → 任意合约
+    
+
+👉 至少要有一个具体条件
+
+* * *
+
+## 📌 常见订阅模式
+
+### 1️⃣ 某合约所有事件
+
+```
+subscribe(CHAIN_ID, contract, IGNORE, IGNORE, IGNORE, IGNORE);
+```
+
+### 2️⃣ 某类事件（topic0）
+
+```
+subscribe(CHAIN_ID, address(0), topic0, IGNORE, IGNORE, IGNORE);
+```
+
+### 3️⃣ 指定合约 + 事件
+
+```
+subscribe(CHAIN_ID, contract, topic0, IGNORE, IGNORE, IGNORE);
+```
+
+* * *
+
+## 🔁 多订阅
+
+```
+service.subscribe(...);
+service.subscribe(...);
+```
+
+👉 一个条件 = 一个 subscription
+
+* * *
+
+## ❌ 取消订阅
+
+通过 system contract：
+
+```
+unsubscribeContract(...)
+```
+
+* * *
+
+## ⚠️ 限制
+
+### ❌ 不支持
+
+-   范围查询（<, >）
+    
+-   位运算过滤
+    
+-   OR 条件
+    
+-   全局订阅（所有链/所有事件）
+    
+
+### ⚠️ 其他
+
+-   只支持 **精确匹配**
+    
+-   重复订阅 ≈ 1 个（但会浪费 gas）
+    
+
+* * *
+
+## 🔄 动态订阅（重点）
+
+### 📊 流程
+
+1.  ReactVM 收到事件
+    
+2.  `react()` 判断逻辑
+    
+3.  emit `Callback`
+    
+4.  RNK 执行订阅/取消订阅
+    
+
+* * *
+
+## 🧠 RNK 侧函数
+
+```
+function subscribe(...) rnOnly callbackOnly
+function unsubscribe(...) rnOnly callbackOnly
+```
+
+👉 只有 RNK 能真正改订阅
+
+* * *
+
+## ⚡ react() 逻辑
+
+```
+if (topic == SUBSCRIBE) {
+    emit Callback → 调 subscribe
+}
+else if (topic == UNSUBSCRIBE) {
+    emit Callback → 调 unsubscribe
+}
+else {
+    emit Callback → 执行业务逻辑
+}
+```
+
+* * *
+
+## 🧾 总结一句话
+
+👉 **Subscription = 精确事件过滤器 + 回调触发机制**
 <!-- DAILY_CHECKIN_2026-03-19_END -->
 
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 
 # Reactive Network 学习笔记
 
@@ -293,6 +479,7 @@ forge verify-contract ...
 
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 
 
 # Reactive Network Demo 学习笔记
@@ -613,6 +800,7 @@ CallbackReceived(...)
 
 
 
+
 源链事件 -> 订阅捕获 -> 条件判断 -> 发起目标链回调
 
 核心知识点：
@@ -662,6 +850,7 @@ CallbackReceived(...)
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 
@@ -954,6 +1143,7 @@ Reactive Contract运行逻辑：
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -1334,6 +1524,7 @@ Sync
 
 
 
+
 # Oracles 学习笔记
 
 ## 1\. Oracle 的作用
@@ -1611,6 +1802,7 @@ Reactive Contract 监听事件
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -2005,6 +2197,7 @@ Reactive Contracts 订阅机制核心：
 
 
 
+
 # Reactive Contracts (RCs) 架构与执行机制
 
 ## 一、 双重执行环境：一个合约，两个状态
@@ -2118,6 +2311,7 @@ Reactive Contracts 订阅机制核心：
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -2400,6 +2594,7 @@ Reactive Network 会自动：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
