@@ -15,13 +15,20 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-19
+<!-- DAILY_CHECKIN_2026-03-19_START -->
+继续学习 Reactive Network 的 Cron Demo
+<!-- DAILY_CHECKIN_2026-03-19_END -->
+
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 今天继续学习其他 Demo。
 <!-- DAILY_CHECKIN_2026-03-18_END -->
 
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 
 ## **Reactive Network 原理**
 
@@ -64,6 +71,7 @@ Let’s vibe Reactive dApp
 <!-- DAILY_CHECKIN_2026-03-16_START -->
 
 
+
 # 部署睿应式合约讲解
 
 1.  **部署准备**：
@@ -97,6 +105,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 
@@ -207,11 +216,13 @@ cast send $PAIR_ADDR 'swap(uint,uint,address,bytes calldata)' --rpc-url $SEPOLIA
 
 
 
+
 今天尝试进行第二关的 Uniswap 止损单的练习，在学习文档内容。
 <!-- DAILY_CHECKIN_2026-03-14_END -->
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -270,6 +281,7 @@ cast send $PAIR_ADDR 'swap(uint,uint,address,bytes calldata)' --rpc-url $SEPOLIA
 
 
 
+
 ### **实时监控问题解答**
 
 **监控原理**：市场波动与Reactive实时监控无关，其监控每条链的每个区块，并对合约订阅的事件做出反应。
@@ -297,6 +309,7 @@ cast send $PAIR_ADDR 'swap(uint,uint,address,bytes calldata)' --rpc-url $SEPOLIA
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -368,6 +381,7 @@ cast send $PAIR_ADDR 'swap(uint,uint,address,bytes calldata)' --rpc-url $SEPOLIA
 
 
 
+
 # **Basic Reactive Demo：理解“监听-反应”闭环**
 
 这个 Demo 是 Reactive 的 "Hello World"。流程很简单：在 Sepolia 上转账 -> Reactive 监听到 -> 自动通知 Sepolia 上的回调合约。
@@ -418,6 +432,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
