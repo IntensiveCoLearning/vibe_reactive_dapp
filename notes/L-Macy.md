@@ -15,8 +15,105 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-19
+<!-- DAILY_CHECKIN_2026-03-19_START -->
+**reactive Network** 的自动化交易系统架构，演示了如何通过监听 Uniswap 价格事件触发自动化代币交换。系统通过 **Reactive Contract** 监控链上事件，当价格达到阈值时自动调用 **Callback Contract** 执行交换并停止监控。
+
+## 技术架构决策
+
+-   **授权机制**：使用 `RVM ID only` modifier 确保只接受来自指定 Reactive Contract 的回调
+    
+-   **RVM ID 定义**：等同于部署 Reactive Contract 的地址（deploy address）
+    
+-   **价格计算**：基于 Uniswap pair 中 token A 和 token B 的 reserves 计算汇率
+    
+-   **代币流转路径**：客户端 → Callback Contract → Uniswap → Callback Contract → 客户端 256
+    
+
+## 核心功能实现
+
+### Stop 函数执行流程
+
+-   **参数验证**：检查 RVM、payer address、client address、交易方向（token A/B）和阈值
+    
+-   **价格检查**：通过 `below threshold` 函数验证 reserves 计算的汇率是否低于阈值
+    
+-   **授权验证**：确认 Callback Contract 有权限从客户端地址花费代币（allowance > 0）
+    
+-   **余额确认**：验证用户实际持有待交换的代币
+    
+-   **代币转移**：从客户端转移代币到 Callback Contract
+    
+-   **Uniswap 授权**：批准 Uniswap 花费 Callback Contract 的代币
+    
+-   **执行交换**：通过 path 变量（包含卖出和买入代币地址）调用 swap 函数
+    
+-   **返还代币**：将买入的代币转回客户端地址
+    
+-   **发出停止事件**：emit stop event 通知监控结束
+    
+
+### 事件监控机制
+
+-   **触发源**：Uniswap pair 发出 sync event
+    
+-   **条件检查**：Reactive Contract 捕获事件并验证条件
+    
+-   **回调执行**：调用 Callback Contract 的 stop 函数
+    
+-   **监控终止**：Reactive Contract 捕获 stop event 后停止监控
+    
+
+## 待确认事项
+
+-   用户需要在使用前通过额外交易授权 Callback Contract 花费代币（类似 DEX 操作）
+    
+-   高级版本（advanced version）功能未在本次会议中覆盖
+    
+
+## 技术要点
+
+### 代币授权机制
+
+-   **ERC20 标准**：客户端必须先 allow 代币被 Callback Contract 花费
+    
+-   **类比 DEX**：与用户直接在去中心化交易所操作时的授权流程相同
+    
+-   **双重验证**：既检查 allowance 又检查实际余额
+    
+
+### 合约继承结构
+
+-   Callback Contract 继承自 `abstract callback`，提供授权功能
+    
+-   包含 stop event 用于终止监控
+    
+-   包含 deadline 参数
+    
+-   构造函数获取 Uniswap version 2 router
+    
+
+## 生产就绪性评估
+
+-   **简化但可用**：示例虽简化但接近生产解决方案
+    
+-   **授权检查完备**：包含必要的授权验证机制
+    
+-   **实际应用可行**：适用于真实应用场景（proof of concept 级别）
+    
+-   **改进建议**：合约中存在若干 warnings，需要进一步优化
+    
+
+## 问答环节
+
+-   **问题**：触发 stop 后监控会话是否结束？
+    
+-   **回答**：是的，通过 stop event 监控会话将终止
+<!-- DAILY_CHECKIN_2026-03-19_END -->
+
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 -   今日重点：深化 Subscribe / Trigger / Callback 模型 + ReactVM 执行逻辑 + 跨链自动化机制。
     
     -   复习双状态（Reactive Network 主链 vs ReactVM 隔离沙箱）。
@@ -39,6 +136,7 @@ Let’s vibe Reactive dApp
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
 
+
 -   订阅 Uniswap Pair Sync 事件（topics\[0\] = keccak256("Sync(uint112,uint112)")）。
     
 -   react() 中：解码 reserve0/reserve1 → 计算价格比率 → 若 ≤ stopPrice → emit Callback。
@@ -50,6 +148,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 
 Uniswap V2 集成与 Reactive Stop Order 实战
@@ -106,6 +205,7 @@ Uniswap V2 集成与 Reactive Stop Order 实战
 
 
 
+
 Uniswap V2 池与合约理解
 
 -   学习目标：
@@ -149,6 +249,7 @@ Uniswap V2 池与合约理解
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -207,6 +308,7 @@ How Uniswap Works（Uniswap V2 池与合约理解）
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -274,6 +376,7 @@ How Oracles Work
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -425,6 +528,7 @@ How Subscriptions Work（订阅机制详解）
 
 
 
+
 **ReactVM and Reactive Network As a Dual-State Environment**
 
 **1\. 学习目标（Lesson Objectives）**
@@ -524,6 +628,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 
 
+
 **Events and Callbacks 工作原理**
 
 **1\. 学习目标（Lesson Objectives**）
@@ -598,6 +703,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
