@@ -15,8 +15,49 @@ shadowdoge，web3新人
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-19
+<!-- DAILY_CHECKIN_2026-03-19_START -->
+**质押惩罚型打卡合约**。玩家把钱锁进去，按时打卡才能拿回来，不打卡就扣钱。
+
+Reactive 在这里能做的事情是：
+
+**Cron 事件** → 每天固定时间检查"今天有没有人打卡" → 没打卡的人自动扣款，不需要任何人手动触发惩罚。
+
+这解决了传统链上打卡合约的最大痛点——**谁来执行惩罚**？以前要么靠中心化服务器，要么靠别人来 call 一个函数。Reactive 让惩罚变成完全自动化的链上行为。
+
+## 合约架构
+
+三层合约，分布在两条链上：
+
+```
+Origin chain (Sepolia):
+├── CheckInContract.sol     ← 玩家打卡、存款、提款
+└── (emit CheckIn 事件)
+
+Reactive Network:
+└── CheckInReactive.sol     ← 订阅 Cron，每天检查打卡状态
+                              → emit Callback 触发扣款
+
+Destination chain (同 Sepolia):
+└── PenaltyExecutor.sol     ← 执行扣款逻辑，分配罚金
+```
+
+实际上 Origin 和 Destination 可以是同一条链，简化部署。
+
+好，方向确定了——**每天必须打卡，漏打扣一份钱，罚金平分给当天打卡成功的人，做成完整网页 + 合约架构文档**。这个设计非常有博弈感，打卡的人越少奖励越多，正向激励非常强。
+
+让我一口气把合约架构和完整网页都做出来。
+
+Viewed a file, created a file, read a file
+
+Viewed a file, created a file, read a file
+
+**STREAK VAULT** 网页 Demo 做好了，点击"CONNECT WALLET"就能体验完整流程。
+<!-- DAILY_CHECKIN_2026-03-19_END -->
+
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 ## 对于 Cron 事件，`react()` 收到的是什么
 
 Cron 不来自任何用户合约——它来自 Reactive 的 **SystemContract**，按固定区块间隔自动 emit。所以 `react()` 收到的 `LogRecord` 里：
@@ -81,6 +122,7 @@ Reactive Network 会自动把 callback payload 的前 160 bit 替换为 ReactVM 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
 
+
 ### 关键概念与实现
 
 1.  **ERC-20** `Approval` **事件监听**：
@@ -119,6 +161,7 @@ Reactive Network 会自动把 callback payload 的前 160 bit 替换为 ReactVM 
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 ## Cron Demo — 给智能合约装上时钟
@@ -161,6 +204,7 @@ RC 定期订阅 cron 事件，每次触发时检查用户的健康因子（Healt
 
 
 
+
 Uniswap 是以太坊上最重要的去中心化交易所（DEX）协议之一，彻底改变了加密资产的交换方式。下面我来分几个核心概念为你讲清楚。
 
 ## 核心思想：自动做市商（AMM）
@@ -189,6 +233,7 @@ Uniswap 是以太坊上最重要的去中心化交易所（DEX）协议之一，
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -363,6 +408,7 @@ cast send <ORIGIN\_CONTRACT\_ADDR> \\
 
 
 
+
 遇到了一个坑
 
 # 坑 1：`--broadcast` 被当成 constructor 参数
@@ -423,6 +469,7 @@ forge create (dry run)
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -490,6 +537,7 @@ execution reverted
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
