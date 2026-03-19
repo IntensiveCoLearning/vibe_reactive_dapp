@@ -15,8 +15,182 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-19
+<!-- DAILY_CHECKIN_2026-03-19_START -->
+### 1\. 核心概念总结
+
+\* \*\*以太坊事件 (EVM Events)\*\*:
+
+\* \*\*作用\*\*: 允许智能合约在不改变区块链状态的情况下，向外部世界（如 dApps）记录信息。
+
+\* \*\*机制\*\*: 使用 `event` 定义`emit` 触发。数据存储在交易日志（Logs）中，可被索引和搜索。
+
+\* \*\*应用\*\*: 常用于监听转账、合约更新或预言机（如 Chainlink）的价格变化。
+
+\* \*\*Reactive Contracts (响应式合约)\*\*:
+
+\* \*\*接口\*\*: 必须实现 `IReactive` 接口。
+
+\* \*\*核心方法 `react()`\*\*: 当 Reactive Network 监测到匹配的事件时，会自动调用此方法。它接收一个 `LogRecord` 结构体，包含事件的所有详细信息（链ID、合约地址、主题、数据等）。
+
+\* \*\*运行环境\*\*: 运行在私有的 \*\*ReactVM\*\* 中，出于安全考虑，只能与同一部署者部署的合约交互。
+
+\* \*\*跨链回调 (Callbacks)\*\*:
+
+\* \*\*机制\*\*: 响应式合约可以通过发射特定的 `Callback` 事件，请求 Reactive Network 在\*\*目标链\*\*上执行交易。
+
+\* \*\*安全性\*\*: 网络会自动将回调负载（payload）中的前160位参数替换为调用者的 \*\*RVM ID\*\*（即部署者地址），以确保授权安全。
+
+\---
+
+\### 2. 关键代码示例
+
+\#### A. 定义和发射普通事件 (以 Chainlink 价格更新为例)
+
+这是标准以太坊合约中监听外部数据的模式：
+
+\`\`\`solidity
+
+// 1. 定义事件
+
+event PriceUpdated(string symbol, uint256 newPrice);
+
+// 2. 在合约逻辑中发射事件 (例如收到预言机数据后)
+
+function updatePrice(uint256 newEthPrice) external {
+
+// ... 获取价格的逻辑 ...
+
+// 发射事件，供外部监听
+
+emit PriceUpdated("ETH", newEthPrice);
+
+}
+
+\`\`\`
+
+\#### B. Reactive Contract 的核心结构 `IReactive`)
+
+响应式合约必须遵循的结构，用于接收事件通知：
+
+\`\`\`solidity
+
+pragma solidity >=0.8.0;
+
+interface IReactive {
+
+// 日志记录结构体，包含事件的完整上下文
+
+struct LogRecord {
+
+uint256 chain\_id; // 事件发生的链ID
+
+address \_contract; // 发射事件的合约地址
+
+uint256 topic\_0; // 事件签名的哈希
+
+uint256 topic\_1; // 索引参数1
+
+uint256 topic\_2; // 索引参数2
+
+uint256 topic\_3; // 索引参数3
+
+bytes data; // 非索引数据
+
+uint256 block\_number; // 区块号
+
+// ... 其他元数据 (op\_code, block\_hash, tx\_hash, log\_index)
+
+}
+
+// 回调事件：用于请求在目标链执行操作
+
+event Callback(
+
+uint256 indexed chain\_id, // 目标链ID
+
+address indexed \_contract, // 目标合约地址
+
+uint64 indexed gas\_limit, // 目标链交易的 Gas 限制
+
+bytes payload // 编码后的函数调用数据
+
+);
+
+// 核心入口函数：由网络自动调用处理事件
+
+function react(LogRecord calldata log) external;
+
+}
+
+\`\`\`
+
+\#### C. 发射跨链回调 (触发目标链动作)
+
+这是在 `react()` 函数内部或相关逻辑中，请求跨链执行的关键代码（以 Uniswap 止损订单为例）：
+
+\`\`\`solidity
+
+function triggerCrossChainAction() internal {
+
+// 1. 编码目标链上要调用的函数及其参数
+
+// 注意：第一个参数地址在网络层会被自动替换为 RVM ID (部署者地址)
+
+bytes memory payload = abi.encodeWithSignature(
+
+"stop(address,address,address,bool,uint256,uint256)",
+
+address(0), // 占位符，实际执行时会被替换为 ReactVM 地址
+
+pair, // Uniswap 交易对地址
+
+client, // 客户端地址
+
+true, // 布尔参数
+
+coefficient, // 系数
+
+priceThreshold // 价格阈值
+
+);
+
+// 2. 发射 Callback 事件
+
+// Reactive Network 监听此事件，解析 payload，并在 chain\_id 指定的链上执行交易
+
+emit Callback(
+
+targetChainId, // 目标链 ID (e.g., Ethereum Mainnet)
+
+targetContractAddress, // 目标合约地址
+
+CALLBACK\_GAS\_LIMIT, // Gas 限制
+
+payload // 编码好的调用数据
+
+);
+
+}
+
+\`\`\`
+
+\### 3. 工作流程图解
+
+1\. \*\*事件发生\*\*: 源链上的合约发射事件（如价格更新）。
+
+2\. \*\*网络监测\*\*: Reactive Network 扫描日志，发现匹配的订阅。
+
+3\. \*\*触发反应\*\*: 网络调用响应式合约的 `react(LogRecord)` 方法。
+
+4\. \*\*决策与回调\*\*: `react` 函数处理逻辑，若需跨链操作，则 `emit Callback(...)`。
+
+5\. \*\*跨链执行\*\*: 网络捕获 `Callback` 事件，构造交易并在目标链上执行。
+<!-- DAILY_CHECKIN_2026-03-19_END -->
+
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 ## 开发所需预先条件
 
 -   Solidity及其开发环境
@@ -30,6 +204,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 
 **跨链回调（Callback）定价与支付** ：
 
@@ -50,6 +225,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 
 ## Economy
@@ -126,6 +302,7 @@ $$p\_{callback} = p\_{base} \\times C \\times (g\_{callback} + K)$$
 
 
 
+
 ## Subscription 的工作原理
 
 ### 1\. 核心概念
@@ -199,6 +376,7 @@ $$p\_{callback} = p\_{base} \\times C \\times (g\_{callback} + K)$$
 
 
 
+
 ### **1\. 事件的本质**
 
 -   **定义**：在区块链上下文中，事件是智能合约执行过程中产生的日志记录（Logs）。
@@ -255,6 +433,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 
 
+
 -   ReactVM: ReactiveNetwork中的核心组件，负责执行Reactive Contract，并发送回调信息到目标链
     
 -   归属权：Reactive COntract会部署到基于同一个地址的EOA的独有的ReactVM，并且同一个ReactVM中的合约可以进行状态共享
@@ -266,6 +445,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -285,6 +465,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 
 
+
 -   完成 **Reactive 挑战「第一关」**
     
 -   了解了REACTIVE的调用和部署流程
@@ -292,6 +473,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
