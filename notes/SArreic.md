@@ -15,8 +15,41 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-19
+<!-- DAILY_CHECKIN_2026-03-19_START -->
+Today I deeply read the article: Decision fatigue under exit priority
+
+This article diagnoses the structural inevitability of voter apathy in DAOs and proposes a radical alternative: **Exit-first Governance**, reframing Quadratic Funding (QF) as a mechanism for negative preference aggregation and systemic braking.
+
+It begins by rejecting moralistic explanations for declining participation (laziness, lack of expertise). Instead, it identifies a structural cost-benefit imbalance: for most individuals, **governance participation costs (time, cognitive load, responsibility) consistently exceed personal gains**. Rational actors thus choose non-participation—not apathy, but calculated exit.
+
+The proposed solution shifts governance's core function from "approving decisions" to **"vetoing unacceptable paths."** Rather than asking "Do you approve this proposal?", the system asks: "If you disagree, are you willing to stay?" **Exit** is framed as a low-cost, high-signal-density, unforgeable preference expression with stronger systemic constraints than voting.
+
+Governance should be **low-frequency, high-threshold**. Proposals that do not affect exit freedom are not worthy for collective attention. A healthy DAO resembles a **constitution, not daily legislation; a circuit breaker, not a steering wheel.** Proposals default to passing; governance only triggers at structural misalignments.
+
+Within this framework, QF is repurposed from resource allocation to **negative preference aggregation**: opposition, veto, braking. The article proposes a complete institutional design:
+
+-   **Default Pass Principle**: All proposals are "passed-pending-execution" by default; governance exists to block errors, not grant permission.
+    
+-   **Tiered Risk Mapping**: From Tier 0 (auto-pass) to Tier 3 (default reject, constitutional), with sensitivity to opposition increasing with irreversibility.
+    
+-   **Opposition-First Signaling**: Governance prioritizes反对 signals. Support expresses preference; opposition triggers institutional brakes.
+    
+-   **Nonlinear Opposition Functions** (log, sqrt, power law) designed to amplify multi-party consensus while dampening extreme single-actor expressions.
+    
+-   **Time Integration**: sustained opposition weighted more than transient spikes.
+    
+-   **Threshold Mapping**: opposition intensity maps to graduated consequences—soft threshold (delay), hard threshold (freeze), fork threshold (exit rights).
+    
+-   **Fork as Feature**: Forks are legitimate governance mechanisms, not attacks—the final fuse under irreconcilable disagreement, with protected rights to replicate state and assets.
+    
+
+The conclusion reframes governance fatigue as a cost-benefit problem, not a cultural one. Mature DAO governance pursues **minimal decisions + maximal exit freedom + maximal correction capability**. The purpose of DAO governance is not to continuously express will, but to enable those who disagree to **leave safely and cheaply.**
+<!-- DAILY_CHECKIN_2026-03-19_END -->
+
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 Today's deck, "Awakening Smart Contracts," articulates a paradigm shift from passive ledgers to event-driven autonomy via **Reactive Network**.
 
 It begins by diagnosing the fundamental limitation of traditional Ethereum architecture: **smart contracts are inherently passive**. They never run autonomously; they require external transactions or calls to be triggered. This "push-to-act" model becomes a critical bottleneck as DeFi, cross-chain interactions, and automated trading explode in complexity.
@@ -35,6 +68,7 @@ The deck acknowledges engineering trade-offs: there is no silver bullet. However
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
 
+
 The February 2026 EIP roundup reveals a dual focus: a surge of new proposals at the core and contract layers to enhance scalability, alongside incremental refinements to blob mechanics and user experience, reinforcing Ethereum's commitment to a rollup-centric roadmap while improving L1 efficiency.
 
 Discussions intensified around the upcoming Hegota upgrade. **FOCIL (EIP-7805)** has been locked as the Consensus Layer headliner, enshrining censorship resistance by mandating validator-specified transaction lists. For the Execution Layer, **Frame Transactions (EIP-8141)** emerges as the leading candidate to advance account abstraction. Complementing this, Justin Drake's **Strawmap** provides a concrete execution path through seven forks until 2029, targeting Fast L1, Gigagas L1, Teragas L2, post-quantum security, and L1 privacy.
@@ -50,6 +84,7 @@ Finally, a provocative question emerges: Can AI accelerate Ethereum's roadmap? W
 <!-- DAILY_CHECKIN_2026-03-16_START -->
 
 
+
 Today I learnt the study case of Fiet.
 
 Fiet is a novel protocol enabling market makers to bridge actively managed off-chain liquidity (from banks, exchanges, etc.) into on-chain AMMs via synthetic assets. Traders interact with these pools normally, but settlement occurs asynchronously—when liquidity is temporarily unavailable, trades enter a queue requiring users to manually claim funds later. This creates a paradox: in volatile moments demanding speed, the experience degrades due to manual intervention.
@@ -61,6 +96,7 @@ This integration transforms asynchronous settlement from a UX compromise into a 
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -88,6 +124,7 @@ Key corollaries emerge from this view. System vitality is not a function of inte
 
 
 
+
 This week's Ethereum ecosystem update highlights four pivotal developments spanning infrastructure, governance, institutional adoption, and wallet UX.
 
 ENS introduced **on.eth**, a canonical on-chain registry assigning each blockchain a resolvable subdomain (e.g., `base.on.eth`) within the ENS namespace. Leveraging ERC-7828 and the Interop SDK, it returns verifiable metadata including chain IDs and interoperable addresses, replacing fragmented off-chain mappings. This transforms ENS into a multi-chain naming layer, enabling human-readable cross-chain identifiers in the `domain.eth@chain` format.
@@ -101,6 +138,7 @@ MetaMask integrated Uniswap as its primary swap provider, routing trades through
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -125,6 +163,7 @@ Despite these debates, ERC-8183's true value is its **grounding in market realit
 
 
 
+
 Today I learnt the relationships and connections between polymarkets and reactive network.
 
 Prediction markets, long predating blockchain, have proven their core thesis: markets aggregate dispersed knowledge more effectively than polls or pundits. However, their traditional form as corporate-run platforms introduced a structural dependency—participants must trust the operator to fairly adjudicate outcomes and process payouts. Blockchain fundamentally transforms this model by encoding markets into self-executing protocols. Trust shifts from a counterparty to transparent, immutable code, enabling permissionless participation where anyone can create markets or provide liquidity without gatekeepers. Crucially, on-chain markets transcend mere decentralization through **composability**; they become infrastructure components whose price signals can be integrated into DeFi protocols, DAO treasuries, or insurance mechanisms. The technical stack—market contracts issuing result tokens (e.g., YES/NO), AMMs for continuous liquidity, oracles for deterministic settlement—forms a pipeline where beliefs flow in and settlements flow out.
@@ -141,11 +180,13 @@ Yet, even this evolved model operates as a passive observer. Markets measure sen
 
 
 
+
 Ivan Ivanitskiy, Head of Developer Relations at Reactive Network, provided key insights into the technology's capabilities and limitations during a workshop. He clarified that while Reactive Smart Contracts are inherently public—meaning any arbitrage strategy coded within them can be reverse-engineered from the bytecode—the network is best suited for non-high-frequency strategies due to an inherent ~10-second latency in cross-chain execution. A major advantage highlighted is enhanced security, particularly when integrated with AI agents; instead of entrusting an agent with a private key, the AI only triggers a predefined workflow, with the actual fund movement logic secured immutably on-chain. Regarding cross-chain operations, Ivan acknowledged the impossibility of true atomicity across different chains but demonstrated how the network handles failures through application-level retry mechanisms, as implemented in their bridge. He also confirmed that while the core focus remains on EVM chains, Solana support is on the roadmap, initially targeting specific applications via community-developed connectors. Finally, he noted that while trading bots can be built on Reactive, the technology's true value lies in embedding secure, automated features like stop-loss directly into DApps, with developer grants flexibly awarded based on a project's specific needs and alignment.
 <!-- DAILY_CHECKIN_2026-03-10_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
