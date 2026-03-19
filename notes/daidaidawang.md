@@ -15,8 +15,131 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-19
+<!-- DAILY_CHECKIN_2026-03-19_START -->
+# **Uniswap V2**
+
+> **Uniswap V2的核心**是一个自动化的代币兑换机，依靠**恒定乘积公式**自动平衡价格。重点关注**Swap和Sync事件**，它们包含了交易和价格变化的所有信息，是构建自动化策略的基础。
+
+## **公式**
+
+> x，y表示流动性池中两个代币数量，k为常数
+
+x\*y=k
+
+## **事件**
+
+### **Swap**
+
+**函数签名**
+
+```
+function swap (
+uint amout0out,//接受代币0数量
+uint amout1out,//接收到代币1数量
+address to,//接受代币地址
+bytes calldata data//回调数据（闪电交换） 
+)external
+```
+
+**执行流程**
+
+```
+function swap(uint amount0Out, uint amount1Out,address to, bytes calldata data)external {
+require(amount0Out > 0 || amount1Out > 0, "UniswapV2: INSUFFICIENT_OUTPUT_AMOUNT");
+//至少取出一个代币
+(uint112 reserve0, uint112 reserve1,) = getReserves();//读取当前池子储备
+require(amount0Out < reserve0 && amount1Out < reserve1, "UniswapV2: INSUFFICIENT_LIQUIDITY");//池子不能为空
+uint balance0;
+uint balance1;
+{
+//扣除0.3%手续费后调整余额
+uint balanceAdjusted0 = balance0 * 1000 - amount0In * 3;
+uint balanceAdjusted1 = balance1 * 1000 - amount1In * 3
+require(balanceAdjusted0 * balanceAdjusted1 >= uint(reserve0) * uint(reserve1) * (1000**2), "UniswapV2: K");
+emit Swap(msg.sender, amount0In, amount1In, amount0Out, to);
+}
+_upodate(balance0, balance1, reserve0, reserve1);//更新储备
+​
+if (amount0Out > 0) _safeTransfer(token0, to, amount0Out);//转账代币
+if (amount1Out > 0) _safeTransder(token1, to, amount1Out);
+​
+//处理回调，闪电交换
+if (data.length > 0) {
+IUniswapV2Callee(to).uniswapV2Call(msg.sender, amount0Out, amount1Out, data);
+}
+}
+```
+
+**Swap事件**
+
+```
+event Swap(
+address indexed sender, //发送者
+uint amount0In,         //转入池子代币0数量
+uint amount1In,         //转入池子代币1数量
+uint amount0Out,        //从池子转出代币0数量
+uint amount1Out,        //从池子转出代币1数量
+address indexed to      //接受者
+);
+```
+
+**Sync事件**
+
+> 实时监控池子状态，价格计算，检测异常变化
+
+```
+event Sync(uint112 reserve0, uint112 reserve1);
+```
+
+## **\_update()**
+
+> 储备量更新函数
+
+```
+function _update(uint balance0, uint balance1, uint112 reserve0, uint112 reserve1) private {
+require(balance0 <= uint112(-1) && balance1 <= uint112(-1), 'UniswapV2: OVERFLOW');//防止溢出
+uint32 blockTimestamp = uint32(block.timestamp % 2**32);
+uint32 timeElapsed = blockTimestap - blockTimestampLast; //距离上次更新时间
+​
+if (timeElapsed > 0 && reserve0 != && reserve1 !=0) {
+price0CumulativeLast += uint(UQ112x112.encode(reserve1).uqdiv(reserve0)) * timeElapsed;//累计价格
+price0CumulativeLast += uint(UQ112x112.encode(reserve0).uqdiv(reserve1)) * timeElapsed;
+}
+reserve0 = uint112(balance0);//更新储备量时间戳
+reserve1 = uint112(balance1);
+blockTimestampLast = blockTimestamp;
+​
+emit Sync(reserve0,reserve1);
+}
+```
+
+## **结合反应式合约**
+
+### **监听事件**
+
+```
+Swap(amount0In, amount1In, amount0Out, amount1Out)//监听Swap事件 发现大额交易
+​
+Sync(reserve0, reserve1)//监听Sync 监控价格变化
+​
+Mint(amount0, amount1)//监听Mint/Burn 监控流动性变化
+Burn(amount0, amount1)
+```
+
+### **应用场景**
+
+| 场景 | 监听事件 | 反应动作 |
+| --- | --- | --- |
+| 套利监控 | Swap | 发现价差，触发套利 |
+| 价格预言机 | Sync | 记录价格，供其他合约使用 |
+| 大额警报 | Swap | 发送通知，记录分析 |
+| 流动性监控 | Mint/Burn | 分析池子健康度 |
+<!-- DAILY_CHECKIN_2026-03-19_END -->
+
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 ## **订阅**
 
 ### **设置订阅**
@@ -266,6 +389,7 @@ contract PriceConsumerV3 {
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
 
+
 今天完成任务二。回滚了一次，总结下回滚的原因。
 
 查询发现要么是余额不足，要么是TK1TK2没有授权回调
@@ -291,6 +415,7 @@ Uniswap V2 止损订单触发回调的过程比较简单理解，在检测到低
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 # 抽象合约
@@ -806,6 +931,7 @@ AbstractPausableReactive
 
 
 
+
 # 反应式合约
 
 ## **部署**
@@ -1057,6 +1183,7 @@ service.subscribe(...);
 
 
 
+
 花费了近一周的时间，今天完成了任务一。从学习部署合约，向地址转账，到最后回调成功。感觉收获很多，印象最深的是最后的回调一直在回滚问了AI了解到是`BasicDemoL1Callback` 构造函数接收了 `_callback_sender`。由于之前在Callback合约中开启了 `authorizedSenderOnly`，合约会执行： `require(msg.sender == _callback_sender)`
 
 如果之前传入的 `$env:DESTINATION_CALLBACK_PROXY_ADDR` **不等于** `0xc9f36411C9897e7F959D99ffca2a0Ba7ee0D7bDA`，那么合约就会 Revert，回调回滚
@@ -1257,6 +1384,7 @@ cast call $CALLBACK_PROXY_ADDR "reserves(address)" $CONTRACT_ADDR --rpc-url $DES
 
 
 
+
 这几天主要学习了如何部署reactive合约，包括设置地址，转账等一系列操作，也对reactive合约的实现流程有了个大致了解
 
 **\[源链（如Sepolia）\] -> \[Reactive Network\] -> \[目标链（如Sepolia）\]**
@@ -1289,6 +1417,7 @@ cast call $CALLBACK_PROXY_ADDR "reserves(address)" $CONTRACT_ADDR --rpc-url $DES
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
