@@ -17,7 +17,7 @@ Let’s vibe Reactive dApp
 <!-- Content_START -->
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
-Reactive Network 经济模型总结（txt版）
+Reactive Network 经济模型总结
 
 一、整体概念
 
@@ -174,6 +174,7 @@ Reactive Network 的经济模型可以抽象为：
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
 
+
 第三阶段进展汇报（初步实践）
 
 本阶段主要开始上手 Reactive 跨链机制的实际开发，目标是打通基础链路并熟悉整体流程。
@@ -189,6 +190,7 @@ Reactive Network 的经济模型可以抽象为：
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 Reactive Network 学习总结
@@ -434,6 +436,7 @@ Reactive 模式：Protocol-level automation，实现去中心化
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -744,6 +747,7 @@ Execute Swap
 
 
 
+
 在本次作业中，我主要围绕 Reactive Network 的跨链事件与回调机制进行了开发实践。首先梳理了系统整体架构，理解了 **Origin Contract、Reactive Contract 和 Destination Contract** 在跨链事件流程中的角色划分。Origin Contract 部署在源链上，用于触发事件；Reactive Contract 运行在 Reactive Network 上，用于监听指定事件并执行响应逻辑；Destination Contract 部署在目标链上，用于接收回调交易并执行最终操作。
 
 在开发过程中，我重点学习了 Reactive Smart Contract 的基本结构以及事件监听与回调的触发方式，并理解了 Reactive Network 的事件驱动执行模式。相比传统依赖 off-chain bot 监听事件再手动发送交易的方式，Reactive Network 将事件监听和自动执行逻辑通过合约形式进行编程，实现了更自动化的跨链响应机制。通过这一过程，我对事件驱动智能合约以及跨链自动化执行的设计思路有了更直观的认识。
@@ -755,6 +759,7 @@ Execute Swap
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -879,6 +884,7 @@ react(LogRecord log)
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
