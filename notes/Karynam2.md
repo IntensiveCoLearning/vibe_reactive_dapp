@@ -17,13 +17,138 @@ Let’s vibe Reactive dApp
 <!-- Content_START -->
 # 2026-03-20
 <!-- DAILY_CHECKIN_2026-03-20_START -->
-3.20日
+# 3.20日
 
-昨日workshop收获良多，不过ivan说现在你们完全了解了这些知识的时候，我觉得我还不太会用这些东西，所以只是浅层的了解一下而已。
+昨日workshop收获良多，不过ivan说现在你们完全了解了这些知识的时候，我觉得我还不太会用这些东西，所以只是浅层的了解一下而已。  
+这份文档详细介绍了 **Reactive Network** 中合约的支付机制、费用计算以及资金管理方式。我为你将核心内容归纳为以下四个维度：
+
+* * *
+
+## 核心机制概览
+
+Reactive 合约采用的是\*\*“先执行，后结算”\*\*的模式。
+
+-   **延迟计费：** RVM（Reactive 虚拟机）交易在执行时不包含 Gas 价格，费用在随后的区块中根据基础费用（Base Fee）统一计算并扣除。
+    
+-   **状态管理：** 合约必须维持足够的 REACT 代币余额。如果欠费（Debt），合约状态会变为 `inactive`（未激活），此时将无法执行交易或回调，必须通过 `coverDebt()` 结算债务后才能恢复。
+    
+
+* * *
+
+## 费用计算公式
+
+### 1\. RVM 交易费用
+
+费用仅取决于消耗的 Gas 和结算区块的基础费用：
+
+$$\\text{fee} = \\text{BaseFee} \\times \\text{GasUsed}$$
+
+-   **最大 Gas 限制：** 900,000 单位。
+    
+
+### 2\. 跨链回调费用 ($p\_{\\text{callback}}$)
+
+回调费用受目标链环境影响，计算公式更为复杂：
+
+$$p\_{\\text{callback}} = p\_{\\text{base}} \\times C \\times (g\_{\\text{callback}} + K)$$
+
+-   $p\_{\\text{base}}$：基础 Gas 价格。
+    
+-   $C$：目标网络定价系数。
+    
+-   $g\_{\\text{callback}}$：回调实际消耗的 Gas。
+    
+-   $K$：固定 Gas 附加费。
+    
+-   **最低阈值：** 回调 Gas 限制不得低于 100,000。
+    
+
+* * *
+
+## 资金注入与结算方式
+
+开发者可以通过以下三种路径为合约充值或清偿债务：
+
+| 方式 | 操作说明 | 特点 |
+| 直接转账 | 使用 cast send 向合约地址转账 REACT，随后调用 coverDebt()。 | 手动两步走，适合基础操作。 |
+| 系统合约存款 | 通过系统合约的 depositTo(address) 方法充值。 | 自动结算现有债务，推荐使用。 |
+| 自动支付 (Pay) | 合约继承 AbstractPayer 或实现 pay() 接口。 | 即时结算，回调发生时自动从余额中扣款。 |
+
+> **注意：** 系统合约与回调代理（Callback Proxy）在 Reactive 网络中的地址统一为：`0x0000000000000000000000000000000000fffFfF`。
+
+* * *
+
+## 状态查询常用命令 (Forge/Cast)
+
+你可以使用以下命令监控合约的财务状况：
+
+-   **查余额：** `cast balance $CONTRACT_ADDR --rpc-url $RPC_URL`
+    
+-   **查欠费 (Debt)：** `cast call $PROXY_ADDR "debts(address)" $CONTRACT_ADDR`
+    
+-   **查准备金 (Reserves)：** `cast call $PROXY_ADDR "reserves(address)" $CONTRACT_ADDR`
+    
+
+* * *
+
+## 这里整理了一个 Bash 脚本模板，可以直接把常用的环境变量填进去，之后无论是部署测试还是日常维护，点一下就能搞定，不用再手动输入那长串的十六进制地址了
+
+🚀 Reactive 合约财务管理脚本 (`manage_reactive.sh`)
+
+```
+#!/bin/bash
+
+# --- 基础配置 (请根据实际情况修改) ---
+RPC_URL="你的REACTIVE_RPC_URL"
+PRIVATE_KEY="你的私钥"
+CONTRACT_ADDR="你的合约地址"
+SYSTEM_PROXY="0x0000000000000000000000000000000000fffFfF"
+
+# --- 颜色输出 ---
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+echo -e "${GREEN}=== Reactive Contract Status ===${NC}"
+
+# 1. 查询基础信息
+echo "1. Balance (余额):"
+cast balance $CONTRACT_ADDR --rpc-url $RPC_URL
+
+echo "2. Debt (欠费):"
+DEBT_HEX=$(cast call $SYSTEM_PROXY "debts(address)" $CONTRACT_ADDR --rpc-url $RPC_URL)
+cast to-dec $DEBT_HEX
+
+echo "3. Reserves (准备金):"
+RESERVE_HEX=$(cast call $SYSTEM_PROXY "reserves(address)" $CONTRACT_ADDR --rpc-url $RPC_URL)
+cast to-dec $RESERVE_HEX
+
+# --- 交互操作选项 ---
+echo -e "\n${GREEN}=== Quick Actions ===${NC}"
+echo "输入 'd' 进行存款并自动结算 (depositTo)"
+echo "输入 'c' 仅结算当前债务 (coverDebt)"
+read -p "请选择操作: " choice
+
+if [ "$choice" == "d" ]; then
+    read -p "请输入存款金额 (单位 ether, 如 0.1): " amount
+    cast send $SYSTEM_PROXY "depositTo(address)" $CONTRACT_ADDR \
+        --value "${amount}ether" --rpc-url $RPC_URL --private-key $PRIVATE_KEY
+elif [ "$choice" == "c" ]; then
+    cast send $CONTRACT_ADDR "coverDebt()" --rpc-url $RPC_URL --private-key $PRIVATE_KEY
+fi
+```
+
+### 💡 核心要点提示
+
+-   **权限与安全：** 脚本中涉及私钥，建议在生产环境使用环境变量（如 `.env` 文件）或硬件钱包，不要直接硬编码。
+    
+-   **地址唯一性：** 记住那个 `0x...fffFfF` 地址，它既是系统合约（管理 RVM 费用），也是回调代理（管理跨链费用），在 Reactive 网络里它是万能的。
+    
+-   **结算逻辑：** 如果你的合约状态是 `inactive`，优先使用 `depositTo`，因为它会顺手把账给结了，省去你再跑一次 `coverDebt` 的 Gas。
 <!-- DAILY_CHECKIN_2026-03-20_END -->
 
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 
 3.19继续vibe coding
 
@@ -34,11 +159,13 @@ Let’s vibe Reactive dApp
 <!-- DAILY_CHECKIN_2026-03-18_START -->
 
 
+
 3.18号打卡
 <!-- DAILY_CHECKIN_2026-03-18_END -->
 
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 
 
 
@@ -74,6 +201,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 
 
@@ -196,6 +324,7 @@ Let’s vibe Reactive dApp
 
 
 
+
 3.15继续打卡，部署跨链合约
 
 简单来说，传统的智能合约像是一个“声控灯”，你不拍手（发送交易），它永远不会亮；而 RCs 就像是一个“光感灯”，它会时刻盯着外界环境（区块链事件），一旦天黑了（满足条件），它自己就亮了。  
@@ -275,6 +404,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -444,6 +574,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 
 
+
 # 3月13号  
 目标🎯跑完链路
 
@@ -473,6 +604,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 
 
+
 # 3.12植树节
 
 1.再来把Reactive contracts弄懂
@@ -480,6 +612,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -831,6 +964,7 @@ Krystal 姐，你担心的“看错”确实是开发者最容易踩的坑，但
 
 
 
+
 # 3.9—3.10两场会议总结
 
 1.  🧘集中精力看着自己脚下的路走，不要分心左顾右盼（不是让你闭门造车/与世隔绝的意思，重点是强调集中精力在解决问题是，精力是一种有限且珍贵的资源，每天是定量供应的，不要浪费它）保持对外界的信息的觉知度，看事情尽量抓本质（是什么东西What，什么原因Why, 具体有什么用Value，怎么样我能用上How，碰上具体什么问题？然后厚着脸皮去问，不管问题是否能完满解决，至少训练了自己的脸皮（褒义））
@@ -845,6 +979,7 @@ Krystal 姐，你担心的“看错”确实是开发者最容易踩的坑，但
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
