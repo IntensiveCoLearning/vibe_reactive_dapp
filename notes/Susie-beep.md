@@ -15,19 +15,27 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-19
+<!-- DAILY_CHECKIN_2026-03-19_START -->
+滴
+<!-- DAILY_CHECKIN_2026-03-19_END -->
+
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 滴
 <!-- DAILY_CHECKIN_2026-03-18_END -->
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
 
+
 好累好困
 <!-- DAILY_CHECKIN_2026-03-16_END -->
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 好累，今日划水
@@ -38,11 +46,13 @@ Let’s vibe Reactive dApp
 
 
 
+
 **Subscribe（订阅）** 是告诉合约“你要听什么声音”，**Trigger（触发）** 是合约真的“听到了那个声音”，**Callback（回调）** 是合约听到声音后“站起来去做的事”。
 <!-- DAILY_CHECKIN_2026-03-13_END -->
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -57,11 +67,13 @@ Let’s vibe Reactive dApp
 
 
 
+
 reactive network如何监听特定事件：每一个链上动作，在代码里都有一个对应的“标签名称”。
 <!-- DAILY_CHECKIN_2026-03-11_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
