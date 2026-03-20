@@ -15,8 +15,20 @@ shadowdoge，web3新人
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-20
+<!-- DAILY_CHECKIN_2026-03-20_START -->
+## MVP 范围确认：
+
+**合约层**：`StreakVault.sol`（Sepolia）+ `StreakReactive.sol`（Reactive Network）
+
+**功能**：存款 → 打卡 → Cron 自动结算 → 罚金分配 → 提款
+
+**不做**：地图、排行榜、成就、保护盾、多周期
+<!-- DAILY_CHECKIN_2026-03-20_END -->
+
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 **质押惩罚型打卡合约**。玩家把钱锁进去，按时打卡才能拿回来，不打卡就扣钱。
 
 Reactive 在这里能做的事情是：
@@ -57,6 +69,7 @@ Viewed a file, created a file, read a file
 
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 
 ## 对于 Cron 事件，`react()` 收到的是什么
 
@@ -123,6 +136,7 @@ Reactive Network 会自动把 callback payload 的前 160 bit 替换为 ReactVM 
 <!-- DAILY_CHECKIN_2026-03-16_START -->
 
 
+
 ### 关键概念与实现
 
 1.  **ERC-20** `Approval` **事件监听**：
@@ -161,6 +175,7 @@ Reactive Network 会自动把 callback payload 的前 160 bit 替换为 ReactVM 
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 
@@ -205,6 +220,7 @@ RC 定期订阅 cron 事件，每次触发时检查用户的健康因子（Healt
 
 
 
+
 Uniswap 是以太坊上最重要的去中心化交易所（DEX）协议之一，彻底改变了加密资产的交换方式。下面我来分几个核心概念为你讲清楚。
 
 ## 核心思想：自动做市商（AMM）
@@ -233,6 +249,7 @@ Uniswap 是以太坊上最重要的去中心化交易所（DEX）协议之一，
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -409,6 +426,7 @@ cast send <ORIGIN\_CONTRACT\_ADDR> \\
 
 
 
+
 遇到了一个坑
 
 # 坑 1：`--broadcast` 被当成 constructor 参数
@@ -469,6 +487,7 @@ forge create (dry run)
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -537,6 +556,7 @@ execution reverted
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
