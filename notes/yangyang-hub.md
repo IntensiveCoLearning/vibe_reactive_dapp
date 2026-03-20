@@ -15,8 +15,389 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-20
+<!-- DAILY_CHECKIN_2026-03-20_START -->
+## Reactive Network RNK 扩展 RPC 学习笔记
+
+### 1\. 基本定位
+
+-   Reactive Network 支持标准 **Geth RPC**。
+    
+-   这页文档介绍的是 **RNK 自定义扩展方法**。
+    
+-   主要用途：
+    
+    -   查询 **ReactVM 交易**
+        
+    -   查询 **交易日志**
+        
+    -   查询 **合约代码 / 存储**
+        
+    -   执行 **只读调用**
+        
+    -   查询 **RVM / 订阅 / 过滤器 / 链上统计信息**
+        
+
+* * *
+
+## 2\. 交易查询类
+
+### `rnk_getTransactionByHash`
+
+按 **RVM ID + 交易哈希** 查询 ReactVM 交易。
+
+### `rnk_getTransactionByNumber`
+
+按 **RVM ID + 交易序号** 查询交易。
+
+### `rnk_getTransactions`
+
+批量查询某个 RVM 从指定序号开始的一段交易。
+
+### `rnk_getHeadNumber`
+
+查询某个 RVM 当前最新交易号。
+
+### 常见返回字段
+
+这几个接口返回的交易对象字段基本一致：
+
+-   `hash`：交易哈希
+    
+-   `number`：交易序号（hex）
+    
+-   `time`：时间戳
+    
+-   `root`：Merkle root
+    
+-   `limit`：gas limit
+    
+-   `used`：gas used
+    
+-   `type`：交易类型
+    
+    -   `0` Legacy
+        
+    -   `1` AccessList
+        
+    -   `2` DynamicFee
+        
+    -   `3` Blob
+        
+    -   `4` SetCode
+        
+-   `status`：状态
+    
+    -   `1` 成功
+        
+    -   `0` 失败
+        
+-   `from` / `to`：发起方 / 接收方
+    
+-   `createContract`：是否创建合约
+    
+-   `sessionId`：所在 RNK 区块号
+    
+-   `refChainId`：来源链 ID
+    
+-   `refTx`：触发该反应交易的来源链交易
+    
+-   `refEventIndex`：来源事件 opcode
+    
+-   `data`：输入数据
+    
+-   `rData`：返回数据
+    
+
+* * *
+
+## 3\. 日志查询
+
+### `rnk_getTransactionLogs`
+
+查询某个 ReactVM 交易产生的日志。
+
+### 返回内容
+
+-   `txHash`：交易哈希
+    
+-   `address`：产生日志的合约地址
+    
+-   `topics`：事件 topics
+    
+    -   `topics[0]` 通常是事件签名
+        
+-   `data`：非索引参数数据
+    
+
+* * *
+
+## 4\. RVM / 地址映射
+
+### `rnk_getRnkAddressMapping`
+
+把 **Reactive Network 合约地址** 映射到对应的 **RVM ID**。
+
+适合理解：
+
+-   “这个 Reactive 合约属于哪个 RVM？”
+    
+
+* * *
+
+## 5\. 网络统计 / RVM 信息
+
+### `rnk_getStat`
+
+查询按 **来源链** 聚合的统计数据。
+
+返回：
+
+-   `txCount`：该来源链触发的交易数
+    
+-   `eventCount`：该来源链事件数
+    
+
+### `rnk_getVms`
+
+查询全部已知 ReactVM 列表。
+
+### `rnk_getVm`
+
+查询单个 ReactVM 信息。
+
+### 常见字段
+
+-   `rvmId`
+    
+-   `lastTxNumber`
+    
+-   `contracts`：该 RVM 下合约数量
+    
+
+* * *
+
+## 6\. 订阅与过滤器
+
+### `rnk_getSubscribers`
+
+查询某个 RVM 的订阅信息。
+
+返回字段：
+
+-   `uid`：订阅唯一 ID
+    
+-   `chainId`：来源链 ID
+    
+-   `contract`：来源链上的被订阅合约
+    
+-   `topics`：订阅的事件 topic 条件
+    
+-   `rvmId`
+    
+-   `rvmContract`：处理该订阅的 Reactive 合约地址
+    
+
+### `rnk_getFilters`
+
+查询全网当前活跃的日志过滤器。
+
+返回重点：
+
+-   `uid`
+    
+-   `chainId`
+    
+-   `contract`
+    
+-   `topics`
+    
+-   `configs`
+    
+    -   `contract`
+        
+    -   `rvmId`
+        
+    -   `active`
+        
+
+* * *
+
+## 7\. 合约状态查询
+
+### `rnk_getCode`
+
+查询某个 RVM 中某个合约在指定状态下的 **字节码**。
+
+参数核心：
+
+-   `rvmId`
+    
+-   `contract`
+    
+-   `txNumberOrHash`
+    
+    -   可传交易号
+        
+    -   或标签：`latest` / `earliest` / `pending`
+        
+
+### `rnk_getStorageAt`
+
+查询某个合约指定 storage slot 的值。
+
+参数核心：
+
+-   `rvmId`
+    
+-   `address`
+    
+-   `hexKey`：32 字节存储槽
+    
+-   `txNumberOrHash`
+    
+
+* * *
+
+## 8\. 只读调用
+
+### `rnk_call`
+
+在某个 RVM 中对合约做 **只读 EVM 调用**，不会产生交易。
+
+适合：
+
+-   查询 view / pure 方法
+    
+-   模拟读取链上状态
+    
+
+参数核心：
+
+-   `rvmId`
+    
+-   `args`
+    
+    -   `to`
+        
+    -   `data`
+        
+    -   可选 `from / gas / gasPrice / value`
+        
+-   `txNumberOrHash`
+    
+
+返回：
+
+-   十六进制结果 `result`
+    
+
+* * *
+
+## 9\. 区块与 RVM 关系
+
+### `rnk_getBlockRvms`
+
+查询某个 RNK 区块中有哪些 RVM 产生了交易。
+
+返回字段：
+
+-   `rvmId`
+    
+-   `headTxNumber`
+    
+-   `prevRnkBlockId`
+    
+-   `txCount`
+    
+
+适合理解：
+
+-   某个 RNK block 内，哪些 RVM 活跃
+    
+-   每个 RVM 在该 block 中处理了多少交易
+    
+
+* * *
+
+## 10\. 参数规律总结
+
+很多接口都会重复出现下面几个参数：
+
+-   `rvmId`：ReactVM 唯一标识
+    
+-   `txHash`：交易哈希
+    
+-   `txNumber`：交易序号
+    
+-   `txNumberOrHash`：既可传交易号，也可传状态标签
+    
+-   `chainId`：来源链 ID
+    
+-   `topics`：事件过滤条件
+    
+
+* * *
+
+## 11\. 记忆重点
+
+你可以把这些接口按 5 类记：
+
+### A. 交易
+
+-   `rnk_getTransactionByHash`
+    
+-   `rnk_getTransactionByNumber`
+    
+-   `rnk_getTransactions`
+    
+-   `rnk_getHeadNumber`
+    
+
+### B. 日志
+
+-   `rnk_getTransactionLogs`
+    
+
+### C. RVM / 网络信息
+
+-   `rnk_getVm`
+    
+-   `rnk_getVms`
+    
+-   `rnk_getStat`
+    
+-   `rnk_getBlockRvms`
+    
+-   `rnk_getRnkAddressMapping`
+    
+
+### D. 订阅 / 过滤器
+
+-   `rnk_getSubscribers`
+    
+-   `rnk_getFilters`
+    
+
+### E. 合约状态 / 调用
+
+-   `rnk_getCode`
+    
+-   `rnk_getStorageAt`
+    
+-   `rnk_call`
+    
+
+* * *
+
+## 12\. 一句话理解
+
+RNK 扩展 RPC 本质上是在标准 Ethereum RPC 之外，补充了 **ReactVM 维度的交易、日志、订阅、状态和统计查询能力**。
+<!-- DAILY_CHECKIN_2026-03-20_END -->
+
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 # Reactive Contracts — Subscriptions
 
 ## 🧩 核心概念
@@ -207,6 +588,7 @@ else {
 
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 
 
 # Reactive Network 学习笔记
@@ -479,6 +861,7 @@ forge verify-contract ...
 
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 
 
 
@@ -801,6 +1184,7 @@ CallbackReceived(...)
 
 
 
+
 源链事件 -> 订阅捕获 -> 条件判断 -> 发起目标链回调
 
 核心知识点：
@@ -850,6 +1234,7 @@ CallbackReceived(...)
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 
@@ -1143,6 +1528,7 @@ Reactive Contract运行逻辑：
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -1525,6 +1911,7 @@ Sync
 
 
 
+
 # Oracles 学习笔记
 
 ## 1\. Oracle 的作用
@@ -1802,6 +2189,7 @@ Reactive Contract 监听事件
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -2198,6 +2586,7 @@ Reactive Contracts 订阅机制核心：
 
 
 
+
 # Reactive Contracts (RCs) 架构与执行机制
 
 ## 一、 双重执行环境：一个合约，两个状态
@@ -2311,6 +2700,7 @@ Reactive Contracts 订阅机制核心：
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -2594,6 +2984,7 @@ Reactive Network 会自动：
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
