@@ -15,8 +15,14 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-20
+<!-- DAILY_CHECKIN_2026-03-20_START -->
+![Screenshot 2026-03-20 at 11.07.04 PM.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/fuyushiphilip/images/2026-03-20-1774019241369-Screenshot_2026-03-20_at_11.07.04_PM.png)
+<!-- DAILY_CHECKIN_2026-03-20_END -->
+
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 \[Origin Chain / Target Chain (e.g. Ethereum, Sepolia)\]
 
 │
@@ -66,6 +72,7 @@ Let's vibe Reactive dApp！
 
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 
 ### DeFi 合約保護情境
 
@@ -167,11 +174,13 @@ Let's vibe Reactive dApp！
 <!-- DAILY_CHECKIN_2026-03-17_START -->
 
 
+
 RC contracts are essentially non-upgradable. If you want to modify functions or perform iterative updates, you must redeploy the contract. This is because RC contracts involve relationships between subscriptions, execution logic, and callbacks, and they do not natively support upgrades. After redeployment, you also need to manage subscription migration and state. Subscriptions are registered in the system's subscription mechanism, and the logic is executed on the RBM. These two environments are isolated from each other. Once the contract is deployed, the subscription rules, contract address, and callback logic are all fixed and cannot be directly upgraded. The only option is to redeploy a new version of the contract.
 <!-- DAILY_CHECKIN_2026-03-17_END -->
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 
 
@@ -285,6 +294,7 @@ DA
 
 
 
+
 **Reactive Contract 基本架構（以 Reactive Network 為例）**
 
 通常會看到三個主要角色合約：
@@ -319,6 +329,7 @@ DA
 
 
 
+
 **Reactive Contracts 是什麼？**
 
 傳統智能合約（Solidity）特性：
@@ -348,6 +359,7 @@ DA
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -424,6 +436,7 @@ Done
 
 
 
+
 傳統 DeFi 架構（Bot 驅動）
 
 flowchart LR
@@ -465,6 +478,7 @@ D --> E\[Send Transaction<br>to target chain\]
 
 
 
+
 傳統Smart Contract 是被動的，意思是沒人調用contract, contract 就什麼都不會做。
 
 現在的DeFi系統依賴bots/Keepers 監聽鏈上的交易。
@@ -481,6 +495,7 @@ Reactive Contract 監聽鏈上事件，然後自動執行 contract，核心概�
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
