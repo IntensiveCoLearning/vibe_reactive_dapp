@@ -15,8 +15,18 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-20
+<!-- DAILY_CHECKIN_2026-03-20_START -->
+# ReactiveDApp学习
+
+[https://blog.reactive.network/fiet-integrates-with-reactive-network-to-automate-asynchronous-defi-settlements/](https://blog.reactive.network/fiet-integrates-with-reactive-network-to-automate-asynchronous-defi-settlements/)
+
+阅读了这篇文章：Fiet 通过把链下主动管理流动性映射到链上 AMM，实现异步结算型交易；问题在于，当流动性暂时不可用时，用户通常需要进入队列并手动再次 claim。Reactive Network 通过 Reactive Contracts 监听链上事件，在流动性恢复时自动执行结算，从而省去人工 claim、链下 bot 和中心化 keeper。这个案例说明，Reactive 不只是简单监听事件，而是能够处理异步结算、队列管理、状态聚合和条件触发执行等复杂 DeFi 自动化场景。
+<!-- DAILY_CHECKIN_2026-03-20_END -->
+
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 # Reactive DApp学习
 
 -   如何把智能合约变成一个自动运行的机器人：**Reactive 方式，**逻辑直接写在响应式合约里。它像是一个**永不掉线的链上监控器**，只要区块链在出块，你的止损逻辑就在运行，且具有去中心化的安全保障。
@@ -26,6 +36,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 # ReactiveDApp学习第六天
 
@@ -43,6 +54,7 @@ Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 # Reactive DApp学习第5天
@@ -64,6 +76,7 @@ Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常
 
 
 
+
 # ReactiveDapp学习第四天
 
 -   ReactVM 这边就像“真正干活的机器人”：它一边盯价格，一边判断是否该止损；一旦该止损就立刻发 callback；等收到执行成功的回执后，再把订单状态标记为完成。
@@ -75,6 +88,7 @@ Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -95,6 +109,7 @@ Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常
 
 
 
+
 # Reactive Dapp 学习第二天
 
 直播学习:
@@ -106,6 +121,7 @@ Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
