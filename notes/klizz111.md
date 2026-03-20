@@ -15,8 +15,38 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-20
+<!-- DAILY_CHECKIN_2026-03-20_START -->
+\- **Subscriptions** 是 Reactive Contracts 用来监听特定区块链事件的机制。
+
+\- 通过调用系统合约（system contract）的 `subscribe()` 方法来创建订阅。
+
+\- 订阅时需要指定：
+
+\- 源链 ID（origin chain ID）
+
+\- 合约地址（contract address）
+
+\- 事件 topics（topic\_0 到 topic\_3，最多4个）
+
+\- 当匹配的事件发生时，系统会自动触发对应 Reactive Contract 的 `react()` 函数。
+
+\- 支持两种方式设置订阅：
+
+1\. **静态**：在合约部署时（constructor）直接设置
+
+2\. **动态**：通过回调（callback）在运行时增删
+
+\- 取消订阅用 `unsubscribe()`，但这个操作相对昂贵（因为要搜索并移除）。
+
+\- 允许重复订阅（duplicate subscriptions），因为防止重复的成本太高。
+
+\- 每次调用 `subscribe()` / `unsubscribe()` 都需要支付 gas 费。
+<!-- DAILY_CHECKIN_2026-03-20_END -->
+
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 ### 1\. 核心概念总结
 
 \* \*\*以太坊事件 (EVM Events)\*\*:
@@ -191,6 +221,7 @@ payload // 编码好的调用数据
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
 
+
 ## 开发所需预先条件
 
 -   Solidity及其开发环境
@@ -204,6 +235,7 @@ payload // 编码好的调用数据
 
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 
 
 **跨链回调（Callback）定价与支付** ：
@@ -225,6 +257,7 @@ payload // 编码好的调用数据
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 
 
@@ -303,6 +336,7 @@ $$p\_{callback} = p\_{base} \\times C \\times (g\_{callback} + K)$$
 
 
 
+
 ## Subscription 的工作原理
 
 ### 1\. 核心概念
@@ -377,6 +411,7 @@ $$p\_{callback} = p\_{base} \\times C \\times (g\_{callback} + K)$$
 
 
 
+
 ### **1\. 事件的本质**
 
 -   **定义**：在区块链上下文中，事件是智能合约执行过程中产生的日志记录（Logs）。
@@ -434,6 +469,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 
 
+
 -   ReactVM: ReactiveNetwork中的核心组件，负责执行Reactive Contract，并发送回调信息到目标链
     
 -   归属权：Reactive COntract会部署到基于同一个地址的EOA的独有的ReactVM，并且同一个ReactVM中的合约可以进行状态共享
@@ -445,6 +481,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -466,6 +503,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 
 
+
 -   完成 **Reactive 挑战「第一关」**
     
 -   了解了REACTIVE的调用和部署流程
@@ -473,6 +511,7 @@ Reactive Network 并不盲目处理所有链上数据，而是通过高效的过
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
