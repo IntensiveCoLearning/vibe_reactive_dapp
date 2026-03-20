@@ -15,8 +15,96 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-20
+<!-- DAILY_CHECKIN_2026-03-20_START -->
+MVP 范围定义 + dApp 流程图设计
+
+1\. 我的 MVP Idea（基于 Reactive 核心优势 + DeFi 实战）Idea 名称：Reactive AutoHedge（自动对冲助手 dApp）  
+核心价值：用户设置跨链/本链资产价格阈值（e.g. ETH/USD 跌破 $2000），Reactive 合约自动监控 oracle + Uniswap 事件，触发对冲动作（swap 到稳定币或跨链转移），实现无 keeper 的 DeFi 风险管理。  
+为什么选这个：
+
+-   结合 Module 1 oracle + Module 2 Uniswap Stop Order demo。
+    
+-   实用场景：DeFi 用户防爆仓/波动风险。
+    
+-   可展示三段链：Origin（Chainlink oracle / Uniswap Sync） → Reactive（评估阈值） → Destination（执行 swap 或桥接）。
+    
+-   MVP 范围可控，易扩展（加 TWAMM、多资产）。
+    
+
+2\. MVP 明确范围（最小可运行版本）In Scope（必须实现）：
+
+-   前端：简单 React UI（输入阈值、资产对、止损方向、recipient 地址）。
+    
+-   后端合约：
+    
+    -   Reactive 合约：订阅 Chainlink price update + Uniswap Sync 事件。
+        
+    -   条件逻辑：价格 < 阈值 → emit Callback。
+        
+    -   Callback：调用 Uniswap swap（或 mock 跨链桥）。
+        
+-   测试链：Lasna 测试网 + Sepolia/Base fork。
+    
+-   验证：部署后手动触发事件，观察 Callback 执行 & 资金转移。
+    
+-   输出：可 demo 的 MVP（视频/截图 + explorer tx）。
+    
+
+Out of Scope（后期迭代）：
+
+-   高级 UI（钱包连接、多用户管理）。
+    
+-   多 oracle 聚合、安全审计。
+    
+-   Gas 优化、REACT 余额自动充值。
+    
+-   移动端支持。
+    
+
+3\. dApp 整体流程图（文字描述 + 简易结构）高层次流程：
+
+1.  用户交互 → 前端输入参数（阈值、pair、方向） → 调用 Reactive 合约 setupHedge()（RNK 环境）。
+    
+2.  订阅设置 → 合约构造函数/动态订阅 Chainlink Aggregator AnswerUpdated + Uniswap Pair Sync。
+    
+3.  Origin 事件触发 → Chainlink 更新价格 / Uniswap Sync emit 储备变化。
+    
+4.  Reactive 层 → ReactVM 接收 LogRecord → react() 解码价格/储备 → 计算当前值 → 若触发阈值 → emit Callback（payload: executeHedge）。
+    
+5.  Destination 执行 → Callback tx 落地 RNK 或跨链 → 调用 Uniswap swap() 或桥接合约 → 资金对冲完成 → emit HedgeExecuted 事件（前端监听显示成功）。
+    
+6.  用户查看 → 前端查询事件日志 / explorer 确认 tx。
+    
+
+流程图文字伪代码（可直接画到 Excalidraw / [Draw.io](http://Draw.io)）：
+
+```text
+用户 → [前端 UI] → setupHedge(阈值, pair, recipient)
+       ↓
+Reactive Contract (RNK) → subscribe(Chainlink + Uniswap events)
+       ↓ (事件发生)
+Origin (Chainlink/Uniswap) → emit Event → Reactive Network 中继
+       ↓
+ReactVM → react(LogRecord) → if (price < threshold) → emit Callback
+       ↓
+Callback tx → Destination (Uniswap/Bridge) → swap/transfer → HedgeExecuted
+       ↓
+前端监听 → 显示 "Hedge 执行成功！"
+```
+
+4\. 今日行动 & 反思
+
+-   已完成：Idea 脑暴 + MVP 范围界定 + 流程图草稿。
+    
+-   待办：明天用 Claude 生成合约骨架（订阅 + Callback），前端 mock UI。
+    
+-   心得：明确 MVP 边界后，Hackathon 方向瞬间清晰——聚焦“事件 → 自动化对冲”三段链闭环。Reactive 的无 keeper 优势在这里发挥最大价值。
+<!-- DAILY_CHECKIN_2026-03-20_END -->
+
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 **reactive Network** 的自动化交易系统架构，演示了如何通过监听 Uniswap 价格事件触发自动化代币交换。系统通过 **Reactive Contract** 监控链上事件，当价格达到阈值时自动调用 **Callback Contract** 执行交换并停止监控。
 
 ## 技术架构决策
@@ -114,6 +202,7 @@ Let’s vibe Reactive dApp
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
 
+
 -   今日重点：深化 Subscribe / Trigger / Callback 模型 + ReactVM 执行逻辑 + 跨链自动化机制。
     
     -   复习双状态（Reactive Network 主链 vs ReactVM 隔离沙箱）。
@@ -137,6 +226,7 @@ Let’s vibe Reactive dApp
 <!-- DAILY_CHECKIN_2026-03-17_START -->
 
 
+
 -   订阅 Uniswap Pair Sync 事件（topics\[0\] = keccak256("Sync(uint112,uint112)")）。
     
 -   react() 中：解码 reserve0/reserve1 → 计算价格比率 → 若 ≤ stopPrice → emit Callback。
@@ -148,6 +238,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 
 
@@ -206,6 +297,7 @@ Uniswap V2 集成与 Reactive Stop Order 实战
 
 
 
+
 Uniswap V2 池与合约理解
 
 -   学习目标：
@@ -249,6 +341,7 @@ Uniswap V2 池与合约理解
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -308,6 +401,7 @@ How Uniswap Works（Uniswap V2 池与合约理解）
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -376,6 +470,7 @@ How Oracles Work
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -529,6 +624,7 @@ How Subscriptions Work（订阅机制详解）
 
 
 
+
 **ReactVM and Reactive Network As a Dual-State Environment**
 
 **1\. 学习目标（Lesson Objectives）**
@@ -629,6 +725,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 
 
+
 **Events and Callbacks 工作原理**
 
 **1\. 学习目标（Lesson Objectives**）
@@ -703,6 +800,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
