@@ -15,8 +15,32 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-20
+<!-- DAILY_CHECKIN_2026-03-20_START -->
+**3月20日 (周五)：前端交互：时间线展示与钱包切换**
+
+-   **目标**：完成前端最小可行性 UI。
+    
+-   **任务**：
+    
+    1.  **钱包连接**：实现一键切换 Origin 和 Lasna 链的逻辑。
+        
+    2.  **触发交互**：前端按钮触发 Origin 链合约的 `emit`。
+        
+    3.  **时间线 UI**：设计并实现一个简单的进度条或时间线，展示：
+        
+        -   `Origin`: 交易已发出 -> 事件已生成。
+            
+        -   `Reactive`: 事件被捕获 -> React 逻辑执行中。
+            
+        -   `Destination`: 回调已触发（如有）。
+            
+    4.  **调试链接**：在 UI 上提供跳转到 [Reactscan](https://reactscan.io/) 的链接。
+<!-- DAILY_CHECKIN_2026-03-20_END -->
+
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 **3月18日 (周三)：Reactive 逻辑实现：LogRecord 与回调**
 
 -   **目标**：实现 `react(LogRecord)` 函数，处理捕获到的事件。
@@ -34,6 +58,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 
 **3月17日 (周二)：Reactive 合约核心：订阅与生命周期**
 
@@ -56,6 +81,7 @@ Let’s vibe Reactive dApp
 <!-- DAILY_CHECKIN_2026-03-16_START -->
 
 
+
 前端：
 
 -   能连接钱包并切换到：Origin 链与 Lasna 链
@@ -67,6 +93,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 
@@ -95,6 +122,7 @@ Let’s vibe Reactive dApp
 
 
 
+
 **代码拆解 —— 以 Uniswap V2 Stop Order 为例**
 
 **今日重点：** 结合 GitHub 源码，看技术理论如何变成逻辑代码。
@@ -116,6 +144,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -156,6 +185,7 @@ Let’s vibe Reactive dApp
 
 
 
+
 ## Day 3：挑战任务实战（终极目标）
 
 **核心点：按照 Notion 指引完成跨链自动化**
@@ -178,6 +208,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -232,6 +263,7 @@ bytes calldata data
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
