@@ -15,8 +15,22 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-20
+<!-- DAILY_CHECKIN_2026-03-20_START -->
+今日完成：
+
+1、**动手实践 + Casual Hackathon 准备，准备利用Reactive做一个链上游戏；**
+
+**2、vibe coding大部分框架已经完成；**
+
+今日感想：
+
+1、**Reactive大部分思想和用法已经了解了，剩下的就是在实践中获取巩固**
+<!-- DAILY_CHECKIN_2026-03-20_END -->
+
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 今日完成：
 
 1、foundry部署uniswap v2 demo完成；
@@ -29,6 +43,7 @@ Let’s vibe Reactive dApp
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
 
+
 今日完成：
 
 1、[uniswap-v2-stop-order](https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/demos/uniswap-v2-stop-order)demo学习，才知道callback合约只需要提供一个外部调用的函数，也就是reactive调用的函数就可以，之前还以为必须得是callback函数；
@@ -40,6 +55,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 
 
@@ -58,6 +74,7 @@ Uniswap v2止损订单demo学习完成：50%；
 
 
 
+
 今日完成：
 
 将uniswapv2 demo在本地启动完成；
@@ -65,6 +82,7 @@ Uniswap v2止损订单demo学习完成：50%；
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -81,6 +99,7 @@ ai是个好老师，好的大模型就是超级好老师，教程实在是太简
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -115,6 +134,7 @@ emit Callback(destinationChainId, callback, GAS\_LIMIT, payload);
 
 
 
+
 今日完成：
 
 1、Dev 文档核心模块学习；  
@@ -127,6 +147,7 @@ emit Callback(destinationChainId, callback, GAS\_LIMIT, payload);
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -163,6 +184,7 @@ emit Callback(destinationChainId, callback, GAS\_LIMIT, payload);
 
 
 
+
 今日完成：
 
 1、睿应层（Reactive Network）官网 Overview学习完成；
@@ -176,6 +198,7 @@ emit Callback(destinationChainId, callback, GAS\_LIMIT, payload);
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
