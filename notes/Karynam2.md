@@ -69,10 +69,7 @@ $$p\_{\\text{callback}} = p\_{\\text{base}} \\times C \\times (g\_{\\text{callba
 
 开发者可以通过以下三种路径为合约充值或清偿债务：
 
-| 方式 | 操作说明 | 特点 |
-| 直接转账 | 使用 cast send 向合约地址转账 REACT，随后调用 coverDebt()。 | 手动两步走，适合基础操作。 |
-| 系统合约存款 | 通过系统合约的 depositTo(address) 方法充值。 | 自动结算现有债务，推荐使用。 |
-| 自动支付 (Pay) | 合约继承 AbstractPayer 或实现 pay() 接口。 | 即时结算，回调发生时自动从余额中扣款。 |
+| 方式 | 操作说明 | 特点 | | 直接转账 | 使用 cast send 向合约地址转账 REACT，随后调用 coverDebt()。 | 手动两步走，适合基础操作。 | | 系统合约存款 | 通过系统合约的 depositTo(address) 方法充值。 | 自动结算现有债务，推荐使用。 | | 自动支付 (Pay) | 合约继承 AbstractPayer 或实现 pay() 接口。 | 即时结算，回调发生时自动从余额中扣款。 |
 
 > **注意：** 系统合约与回调代理（Callback Proxy）在 Reactive 网络中的地址统一为：`0x0000000000000000000000000000000000fffFfF`。
 
@@ -150,6 +147,7 @@ fi
 <!-- DAILY_CHECKIN_2026-03-19_START -->
 
 
+
 3.19继续vibe coding
 
 卡那个链上操作好几天了😭
@@ -160,11 +158,13 @@ fi
 
 
 
+
 3.18号打卡
 <!-- DAILY_CHECKIN_2026-03-18_END -->
 
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 
 
 
@@ -201,6 +201,7 @@ fi
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 
 
@@ -325,6 +326,7 @@ fi
 
 
 
+
 3.15继续打卡，部署跨链合约
 
 简单来说，传统的智能合约像是一个“声控灯”，你不拍手（发送交易），它永远不会亮；而 RCs 就像是一个“光感灯”，它会时刻盯着外界环境（区块链事件），一旦天黑了（满足条件），它自己就亮了。  
@@ -404,6 +406,7 @@ fi
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -575,6 +578,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 
 
+
 # 3月13号  
 目标🎯跑完链路
 
@@ -605,6 +609,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 
 
+
 # 3.12植树节
 
 1.再来把Reactive contracts弄懂
@@ -612,6 +617,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -965,6 +971,7 @@ Krystal 姐，你担心的“看错”确实是开发者最容易踩的坑，但
 
 
 
+
 # 3.9—3.10两场会议总结
 
 1.  🧘集中精力看着自己脚下的路走，不要分心左顾右盼（不是让你闭门造车/与世隔绝的意思，重点是强调集中精力在解决问题是，精力是一种有限且珍贵的资源，每天是定量供应的，不要浪费它）保持对外界的信息的觉知度，看事情尽量抓本质（是什么东西What，什么原因Why, 具体有什么用Value，怎么样我能用上How，碰上具体什么问题？然后厚着脸皮去问，不管问题是否能完满解决，至少训练了自己的脸皮（褒义））
@@ -979,6 +986,7 @@ Krystal 姐，你担心的“看错”确实是开发者最容易踩的坑，但
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
