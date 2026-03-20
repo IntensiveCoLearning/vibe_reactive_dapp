@@ -15,19 +15,27 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-20
+<!-- DAILY_CHECKIN_2026-03-20_START -->
+留个爪，今日依旧在备赛
+<!-- DAILY_CHECKIN_2026-03-20_END -->
+
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 打个卡，留个爪
 <!-- DAILY_CHECKIN_2026-03-19_END -->
 
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
 
+
 留个爪，今天仍旧在学习vibecoding
 <!-- DAILY_CHECKIN_2026-03-18_END -->
 
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 
 
 留个爪打个小卡，今天还在vibecoding中
@@ -38,11 +46,13 @@ Let’s vibe Reactive dApp
 
 
 
+
 新的一周开始新的学习！
 <!-- DAILY_CHECKIN_2026-03-16_END -->
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -57,11 +67,13 @@ Let’s vibe Reactive dApp
 
 
 
+
 ![image.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/drinkingmorewater/images/2026-03-12-1773325301284-image.png)
 <!-- DAILY_CHECKIN_2026-03-12_END -->
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -144,11 +156,13 @@ Reactive 与传统 EVM 的根本区别
 
 
 
+
 今日打卡~学习基础知识中
 <!-- DAILY_CHECKIN_2026-03-10_END -->
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
