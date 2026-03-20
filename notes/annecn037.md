@@ -15,19 +15,27 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-20
+<!-- DAILY_CHECKIN_2026-03-20_START -->
+今日打卡
+<!-- DAILY_CHECKIN_2026-03-20_END -->
+
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 今日打卡
 <!-- DAILY_CHECKIN_2026-03-19_END -->
 
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
 
+
 今日打卡
 <!-- DAILY_CHECKIN_2026-03-18_END -->
 
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 
 
 Reactive Network 的**经济模型**采用**"先执行、后计费"**的独特机制，让智能合约能够在无需预先支付 gas 的情况下完成跨链交互。本文系统梳理了 RVM 交易费用计算、合约充值方式、跨链回调定价公式及债务结算机制，帮助开发者理解如何维持合约活跃状态，避免因余额不足导致的执行中断。
@@ -227,6 +235,7 @@ cast send \
 
 
 
+
 ## **Reactive Network 核心模块笔记**
 
 ### **一、项目定位与核心价值**
@@ -339,11 +348,13 @@ cast send \
 
 
 
+
 今日打卡√
 <!-- DAILY_CHECKIN_2026-03-13_END -->
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -615,11 +626,13 @@ function react(LogRecord calldata log) external vmOnly {
 
 
 
+
 回来太晚了，各位加油，I need to lie down
 <!-- DAILY_CHECKIN_2026-03-11_END -->
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -804,6 +817,7 @@ function react(LogRecord calldata log) external vmOnly {
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
