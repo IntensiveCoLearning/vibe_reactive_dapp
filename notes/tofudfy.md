@@ -15,8 +15,52 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-20
+<!-- DAILY_CHECKIN_2026-03-20_START -->
+**Reactive Contract 不是单实例、不是用户主动调用、也不是单链事件监听器** 这三个前提。Reactive Contract 部署后会同时存在于 **Reactive Network（RNK）** 和 **私有 ReactVM（RVM）** 两个环境里，两份实例**代码相同但状态隔离**；RNK 侧主要负责订阅和管理，RVM 侧主要负责接收事件并执行 react(LogRecord) 逻辑，再通过 Callback 事件把结果送到目标链。这个双状态、事件驱动、跨链回调的执行模型，是前端、后端、合约三部分全部设计的起点。  
+  
+对前端来说，最重要的不是页面本身，而是**链路可观测性**。Lasna Testnet 的链 ID 是 5318007，系统合约地址在 Mainnet 和 Lasna 都是固定的 0x0000000000000000000000000000000000fffFfF。Reactscan 也明确把“我的 RVM Address”作为一个单独观察入口，且文档说明它应与部署地址映射相关联；这正好对应你要把“部署地址 → RVM 地址 → reactive 交易状态”回传给前端或日志。
+
+对后端来说，最有用的几个 **RNK 专用 JSON-RPC**是：
+
+-   rnk\_getRnkAddressMapping：把 RNK 合约地址映射到 RVM ID；
+    
+-   rnk\_getVm / rnk\_getVms / rnk\_getStat：看 RVM 活跃情况；
+    
+-   rnk\_getSubscribers 和 rnk\_getFilters：看订阅是否真的注册成功；
+    
+-   rnk\_getTransactionByHash / ByNumber：查某次 Reactive 交易是否执行、由哪个 Origin 交易触发、状态是否成功；
+    
+-   rnk\_call / rnk\_getCode / rnk\_getStorageAt：做模拟调用、代码和状态排错。
+    
+
+这些接口正好支撑“后端统一监听 + 结构化返回 + 调试信息回传”。
+
+对智能合约来说，最关键的是三个接口面：
+
+-   第一，订阅靠 ISubscriptionService.subscribe(chain\_id, contract, topic\_0, topic\_1, topic\_2, topic\_3)；
+    
+-   第二，事件到来后，Reactive Network 会调用 react(LogRecord calldata log)，而 LogRecord 里除了 chain\_id、\_contract、topic\_0...topic\_3、data，还带 block\_number、op\_code、block\_hash、tx\_hash、log\_index；
+    
+-   第三，跨链动作不是直接发交易，而是 emit Callback(chain\_id, _contract, gas_limit, payload)，由网络把回调提交到目标链。 
+    
+
+第一个难点是 **双状态不是概念题，而是代码组织题**。 Reactive Contract 会在 RNK 与 RVM 两边各有一份实例，状态不共享；同时 AbstractReactive 通过 detectVm() 检查系统合约地址 0x...fffFfF 是否有代码来判断当前运行环境，并提供 rnOnly / vmOnly 两个执行上下文修饰器。如果没有把“网络侧变量”和“RVM 侧变量”分开设计，就会很容易写出构造正常、运行错位的代码。
+
+第二个难点是 **constructor 里订阅要“只在 RNK 侧做”**。官方反复强调，订阅通常在 constructor 中调用 subscribe() 完成，但因为同一份字节码也会部署到 RVM，而 RVM 里并不存在系统合约，所以构造函数必须避免在 ReactVM 里调用 subscribe()；示例代码就是 if (!vm) { service.subscribe(...) }。这正好对应“在 constructor 里调用系统合约 subscribe(…) 建立订阅”——这句话要补上一半：**只能在 !vm 时调**。
+
+第三个难点是 **订阅过滤是等值匹配，不是模糊检索**。文档给出的过滤维度就是 chain ID + contract address + topics 0~3，并支持用 REACTIVE\_IGNORE 作为通配；因此要满足“事件签名稳定、参数里至少包含一个 indexed”的要求，因为只有进入 topic 的内容，订阅层才能直接高效过滤。若 Origin 事件字段没进 topic，而全放进 data，那就只能在 react(LogRecord) 里做二次解析和判断。
+
+第四个难点是 **回调入口的第一个参数必须是 address**。文档在 Events & Callbacks 和 Debugging 两处都写得很明确，Reactive Network 会自动把回调 payload 的前 160 bits 替换为 RVM ID（即部署者地址），因此回调函数的第一个参数必须预留为地址类型；漏掉它，调用就会失败。
+
+第五个难点是 **在 RVM 里只能“看日志、做判断、发回调”，不能直接连外部世界**。官方文档明确说 ReactVM 内部不能访问外部 RPC、不能连 off-chain 服务；它能做的是接收日志、执行 Solidity 逻辑、然后请求 RNK 把 callback 发去目标链。所以后端的 SSE/WebSocket、统一事件结构、调试聚合，必须放在链外服务层，不要指望在 Reactive 合约里完成。
+
+第六个难点是 **资金与活跃状态**。Reactive Contract 在 RVM 执行前要先有 REACT 余额；callback 合约在目标链侧也要有足够资金，否则会因债务或余额问题变成 inactive。文档还给了两个容易踩坑的参数，RVM 交易最大 gas limit 是 900,000，callback 最低 gas limit 是 100,000，低于这个最小值会被忽略。没触发最后不是订阅问题，而是资金或 gas 约束没满足。
+<!-- DAILY_CHECKIN_2026-03-20_END -->
+
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 Reactive Network 经济模型总结
 
 一、整体概念
@@ -175,6 +219,7 @@ Reactive Network 的经济模型可以抽象为：
 <!-- DAILY_CHECKIN_2026-03-18_START -->
 
 
+
 第三阶段进展汇报（初步实践）
 
 本阶段主要开始上手 Reactive 跨链机制的实际开发，目标是打通基础链路并熟悉整体流程。
@@ -190,6 +235,7 @@ Reactive Network 的经济模型可以抽象为：
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -436,6 +482,7 @@ Reactive 模式：Protocol-level automation，实现去中心化
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -748,6 +795,7 @@ Execute Swap
 
 
 
+
 在本次作业中，我主要围绕 Reactive Network 的跨链事件与回调机制进行了开发实践。首先梳理了系统整体架构，理解了 **Origin Contract、Reactive Contract 和 Destination Contract** 在跨链事件流程中的角色划分。Origin Contract 部署在源链上，用于触发事件；Reactive Contract 运行在 Reactive Network 上，用于监听指定事件并执行响应逻辑；Destination Contract 部署在目标链上，用于接收回调交易并执行最终操作。
 
 在开发过程中，我重点学习了 Reactive Smart Contract 的基本结构以及事件监听与回调的触发方式，并理解了 Reactive Network 的事件驱动执行模式。相比传统依赖 off-chain bot 监听事件再手动发送交易的方式，Reactive Network 将事件监听和自动执行逻辑通过合约形式进行编程，实现了更自动化的跨链响应机制。通过这一过程，我对事件驱动智能合约以及跨链自动化执行的设计思路有了更直观的认识。
@@ -759,6 +807,7 @@ Execute Swap
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -884,6 +933,7 @@ react(LogRecord log)
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
