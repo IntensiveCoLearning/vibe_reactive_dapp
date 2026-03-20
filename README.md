@@ -294,7 +294,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [wodeche](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/wodeche.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [haolan0427](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/haolan0427.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [Joyceyuuu](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Joyceyuuu.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
-| [luuzuofan-design](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/luuzuofan-design.md) | ⭕️ | ⭕️ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕️ | ✅ | ⭕️ |   | | |
+| [luuzuofan-design](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/luuzuofan-design.md) | ⭕️ | ⭕️ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕️ | ✅ | ⭕️ | ✅ | | |
 | [vergissxie](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/vergissxie.md) | ⭕️ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕️ | ✅ | | |
 | [1145141926](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/1145141926.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [azolonev-debug](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/azolonev-debug.md) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕️ | ✅ | ⭕️ | ✅ | | |
@@ -407,6 +407,7 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 | [yjj810815-cloud](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/yjj810815-cloud.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 | [Rohit12ka](https://github.com/IntensiveCoLearning/vibe_reactive_dapp/blob/main/notes/Rohit12ka.md) | ⭕️ | ⭕️ | ❌ | | | | | | | | | | | |
 <!-- END_COMMIT_TABLE -->
+
 
 
 
