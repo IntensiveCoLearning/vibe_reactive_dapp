@@ -15,8 +15,148 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-21
+<!-- DAILY_CHECKIN_2026-03-21_START -->
+动手实践 & Hackathon 准备1. 智能合约实践（核心：双状态 + 订阅 + react()）
+
+-   双状态理解：同一合约字节码，在 Reactive Network (RNK)（用户交互、主状态）和 私有 ReactVM（事件处理、隔离状态）各有一份实例。状态隔离 → ReactVM 只处理事件，不直接改 RNK 状态；通过 Callback tx 回传变更。
+    
+-   Origin 合约（只 emit Event）：
+    
+    solidity
+    
+    ```solidity
+    contract OriginEmitter {
+        event PriceUpdated(address indexed asset, uint256 indexed price, uint256 timestamp);
+        function updatePrice(address asset, uint256 price) external {
+            emit PriceUpdated(asset, price, block.timestamp);
+        }
+    }
+    ```
+    
+    -   topic0 = keccak256("PriceUpdated(address,uint256,uint256)") → 稳定、可订阅。
+        
+    -   至少一个 indexed（asset）。
+        
+-   Reactive 合约（订阅 + react + Callback）：
+    
+    -   系统合约固定地址：0x0000000000000000000000000000000000fffFfF（Lasna & Mainnet 通用）。
+        
+    -   constructor 订阅（静态）：
+        
+        solidity
+        
+        ```solidity
+        import {ISystemContract} from "./ISystemContract.sol";
+        ISystemContract constant SERVICE = ISystemContract(0x0000000000000000000000000000000000fffFfF);
+        uint256 constant REACTIVE_IGNORE = 0xa65f96fc951c35ead38878e0f0b7a3c744a6f5ccc1476b313353ce31712313ad;
+        
+        constructor(uint256 originChainId, address originContract) {
+            if (!vm) {  // 防 ReactVM 内订阅
+                SERVICE.subscribe(
+                    originChainId,
+                    originContract,
+                    TOPIC_0_PRICE_UPDATED,  // keccak256 event sig
+                    REACTIVE_IGNORE,
+                    REACTIVE_IGNORE,
+                    REACTIVE_IGNORE
+                );
+            }
+        }
+        ```
+        
+    -   react()（vmOnly，处理 LogRecord）：
+        
+        solidity
+        
+        ```solidity
+        struct LogRecord {
+            uint256 chain_id;
+            address _contract;
+            bytes32 topic_0;
+            bytes32 topic_1;
+            bytes32 topic_2;
+            bytes32 topic_3;
+            bytes data;
+            // + block_number, tx_hash 等
+        }
+        
+        function react(LogRecord calldata log) external vmOnly {
+            // 解码 data（非 indexed 参数）
+            (, uint256 price, uint256 ts) = abi.decode(log.data, (address, uint256, uint256)); // 忽略 indexed asset
+            if (price < THRESHOLD && whitelist[log._contract]) {  // 阈值 + 白名单 + 去重（可选 nonce）
+                bytes memory payload = abi.encodeWithSignature("executeHedge(address)", address(0)); // 第一个参数强制 address (RVM ID 自动替换)
+                emit Callback(DEST_CHAIN_ID, DESTINATION_CONTRACT, GAS_LIMIT, payload);
+                emit HedgeTriggered(price, ts);  // 可观测事件给 UI/后端
+            }
+        }
+        ```
+        
+    -   部署：Lasna 测试网（Chain ID 5318007, RPC [https://lasna-rpc.rnk.dev/），确认订阅在](https://lasna-rpc.rnk.dev/），确认订阅在) Reactscan（[https://lasna.reactscan.net/](https://lasna.reactscan.net/)[）](https://lasna.reactscan.net/）) → contract → subscriptions tab。
+        
+    -   排错：ReactVM ID ≈ deployer address；查看 Callback tx 在 Reactscan（trace events & status）。
+        
+
+2\. 前端实践（最小交互 + 三段链时间线）
+
+-   连接钱包 & 切换链：用 wagmi/viem，支持 Origin（e.g. Sepolia/Base） + Lasna。
+    
+-   最小交互：按钮 → 调用 OriginEmitter.updatePrice() → emit 事件触发 Reactive。
+    
+-   三段链时间线展示：
+    
+    -   用 SSE/WebSocket 监听后端推送。
+        
+    -   UI 组件：Timeline（Origin 时间戳 → Reactive react() 时间 → Destination Callback tx hash）。
+        
+    -   示例：Ant Design Timeline 或简单 div + 状态图标。
+        
+
+3\. 后端实践（监听 + 推送 + RNK RPC 验证）
+
+-   监听多链：用 ethers.js/viem 同时订阅 Origin 链 + Lasna 链事件。
+    
+    -   统一结构：{ chainId, txHash, timestamp, eventName, data: {price, ...} }
+        
+-   推送通道：选 SSE（简单）：
+    
+    ts
+    
+    ```text
+    // Express SSE endpoint
+    app.get('/events', (req, res) => {
+        res.setHeader('Content-Type', 'text/event-stream');
+        // 当事件发生 → res.write(`data: ${JSON.stringify(event)}\n\n`);
+    });
+    ```
+    
+-   RNK 专用 RPC：用 Lasna RPC 调用系统合约 view 方法验证订阅/状态（e.g. cast call 或 viem readContract）。
+    
+-   排错返回：前端请求时，返回 { rvmId: deployerAddr, reactiveTxHash, status, reactscanUrl: [https://lasna.reactscan.net/tx/${txHash}](https://lasna.reactscan.net/tx/${txHash}) } → 指导用户查 Reactscan。
+    
+
+4\. Hackathon MVP 准备（Casual 模式）
+
+-   灵感来源（Ecosystem cases）：ReacDEFI（健康因子保护）、NewEra Finance（oracle 限价单）、DexTrade（跨链 swap）、Reactive Bridge（跨链 staking）。
+    
+-   我的 MVP：延续前天 AutoHedge → 监听 oracle/uniswap → 阈值对冲 → Callback swap/桥接。
+    
+-   Checklist：
+    
+    -   部署 Origin + Reactive 合约到 Lasna → 确认订阅。
+        
+    -   后端监听 → SSE 推送。
+        
+    -   前端：钱包切换 + 触发事件 + 时间线显示。
+        
+    -   测试：手动 updatePrice → 观察 Callback 执行。
+        
+    -   Demo：录屏三段链 + Reactscan tx。
+<!-- DAILY_CHECKIN_2026-03-21_END -->
+
 # 2026-03-20
 <!-- DAILY_CHECKIN_2026-03-20_START -->
+
 MVP 范围定义 + dApp 流程图设计
 
 1\. 我的 MVP Idea（基于 Reactive 核心优势 + DeFi 实战）Idea 名称：Reactive AutoHedge（自动对冲助手 dApp）  
@@ -104,6 +244,7 @@ Callback tx → Destination (Uniswap/Bridge) → swap/transfer → HedgeExecuted
 
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 
 **reactive Network** 的自动化交易系统架构，演示了如何通过监听 Uniswap 价格事件触发自动化代币交换。系统通过 **Reactive Contract** 监控链上事件，当价格达到阈值时自动调用 **Callback Contract** 执行交换并停止监控。
 
@@ -203,6 +344,7 @@ Callback tx → Destination (Uniswap/Bridge) → swap/transfer → HedgeExecuted
 <!-- DAILY_CHECKIN_2026-03-18_START -->
 
 
+
 -   今日重点：深化 Subscribe / Trigger / Callback 模型 + ReactVM 执行逻辑 + 跨链自动化机制。
     
     -   复习双状态（Reactive Network 主链 vs ReactVM 隔离沙箱）。
@@ -227,6 +369,7 @@ Callback tx → Destination (Uniswap/Bridge) → swap/transfer → HedgeExecuted
 
 
 
+
 -   订阅 Uniswap Pair Sync 事件（topics\[0\] = keccak256("Sync(uint112,uint112)")）。
     
 -   react() 中：解码 reserve0/reserve1 → 计算价格比率 → 若 ≤ stopPrice → emit Callback。
@@ -238,6 +381,7 @@ Callback tx → Destination (Uniswap/Bridge) → swap/transfer → HedgeExecuted
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 
 
@@ -298,6 +442,7 @@ Uniswap V2 集成与 Reactive Stop Order 实战
 
 
 
+
 Uniswap V2 池与合约理解
 
 -   学习目标：
@@ -341,6 +486,7 @@ Uniswap V2 池与合约理解
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -401,6 +547,7 @@ How Uniswap Works（Uniswap V2 池与合约理解）
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -470,6 +617,7 @@ How Oracles Work
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -625,6 +773,7 @@ How Subscriptions Work（订阅机制详解）
 
 
 
+
 **ReactVM and Reactive Network As a Dual-State Environment**
 
 **1\. 学习目标（Lesson Objectives）**
@@ -726,6 +875,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 
 
+
 **Events and Callbacks 工作原理**
 
 **1\. 学习目标（Lesson Objectives**）
@@ -800,6 +950,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
