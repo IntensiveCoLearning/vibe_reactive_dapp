@@ -15,8 +15,16 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-21
+<!-- DAILY_CHECKIN_2026-03-21_START -->
+# Reactive DApp学习
+
+NewEra Finance 将集成 Reactive Network，用 Reactive Contracts 自动执行 RWA 市场中的 TWAMM 和预言机限价单，替代原本依赖人工的执行流程。NewEra 基于 Uniswap V4 Hooks，覆盖 7 条链，支持股票、ETF、黄金、法币和债券等 RWA。集成后，一类合约每分钟执行 TWAMM，另一类合约根据预言机和波动实时执行限价单，从而减少延迟、滑点和 MEV 风险，并提升多链扩展能力和用户体验。项目将先在 Base Sepolia 测试，再上线主网。
+<!-- DAILY_CHECKIN_2026-03-21_END -->
+
 # 2026-03-20
 <!-- DAILY_CHECKIN_2026-03-20_START -->
+
 # ReactiveDApp学习
 
 [https://blog.reactive.network/fiet-integrates-with-reactive-network-to-automate-asynchronous-defi-settlements/](https://blog.reactive.network/fiet-integrates-with-reactive-network-to-automate-asynchronous-defi-settlements/)
@@ -27,6 +35,7 @@ Let’s vibe Reactive dApp
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
 
+
 # Reactive DApp学习
 
 -   如何把智能合约变成一个自动运行的机器人：**Reactive 方式，**逻辑直接写在响应式合约里。它像是一个**永不掉线的链上监控器**，只要区块链在出块，你的止损逻辑就在运行，且具有去中心化的安全保障。
@@ -36,6 +45,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 
 # ReactiveDApp学习第六天
@@ -54,6 +64,7 @@ Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 
@@ -77,6 +88,7 @@ Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常
 
 
 
+
 # ReactiveDapp学习第四天
 
 -   ReactVM 这边就像“真正干活的机器人”：它一边盯价格，一边判断是否该止损；一旦该止损就立刻发 callback；等收到执行成功的回执后，再把订单状态标记为完成。
@@ -88,6 +100,7 @@ Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -110,6 +123,7 @@ Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常
 
 
 
+
 # Reactive Dapp 学习第二天
 
 直播学习:
@@ -121,6 +135,7 @@ Uniswap V2 的核心是由两种代币储备组成的流动性池，价格由常
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
