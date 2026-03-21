@@ -15,8 +15,14 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-22
+<!-- DAILY_CHECKIN_2026-03-22_START -->
+3月22号打卡
+<!-- DAILY_CHECKIN_2026-03-22_END -->
+
 # 2026-03-21
 <!-- DAILY_CHECKIN_2026-03-21_START -->
+
 3月21号打卡
 
 简单来说，**Reactive Network（响应式网络）** 就像是一个“全自动的链上机器人”。它平时盯着 A 链，一旦发现符合条件的事情发生，就自动去 B 链上帮你执行操作。
@@ -67,6 +73,7 @@ Reactive Contract 就像是一个**带摄像头的自动开关**。
 
 # 2026-03-20
 <!-- DAILY_CHECKIN_2026-03-20_START -->
+
 
 
 # 3.20日
@@ -202,6 +209,7 @@ fi
 
 
 
+
 3.19继续vibe coding
 
 卡那个链上操作好几天了😭
@@ -215,11 +223,13 @@ fi
 
 
 
+
 3.18号打卡
 <!-- DAILY_CHECKIN_2026-03-18_END -->
 
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 
 
 
@@ -259,6 +269,7 @@ fi
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 
 
@@ -389,6 +400,7 @@ fi
 
 
 
+
 3.15继续打卡，部署跨链合约
 
 简单来说，传统的智能合约像是一个“声控灯”，你不拍手（发送交易），它永远不会亮；而 RCs 就像是一个“光感灯”，它会时刻盯着外界环境（区块链事件），一旦天黑了（满足条件），它自己就亮了。  
@@ -468,6 +480,7 @@ fi
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -645,6 +658,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 
 
+
 # 3月13号  
 目标🎯跑完链路
 
@@ -678,6 +692,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 
 
+
 # 3.12植树节
 
 1.再来把Reactive contracts弄懂
@@ -685,6 +700,7 @@ cast send $ORIGIN_ADDR --rpc-url $ORIGIN_RPC --private-key $ORIGIN_PRIVATE_KEY -
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -1044,6 +1060,7 @@ Krystal 姐，你担心的“看错”确实是开发者最容易踩的坑，但
 
 
 
+
 # 3.9—3.10两场会议总结
 
 1.  🧘集中精力看着自己脚下的路走，不要分心左顾右盼（不是让你闭门造车/与世隔绝的意思，重点是强调集中精力在解决问题是，精力是一种有限且珍贵的资源，每天是定量供应的，不要浪费它）保持对外界的信息的觉知度，看事情尽量抓本质（是什么东西What，什么原因Why, 具体有什么用Value，怎么样我能用上How，碰上具体什么问题？然后厚着脸皮去问，不管问题是否能完满解决，至少训练了自己的脸皮（褒义））
@@ -1058,6 +1075,7 @@ Krystal 姐，你担心的“看错”确实是开发者最容易踩的坑，但
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
