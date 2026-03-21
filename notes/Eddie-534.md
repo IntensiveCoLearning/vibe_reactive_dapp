@@ -15,8 +15,16 @@ Let's vibe Reactive dApp！
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-22
+<!-- DAILY_CHECKIN_2026-03-22_START -->
+2026.3.22 今天重新完成了 Basic 和 uniswap-v2-stop-order 演示，现在在做 cron 中，但还遇到了些问题，在 etherscan 中查不到回调交易记录。  
+
+![屏幕截图 2026-03-22 000444.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Eddie-534/images/2026-03-21-1774109200762-_____2026-03-22_000444.png)![屏幕截图 2026-03-22 000455.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Eddie-534/images/2026-03-21-1774109221941-_____2026-03-22_000455.png)
+<!-- DAILY_CHECKIN_2026-03-22_END -->
+
 # 2026-03-20
 <!-- DAILY_CHECKIN_2026-03-20_START -->
+
 26.3.20 今天做了一个简单的 demo，完成了智能合约、前端和后端，现在还在完善中  
 
 ![屏幕截图 2026-03-20 234434.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Eddie-534/images/2026-03-20-1774021707387-_____2026-03-20_234434.png)![屏幕截图 2026-03-20 234447.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Eddie-534/images/2026-03-20-1774021736174-_____2026-03-20_234447.png)![屏幕截图 2026-03-20 234501.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Eddie-534/images/2026-03-20-1774021753844-_____2026-03-20_234501.png)
@@ -24,6 +32,7 @@ Let's vibe Reactive dApp！
 
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 
 2026.3.19 今天完成了 aave 清算保护，实现了反应层接受到健康因子降低到规定值以下，将消息传送到回调合约，触发保护机制。  
 
@@ -34,6 +43,7 @@ Let's vibe Reactive dApp！
 <!-- DAILY_CHECKIN_2026-03-18_START -->
 
 
+
 2026.3.18 今天已经到监视健康因子了，明天继续完成。  
 
 ![屏幕截图 2026-03-18 234942.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Eddie-534/images/2026-03-18-1773849055508-_____2026-03-18_234942.png)
@@ -41,6 +51,7 @@ Let's vibe Reactive dApp！
 
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 
 
 
@@ -55,6 +66,7 @@ Let's vibe Reactive dApp！
 
 
 
+
 26.3.16 今天开始学习 aave 清算保护，领取了 USDC，部署了三个合约，但其中一个出了点问题，还在解决中。  
 
 ![屏幕截图 2026-03-16 234610.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Eddie-534/images/2026-03-16-1773676234407-_____2026-03-16_234610.png)
@@ -62,6 +74,7 @@ Let's vibe Reactive dApp！
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 
@@ -90,6 +103,7 @@ Let's vibe Reactive dApp！
 
 
 
+
 26.3.14 今天把三个合约都重新改了下，整理思路从头开始，但最后 reactive 链上还是没监测到，回调合约地址也没有交易事件，到底是哪里出问题了呢。  
 
 ![屏幕截图 2026-03-14 233704.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Eddie-534/images/2026-03-14-1773502698356-_____2026-03-14_233704.png)![屏幕截图 2026-03-14 233832.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Eddie-534/images/2026-03-14-1773502778055-_____2026-03-14_233832.png)![屏幕截图 2026-03-14 233927.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Eddie-534/images/2026-03-14-1773502786869-_____2026-03-14_233927.png)
@@ -97,6 +111,7 @@ Let's vibe Reactive dApp！
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -119,6 +134,7 @@ Let's vibe Reactive dApp！
 
 
 
+
 26.3.12 今天在做挑战第二关，完成了部署源链合约，目标链合约和reactive合约，并且创建了 uniswap 交易对。  
 
 ![屏幕截图 2026-03-12 233834.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Eddie-534/images/2026-03-12-1773330074633-_____2026-03-12_233834.png)
@@ -126,6 +142,7 @@ Let's vibe Reactive dApp！
 
 # 2026-03-11
 <!-- DAILY_CHECKIN_2026-03-11_START -->
+
 
 
 
@@ -161,6 +178,7 @@ Reactive合约0x0cF71E200DCf94587f487FF1C34035236A2747a0
 
 
 
+
 26.3.10 今天部署了三个合约，连接了 reactive lasna 网络，明天将会触发并验证跨链回调。  
 
 ![屏幕截图 2026-03-10 233540.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/Eddie-534/images/2026-03-10-1773157153639-_____2026-03-10_233540.png)
@@ -168,6 +186,7 @@ Reactive合约0x0cF71E200DCf94587f487FF1C34035236A2747a0
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
