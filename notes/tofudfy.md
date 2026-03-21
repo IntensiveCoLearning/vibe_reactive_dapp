@@ -15,8 +15,27 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-21
+<!-- DAILY_CHECKIN_2026-03-21_START -->
+## **Reactive Network 潜在方向与生态现状**
+
+| 方向 | 具体描述 | 已有实践（项目 + 链接） | 链接内公开的挑战 / 局限 |
+| --- | --- | --- | --- |
+| 自动化 DeFi 策略 / 资产管理 | 自动止盈止损、收益优化、策略执行 | Reactor（no-code automation）https://cryptoslate.com/press-releases/reactor-launches-on-reactive-network-pioneering-the-future-of-no-code-defi-automation/ | 需要用户定义触发条件；复杂策略设计门槛仍存在；自动化依赖链上事件触发，执行粒度受限 |
+| 自动套利 / MEV 系统 | 跨链套利、价格差捕获、自动交易执行 | Flash Profit Extractorhttps://reactive.network/ecosystem | 依赖价格事件触发，存在延迟；无法完全避免外部竞争（链外 bot）；执行顺序受链上确认影响 |
+| 跨链交易 / Gasless Swap | 无 gas 费用跨链交易、自动撮合 | DexTrade（gasless swap）https://reactive.network/ecosystem | 跨链交易仍依赖事件同步；执行路径复杂；用户体验与多链状态管理仍是挑战 |
+| 自动化清算 / 风险管理 | 自动 liquidation、抵押监控、风险控制 | Reactive 自动执行逻辑https://www.gate.com/learn/articles/what-is-reactive-network-react/7309 | 依赖外部价格数据；链上事件触发存在延迟；极端市场条件下执行可靠性问题 |
+| 跨链借贷 / 流动性整合 | 多链抵押借贷、统一流动性市场 | ReactiveFlow Lender（生态项目）https://reactive.network/ecosystem | 不同链资产标准不统一；跨链状态同步复杂；风险评估模型尚未成熟 |
+| Flash Loan / 组合金融 | 无锁闪电贷、组合交易执行 | Non-locking FlashLoanhttps://reactive.network/ecosystem | 安全性依赖协议设计；组合交易复杂性高；跨链执行一致性问题 |
+| NFT / 动态资产 | 动态 NFT、收益自动分配、链上逻辑触发 | Dynamic NFT Royalty Systemhttps://www.gate.com/learn/articles/what-is-reactive-network-react/7309 | NFT 状态跨链同步复杂；执行成本（gas）较高；逻辑复杂度限制应用范围 |
+| DAO / 治理自动执行 | 投票触发执行、资金管理自动化 | Reactive governance automationhttps://reactive.network | 自动执行不可回滚；治理错误风险放大；跨链治理一致性问题 |
+| RWA / 现实资产 | 房地产、债券、票据等资产上链并自动结算 | RWA automation use caseshttps://wealthandfinance.digital/real-world-assets-on-the-blockchain-how-reactive-network-is-transforming-financial-markets/ | 法律与链上执行不完全一致；数据真实性依赖外部输入；合规问题仍未解决 |
+| AI + DeFi 自动系统 | AI agent 自动交易、策略执行 | AI-driven DeFi automationhttps://www.gate.com/learn/articles/what-is-reactive-network-react/7309 | AI 决策不可验证；策略透明性不足；链上执行与 AI 决策之间存在信任问题 |
+<!-- DAILY_CHECKIN_2026-03-21_END -->
+
 # 2026-03-20
 <!-- DAILY_CHECKIN_2026-03-20_START -->
+
 **Reactive Contract 不是单实例、不是用户主动调用、也不是单链事件监听器** 这三个前提。Reactive Contract 部署后会同时存在于 **Reactive Network（RNK）** 和 **私有 ReactVM（RVM）** 两个环境里，两份实例**代码相同但状态隔离**；RNK 侧主要负责订阅和管理，RVM 侧主要负责接收事件并执行 react(LogRecord) 逻辑，再通过 Callback 事件把结果送到目标链。这个双状态、事件驱动、跨链回调的执行模型，是前端、后端、合约三部分全部设计的起点。  
   
 对前端来说，最重要的不是页面本身，而是**链路可观测性**。Lasna Testnet 的链 ID 是 5318007，系统合约地址在 Mainnet 和 Lasna 都是固定的 0x0000000000000000000000000000000000fffFfF。Reactscan 也明确把“我的 RVM Address”作为一个单独观察入口，且文档说明它应与部署地址映射相关联；这正好对应你要把“部署地址 → RVM 地址 → reactive 交易状态”回传给前端或日志。
@@ -60,6 +79,7 @@ Let’s vibe Reactive dApp
 
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 
 Reactive Network 经济模型总结
 
@@ -220,6 +240,7 @@ Reactive Network 的经济模型可以抽象为：
 
 
 
+
 第三阶段进展汇报（初步实践）
 
 本阶段主要开始上手 Reactive 跨链机制的实际开发，目标是打通基础链路并熟悉整体流程。
@@ -235,6 +256,7 @@ Reactive Network 的经济模型可以抽象为：
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -482,6 +504,7 @@ Reactive 模式：Protocol-level automation，实现去中心化
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -796,6 +819,7 @@ Execute Swap
 
 
 
+
 在本次作业中，我主要围绕 Reactive Network 的跨链事件与回调机制进行了开发实践。首先梳理了系统整体架构，理解了 **Origin Contract、Reactive Contract 和 Destination Contract** 在跨链事件流程中的角色划分。Origin Contract 部署在源链上，用于触发事件；Reactive Contract 运行在 Reactive Network 上，用于监听指定事件并执行响应逻辑；Destination Contract 部署在目标链上，用于接收回调交易并执行最终操作。
 
 在开发过程中，我重点学习了 Reactive Smart Contract 的基本结构以及事件监听与回调的触发方式，并理解了 Reactive Network 的事件驱动执行模式。相比传统依赖 off-chain bot 监听事件再手动发送交易的方式，Reactive Network 将事件监听和自动执行逻辑通过合约形式进行编程，实现了更自动化的跨链响应机制。通过这一过程，我对事件驱动智能合约以及跨链自动化执行的设计思路有了更直观的认识。
@@ -807,6 +831,7 @@ Execute Swap
 
 # 2026-03-10
 <!-- DAILY_CHECKIN_2026-03-10_START -->
+
 
 
 
@@ -933,6 +958,7 @@ react(LogRecord log)
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
