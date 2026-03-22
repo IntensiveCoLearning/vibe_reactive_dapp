@@ -17,11 +17,14 @@ Let's vibe Reactive dApp！
 <!-- Content_START -->
 # 2026-03-22
 <!-- DAILY_CHECKIN_2026-03-22_START -->
-~/.foundry/bin/forge create --broadcast \\ --rpc-url http://127.0.0.1:8546 \\ --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \\ src/demos/cron/CronDemo.sol:BasicCronContract \\ --value 0.1ether \\ --constructor-args 1 \\ --use ./.local-bin/solc-0.8.33 cast send 0x5FbDB2315678afecb367f032d93F642f64180aa3 \\ "react((uint256,address,uint256,uint256,uint256,uint256,bytes,uint256,uint256,uint256,uint256,uint256))" \\ "(31337,0x0000000000000000000000000000000000fffFfF,1,0,0,0,0x,1,0,0,0,0)" \\ --rpc-url http://127.0.0.1:8546 \\ --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 cast call 0x5FbDB2315678afecb367f032d93F642f64180aa3 \\ "lastCronBlock()(uint256)" \\ --rpc-url http://127.0.0.1:8546
+```
+~/.foundry/bin/forge create --broadcast \ --rpc-url http://127.0.0.1:8546 \ --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \ src/demos/cron/CronDemo.sol:BasicCronContract \ --value 0.1ether \ --constructor-args 1 \ --use ./.local-bin/solc-0.8.33 cast send 0x5FbDB2315678afecb367f032d93F642f64180aa3 \ “react((uint256,address,uint256,uint256,uint256,uint256,bytes,uint256,uint256,uint256,uint256,uint256))” \ “(31337,0x0000000000000000000000000000000000fffFfF,1,0,0,0,0x,1,0,0,0,0)” \ --rpc-url http://127.0.0.1:8546 \ --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 cast call 0x5FbDB2315678afecb367f032d93F642f64180aa3 \ “lastCronBlock()(uint256)” \ --rpc-url http://127.0.0.1:8546
+```
 <!-- DAILY_CHECKIN_2026-03-22_END -->
 
 # 2026-03-21
 <!-- DAILY_CHECKIN_2026-03-21_START -->
+
 
 ```
 //Narrow Subscription
@@ -42,11 +45,13 @@ subscribe( same for Swap / Repay / FlashLoan events );
 <!-- DAILY_CHECKIN_2026-03-20_START -->
 
 
+
 ![Screenshot 2026-03-20 at 11.07.04 PM.png](https://raw.githubusercontent.com/IntensiveCoLearning/vibe_reactive_dapp/main/assets/fuyushiphilip/images/2026-03-20-1774019241369-Screenshot_2026-03-20_at_11.07.04_PM.png)
 <!-- DAILY_CHECKIN_2026-03-20_END -->
 
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 
 
 
@@ -99,6 +104,7 @@ subscribe( same for Swap / Repay / FlashLoan events );
 
 # 2026-03-18
 <!-- DAILY_CHECKIN_2026-03-18_START -->
+
 
 
 
@@ -206,11 +212,13 @@ subscribe( same for Swap / Repay / FlashLoan events );
 
 
 
+
 RC contracts are essentially non-upgradable. If you want to modify functions or perform iterative updates, you must redeploy the contract. This is because RC contracts involve relationships between subscriptions, execution logic, and callbacks, and they do not natively support upgrades. After redeployment, you also need to manage subscription migration and state. Subscriptions are registered in the system's subscription mechanism, and the logic is executed on the RBM. These two environments are isolated from each other. Once the contract is deployed, the subscription rules, contract address, and callback logic are all fixed and cannot be directly upgraded. The only option is to redeploy a new version of the contract.
 <!-- DAILY_CHECKIN_2026-03-17_END -->
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 
 
@@ -330,6 +338,7 @@ DA
 
 
 
+
 **Reactive Contract 基本架構（以 Reactive Network 為例）**
 
 通常會看到三個主要角色合約：
@@ -367,6 +376,7 @@ DA
 
 
 
+
 **Reactive Contracts 是什麼？**
 
 傳統智能合約（Solidity）特性：
@@ -396,6 +406,7 @@ DA
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -478,6 +489,7 @@ Done
 
 
 
+
 傳統 DeFi 架構（Bot 驅動）
 
 flowchart LR
@@ -522,6 +534,7 @@ D --> E\[Send Transaction<br>to target chain\]
 
 
 
+
 傳統Smart Contract 是被動的，意思是沒人調用contract, contract 就什麼都不會做。
 
 現在的DeFi系統依賴bots/Keepers 監聽鏈上的交易。
@@ -538,6 +551,7 @@ Reactive Contract 監聽鏈上事件，然後自動執行 contract，核心概�
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
