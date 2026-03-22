@@ -15,19 +15,42 @@ Reactive 探索者
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-22
+<!-- DAILY_CHECKIN_2026-03-22_START -->
+## 今天完成第一个作业  
+
+整个流程：
+
+1.  源链 收到 0.01 eth，然后马上把 0.01 钱转回去，同时 emit Received 事件
+    
+2.  RVM 接收到 Received 事件，判断钱是否大于 0.01，如果大于就继续转发到目标链
+    
+3.  目标链收到消息就也发一个 callbackReceived 事件
+    
+
+其中 2 个合约是要预先充值钱的：
+
+1.  Reactive 合约，里面的单位虽然部署的时候使用了 0.1 ether，但其实是 0.1 REACT
+    
+2.  目标链合约，也要流一点点
+<!-- DAILY_CHECKIN_2026-03-22_END -->
+
 # 2026-03-21
 <!-- DAILY_CHECKIN_2026-03-21_START -->
+
 准备参加黑客松，这次做一个基于 Reactive 的换装游戏 或者 类似的小游戏，主要是为了体现 Reactive 能够在 Web3 Game 中把 Web2 的性能优势加进来，同时又拥有 Web3 的确权。
 <!-- DAILY_CHECKIN_2026-03-21_END -->
 
 # 2026-03-20
 <!-- DAILY_CHECKIN_2026-03-20_START -->
 
+
 明天准备把作业做一下了
 <!-- DAILY_CHECKIN_2026-03-20_END -->
 
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 
 
 **动态 NFT 换装系统（“链上 QQ 秀”）**
@@ -59,6 +82,7 @@ Reactive 探索者
 
 
 
+
 先打卡
 
 有个 动态 NFT 的 idea，但是不知道有没有价值，需要构思一下
@@ -66,6 +90,7 @@ Reactive 探索者
 
 # 2026-03-17
 <!-- DAILY_CHECKIN_2026-03-17_START -->
+
 
 
 
@@ -126,11 +151,13 @@ Reactive 探索者
 
 
 
+
 今天看一下 [https://dev.reactive.network/hyperlane](https://dev.reactive.network/hyperlane)
 <!-- DAILY_CHECKIN_2026-03-16_END -->
 
 # 2026-03-15
 <!-- DAILY_CHECKIN_2026-03-15_START -->
+
 
 
 
@@ -171,6 +198,7 @@ X \* y = k
 
 
 
+
 # **Lesson 5: How Oracles Work**
 
 **尝试使用漫画方式来理解**
@@ -180,6 +208,7 @@ X \* y = k
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -313,6 +342,7 @@ Unsubscribing is an expensive operation due to the necessity of searching and re
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -859,6 +889,7 @@ function react(LogRecord calldata log) external vmOnly {
 
 
 
+
 # **Lesson 2: How Events and Callbacks Work**
 
 本课重点讲解事件和回调在智能合约中的作用。通过学习如何发出、处理和监听事件，开发者可以创建能够实时响应区块链变化的动态去中心化应用（dApp）。我们还将探讨响应式合约如何使用 `react()` 方法处理事件，并通过回调发起跨链交易，从而增强响应式网络的功能。
@@ -954,6 +985,7 @@ For security and authorization purposes, the Reactive Network automatically repl
 
 
 
+
 # 学习计划
 
 1.  学习：[https://dev.reactive.network/education/module-1/reactive-contracts](https://dev.reactive.network/education/module-1/reactive-contracts)
@@ -1019,6 +1051,7 @@ RC 可以监控来自不同智能合约、兼容 EVM 的区块链的数据，它
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
