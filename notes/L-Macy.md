@@ -15,8 +15,140 @@ Let’s vibe Reactive dApp
 ## Notes
 
 <!-- Content_START -->
+# 2026-03-23
+<!-- DAILY_CHECKIN_2026-03-23_START -->
+# **Reactive Network 挑战任务提交说明**
+
+## **1\. 选择的 Demo**
+
+我选择的是 **Uniswap V2 Stop Order Demo**。
+
+对应目录：
+
+-   [src/demos/uniswap-v2-stop-order/](https://file+.vscode-resource.vscode-cdn.net/d%3A/reactive-smart-contract-demos/src/demos/uniswap-v2-stop-order/)
+    
+
+## **2\. 当前已完成部署**
+
+### **钱包地址**
+
+-   Client Wallet: `0x8626aD539f42f4CE457d36A013aEa60148a10402`
+    
+
+### **测试 Token**
+
+-   Token 1: `0x9Ec9E956DC61fABf965a527DDd7d41d6A301EF6e`
+    
+    -   部署交易：`0x6b4d6f2adb52ff4aaa664781202d2d4e212052dfc9561d547f9bc30e804baa9c`
+        
+-   Token 2: `0xc08e7b1a9a17D4ab9F31ae3962FB7A96e2Ec88D6`
+    
+    -   部署交易：`0x24955ddce18232f57d50148a38aa8cfd521a3dca6de5abd3af53b910d158044a`
+        
+
+### **Uniswap V2 Pair**
+
+-   Pair 地址：`0xbf1A749330003E38F86BE58b61890A09E3DbFf5d`
+    
+-   创建交易：`0x1d2db9e97d01e853e854cbf7851b810e1167993fd2368f4915ad96220b599e2d`
+    
+
+### **Callback Contract**
+
+-   Callback 地址：`0x1b39e5db193bB100885Aa3918cD58cB29b240450`
+    
+-   部署交易：`0x5332a3d9eee15befc1dd1fa1f9e947ff6aef147f6350368adad2f15c9eb98b73`
+    
+
+### **Reactive Contract**
+
+-   Reactive 地址：`0xF940B07e39a8f8cF3C2228aF1818Ec3fd94Fc39C`
+    
+-   部署交易：`0x16073516654085e716956432a8074f66c1684c58be25e0f055f68374cc84552a`
+    
+-   部署参数：
+    
+    -   Pair: `0xbf1A749330003E38F86BE58b61890A09E3DbFf5d`
+        
+    -   Callback: `0x1b39e5db193bB100885Aa3918cD58cB29b240450`
+        
+    -   Client: `0x8626aD539f42f4CE457d36A013aEa60148a10402`
+        
+    -   Direction: `true` (卖出 token0)
+        
+    -   阈值: `999/1000` (汇率低于 0.999 时触发)
+        
+
+## **3\. 注资与流动性初始化**
+
+为了验证 stop order 流程，我先部署了两份测试 ERC-20 Token，并向新建的 Uniswap V2 Pair 注入初始流动性。
+
+### **相关交易**
+
+-   向 Pair 转入 Token 1：`0x8d6c6701aad429eb6ec2eda1d50f0ee2760b007c95fde855da3e35037f039a3a`
+    
+-   向 Pair 转入 Token 2：`0xd04230eda2f1165b3dded9fcc58b949eb82b8b3580a4377e577bf5df2ab3b5b8`
+    
+-   Mint LP：`0x2e2fd7b11106f1ec24fc6979ff1224e751c2b6daa70af75b82b498ed2dae8ba9`
+    
+
+## **4\. 触发流程与执行结果**
+
+这个 Demo 的核心机制是：
+
+> Uniswap Pair 发出 `Sync` 事件 → Reactive Contract 检测汇率是否跌破阈值 → 触发 callback transaction → Callback Contract 执行 swap
+
+### **步骤 1：授权 Token**
+
+授权 callback 合约使用 1 个 token0：
+
+-   交易哈希：`0xc0db1b427fca92cac364db6caf040b4eee18ef8767c36ed830b28fa823c40fe1`
+    
+
+### **步骤 2：触发汇率变化**
+
+通过直接向 pair 转入 token0 并执行 swap 来改变储备比例：
+
+-   转入 token0：`0xbdad880086ff0d2901eede743621a253fae36646311f2184d2d9761e2e3bbc77`
+    
+-   执行 swap：`0xcb7f841f771b2d39b42da779ddb2d1a0cba4d6974098e61850af9d78424bd9dc`
+    
+
+### **步骤 3：Callback 成功执行**
+
+Reactive Network 监听到 `Sync` 事件后，检测到汇率跌破阈值，自动在目标链触发 callback：
+
+-   Callback 交易哈希：`0x851c24d230df5c78d61a257da19df45fbdae6f493bc2b28762407f1ccd1c34a3`
+    
+-   事件 topic0：`0x9996f0dd09556ca972123b22cf9f75c3765bc699a1336a85286c7cb8b9889c6b` (Stop 事件)
+    
+-   区块高度：`10502433`
+    
+
+## **5\. 成功证明**
+
+### **已完成的完整流程**
+
+### **浏览器验证链接**
+
+-   **Sepolia Etherscan**
+    
+    -   Callback 合约：[https://sepolia.etherscan.io/address/0x1b39e5db193bB100885Aa3918cD58cB29b240450](https://sepolia.etherscan.io/address/0x1b39e5db193bB100885Aa3918cD58cB29b240450)
+        
+    -   Callback 成功交易：[https://sepolia.etherscan.io/tx/0x851c24d230df5c78d61a257da19df45fbdae6f493bc2b28762407f1ccd1c34a3](https://sepolia.etherscan.io/tx/0x851c24d230df5c78d61a257da19df45fbdae6f493bc2b28762407f1ccd1c34a3)
+        
+    -   Pair 合约：[https://sepolia.etherscan.io/address/0xbf1A749330003E38F86BE58b61890A09E3DbFf5d](https://sepolia.etherscan.io/address/0xbf1A749330003E38F86BE58b61890A09E3DbFf5d)
+        
+-   **Reactive Lasna Explorer**
+    
+    -   Reactive 合约：[https://lasna.reactscan.net/address/0xF940B07e39a8f8cF3C2228aF1818Ec3fd94Fc39C](https://lasna.reactscan.net/address/0xF940B07e39a8f8cF3C2228aF1818Ec3fd94Fc39C)
+        
+    -   Reactive 部署交易：[https://lasna.reactscan.net/tx/0x16073516654085e716956432a8074f66c1684c58be25e0f055f68374cc84552a](https://lasna.reactscan.net/tx/0x16073516654085e716956432a8074f66c1684c58be25e0f055f68374cc84552a)
+<!-- DAILY_CHECKIN_2026-03-23_END -->
+
 # 2026-03-21
 <!-- DAILY_CHECKIN_2026-03-21_START -->
+
 动手实践 & Hackathon 准备1. 智能合约实践（核心：双状态 + 订阅 + react()）
 
 -   双状态理解：同一合约字节码，在 Reactive Network (RNK)（用户交互、主状态）和 私有 ReactVM（事件处理、隔离状态）各有一份实例。状态隔离 → ReactVM 只处理事件，不直接改 RNK 状态；通过 Callback tx 回传变更。
@@ -157,6 +289,7 @@ Let’s vibe Reactive dApp
 # 2026-03-20
 <!-- DAILY_CHECKIN_2026-03-20_START -->
 
+
 MVP 范围定义 + dApp 流程图设计
 
 1\. 我的 MVP Idea（基于 Reactive 核心优势 + DeFi 实战）Idea 名称：Reactive AutoHedge（自动对冲助手 dApp）  
@@ -244,6 +377,7 @@ Callback tx → Destination (Uniswap/Bridge) → swap/transfer → HedgeExecuted
 
 # 2026-03-19
 <!-- DAILY_CHECKIN_2026-03-19_START -->
+
 
 
 **reactive Network** 的自动化交易系统架构，演示了如何通过监听 Uniswap 价格事件触发自动化代币交换。系统通过 **Reactive Contract** 监控链上事件，当价格达到阈值时自动调用 **Callback Contract** 执行交换并停止监控。
@@ -345,6 +479,7 @@ Callback tx → Destination (Uniswap/Bridge) → swap/transfer → HedgeExecuted
 
 
 
+
 -   今日重点：深化 Subscribe / Trigger / Callback 模型 + ReactVM 执行逻辑 + 跨链自动化机制。
     
     -   复习双状态（Reactive Network 主链 vs ReactVM 隔离沙箱）。
@@ -370,6 +505,7 @@ Callback tx → Destination (Uniswap/Bridge) → swap/transfer → HedgeExecuted
 
 
 
+
 -   订阅 Uniswap Pair Sync 事件（topics\[0\] = keccak256("Sync(uint112,uint112)")）。
     
 -   react() 中：解码 reserve0/reserve1 → 计算价格比率 → 若 ≤ stopPrice → emit Callback。
@@ -381,6 +517,7 @@ Callback tx → Destination (Uniswap/Bridge) → swap/transfer → HedgeExecuted
 
 # 2026-03-16
 <!-- DAILY_CHECKIN_2026-03-16_START -->
+
 
 
 
@@ -443,6 +580,7 @@ Uniswap V2 集成与 Reactive Stop Order 实战
 
 
 
+
 Uniswap V2 池与合约理解
 
 -   学习目标：
@@ -486,6 +624,7 @@ Uniswap V2 池与合约理解
 
 # 2026-03-14
 <!-- DAILY_CHECKIN_2026-03-14_START -->
+
 
 
 
@@ -547,6 +686,7 @@ How Uniswap Works（Uniswap V2 池与合约理解）
 
 # 2026-03-13
 <!-- DAILY_CHECKIN_2026-03-13_START -->
+
 
 
 
@@ -617,6 +757,7 @@ How Oracles Work
 
 # 2026-03-12
 <!-- DAILY_CHECKIN_2026-03-12_START -->
+
 
 
 
@@ -774,6 +915,7 @@ How Subscriptions Work（订阅机制详解）
 
 
 
+
 **ReactVM and Reactive Network As a Dual-State Environment**
 
 **1\. 学习目标（Lesson Objectives）**
@@ -876,6 +1018,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 
 
+
 **Events and Callbacks 工作原理**
 
 **1\. 学习目标（Lesson Objectives**）
@@ -950,6 +1093,7 @@ Reactive 合约的双状态本质：Reactive Network 作为持久主环境，Rea
 
 # 2026-03-09
 <!-- DAILY_CHECKIN_2026-03-09_START -->
+
 
 
 
