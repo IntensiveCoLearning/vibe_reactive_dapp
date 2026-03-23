@@ -1737,15 +1737,16 @@ https://github.com/Reactive-Network/reactive-smart-contract-demos/tree/main/src/
 
 
 
+
 <!-- STATISTICALDATA_START -->
 ## 统计数据
 
-- 总参与人数: 0
-- 完成人数: 0
-- 完成用户: 
-- 全勤用户: 
-- 淘汰人数: 0
-- 淘汰率: 0.00%
+- 总参与人数: 213
+- 完成人数: 49
+- 完成用户: QingQiuGeek, Cap-bit-mint, SU-AN-coder, Karynam2, fenixIves, liji3597, isethan18, jishukuangzi, L-Macy, patrick-star-10, Xboxpig, Rose838, may-tonk, XuetaoZhang, bonujel, 2273310475-dev, lorstyang, starrujian, joycefey, 0xBrick-Li, leopc999, hwish39-byte, KMSHSF, SArreic, drinkingmorewater, luuzuofan-design, vergissxie, hynfrank, fox896, yangyang-hub, annecn037, klizz111, JonathanQUANLEE, yoona333, XGe711, jochenai, ShihaoZhou-NEU, haoshidoufasheng-dev, Kwong-WJTECH, irinaguo, MarnieWu, SeeMoon357, fuyushiphilip, llyzsam, Eddie-534, beautifulrem, ysy040204-alt, zhaojinxiu6, dl4987638
+- 全勤用户: QingQiuGeek, Karynam2, fenixIves, liji3597, jishukuangzi, patrick-star-10, may-tonk, 0xBrick-Li, leopc999, hwish39-byte, yangyang-hub, XGe711, ShihaoZhou-NEU
+- 淘汰人数: 164
+- 淘汰率: 77.00%
 <!-- STATISTICALDATA_END -->
 
 
